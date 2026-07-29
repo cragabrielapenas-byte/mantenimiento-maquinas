@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Mantenimiento · Amsterdam</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fraunces:opsz,wght@9..144,300;9..144,600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
@@ -30,97 +30,77 @@ html{font-size:15px;-webkit-font-smoothing:antialiased}
 body{background:var(--sand);color:var(--ink);font-family:var(--font);min-height:100vh;overflow-x:hidden}
 
 /* LOADING */
-.app-loading{
-  position:fixed;inset:0;background:var(--sand);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  z-index:999;gap:14px;
-}
+.app-loading{position:fixed;inset:0;background:var(--sand);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;gap:14px;}
 .app-loading.hidden{display:none;}
-.spinner{
-  width:36px;height:36px;border:3px solid var(--sand-3);
-  border-top-color:var(--rust);border-radius:50%;
-  animation:spin .7s linear infinite;
-}
+.spinner{width:36px;height:36px;border:3px solid var(--sand-3);border-top-color:var(--rust);border-radius:50%;animation:spin .7s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loading-text{font-size:13px;color:var(--ink-3);font-weight:500;}
 
+/* HEADER */
+.app-header{position:sticky;top:0;z-index:100;background:var(--white);border-bottom:1px solid var(--sand-2);padding:0 16px;height:54px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--sh);}
+.header-logo{display:flex;align-items:center;gap:10px;}
+.logo-pill{background:var(--rust);color:var(--white);font-family:var(--serif);font-style:normal;font-size:15px;font-weight:600;padding:4px 12px;border-radius:20px;letter-spacing:.01em;}
+.header-title{font-size:13px;color:var(--ink-3);font-weight:500;}
+.hamburger-btn{width:36px;height:36px;background:var(--sand);border:1px solid var(--sand-3);border-radius:var(--r-sm);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;flex-shrink:0;}
+.hamburger-btn span{width:16px;height:2px;background:var(--ink-2);border-radius:1px;display:block;transition:all .2s;}
+
+/* DRAWER */
+.drawer-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:290;backdrop-filter:blur(2px);}
+.drawer-overlay.open{display:block;}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:260px;background:var(--white);z-index:300;box-shadow:var(--sh-lg);display:flex;flex-direction:column;transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);}
+.drawer.open{transform:translateX(0);}
+.drawer-header{padding:16px 16px 12px;border-bottom:1px solid var(--sand-2);display:flex;justify-content:space-between;align-items:center;}
+.drawer-logo{font-family:var(--serif);font-style:normal;font-size:16px;font-weight:600;color:var(--ink);}
+.drawer-close{width:30px;height:30px;background:var(--sand-2);border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--ink-3);cursor:pointer;}
+.drawer-section{padding:10px 12px 4px;}
+.drawer-section-lbl{font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-4);padding:0 4px;margin-bottom:4px;}
+.drawer-item{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:var(--r-sm);cursor:pointer;font-size:13px;font-weight:500;color:var(--ink-2);margin-bottom:1px;border:none;background:none;width:100%;text-align:left;font-family:var(--font);}
+.drawer-item:active,.drawer-item:hover{background:var(--sand);}
+.drawer-item.active{background:var(--rust-bg);color:var(--rust);font-weight:700;}
+.di-icon{font-size:15px;width:20px;text-align:center;}
+.di-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.drawer-footer{margin-top:auto;padding:14px 16px;border-top:1px solid var(--sand-2);font-size:11px;color:var(--ink-4);line-height:1.7;}
+
 /* BOTTOM NAV */
-.bottom-nav{
-  position:fixed;bottom:0;left:0;right:0;height:var(--nav-h);
-  background:var(--white);border-top:1px solid var(--sand-2);
-  display:flex;align-items:stretch;z-index:200;
-  box-shadow:0 -4px 20px rgba(0,0,0,.06);
-}
-.nav-tab{
-  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:3px;cursor:pointer;font-size:10px;font-weight:600;letter-spacing:.04em;
-  text-transform:uppercase;color:var(--ink-4);transition:color .15s;
-  border:none;background:none;padding:0;position:relative;
-}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;height:var(--nav-h);background:var(--white);border-top:1px solid var(--sand-2);display:flex;align-items:stretch;z-index:200;box-shadow:0 -4px 20px rgba(0,0,0,.06);}
+.nav-tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;font-size:9.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-4);border:none;background:none;padding:0;position:relative;}
 .nav-tab .nav-icon{font-size:20px;line-height:1;}
 .nav-tab.active{color:var(--rust);}
-.nav-tab.active::before{
-  content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
-  width:32px;height:3px;background:var(--rust);border-radius:0 0 3px 3px;
-}
-
-/* HEADER */
-.app-header{
-  position:sticky;top:0;z-index:100;background:var(--white);
-  border-bottom:1px solid var(--sand-2);padding:0 16px;height:56px;
-  display:flex;align-items:center;justify-content:space-between;box-shadow:var(--sh);
-}
-.header-logo{display:flex;align-items:center;gap:10px;}
-.logo-pill{
-  background:var(--rust);color:var(--white);font-family:var(--serif);
-  font-style:italic;font-size:15px;font-weight:300;
-  padding:4px 11px;border-radius:20px;
-}
-.header-title{font-size:13px;color:var(--ink-3);font-weight:500;}
-.header-actions{display:flex;gap:8px;align-items:center;}
+.nav-tab.active::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:32px;height:3px;background:var(--rust);border-radius:0 0 3px 3px;}
 
 /* PAGES */
 .page{display:none;padding:16px 16px calc(var(--nav-h) + 16px);}
 .page.active{display:block;}
 
-/* SECTION LABEL */
-.section-label{
-  font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
-  color:var(--ink-3);margin-bottom:10px;
-}
-
-/* CARDS */
-.card{background:var(--white);border:1px solid var(--sand-2);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;}
-.card+.card{margin-top:12px;}
-.card-header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--sand-2);}
-.card-title{font-size:13.5px;font-weight:700;color:var(--ink);}
-.card-body{padding:14px 16px;}
+/* FAB */
+.fab{position:fixed;right:16px;bottom:calc(var(--nav-h) + 12px);width:52px;height:52px;border-radius:50%;background:var(--rust);color:var(--white);border:none;cursor:pointer;font-size:22px;box-shadow:0 4px 16px rgba(194,78,26,.4);display:flex;align-items:center;justify-content:center;z-index:199;transition:transform .15s;}
+.fab:active{transform:scale(.94);}
+.fab.hidden{display:none;}
 
 /* KPI */
 .kpi-row{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px;}
-.kpi-card{
-  background:var(--white);border:1px solid var(--sand-2);border-radius:var(--r);
-  padding:14px 16px;box-shadow:var(--sh);position:relative;overflow:hidden;
-}
+.kpi-card{background:var(--white);border:1px solid var(--sand-2);border-radius:var(--r);padding:14px 16px;box-shadow:var(--sh);position:relative;overflow:hidden;}
 .kpi-card::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
 .kpi-total::after{background:var(--blue);}
 .kpi-ok::after{background:var(--green);}
 .kpi-warn::after{background:var(--amber);}
 .kpi-crit::after{background:var(--red);}
-.kpi-num{font-family:var(--serif);font-size:34px;font-weight:600;line-height:1;color:var(--ink);margin-bottom:3px;}
+.kpi-num{font-family:var(--serif);font-size:34px;font-weight:600;line-height:1;margin-bottom:3px;}
 .kpi-total .kpi-num{color:var(--blue);}
 .kpi-ok .kpi-num{color:var(--green);}
 .kpi-warn .kpi-num{color:var(--amber);}
 .kpi-crit .kpi-num{color:var(--red);}
 .kpi-lbl{font-size:11px;color:var(--ink-3);font-weight:500;}
 
+/* SECTION LABEL */
+.section-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px;}
+
+/* ALERT */
+.alert-banner{background:var(--red-bg);border:1px solid var(--red-bd);border-left:4px solid var(--red);border-radius:var(--r-sm);padding:11px 14px;display:flex;gap:10px;align-items:flex-start;margin-bottom:14px;font-size:13px;color:var(--ink-2);}
+.alert-banner.hidden{display:none;}
+
 /* MACHINE CARDS */
-.machine-card{
-  background:var(--white);border:1px solid var(--sand-2);border-radius:var(--r);
-  box-shadow:var(--sh);padding:14px 16px;
-  display:flex;align-items:flex-start;gap:12px;cursor:pointer;
-  transition:box-shadow .15s,transform .1s;position:relative;overflow:hidden;margin-bottom:10px;
-}
+.machine-card{background:var(--white);border:1px solid var(--sand-2);border-radius:var(--r);box-shadow:var(--sh);padding:14px 16px;display:flex;align-items:flex-start;gap:12px;cursor:pointer;transition:transform .1s;position:relative;overflow:hidden;margin-bottom:10px;}
 .machine-card:active{transform:scale(.99);}
 .machine-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:4px 0 0 4px;}
 .mc-ok::before{background:var(--green);}
@@ -138,7 +118,7 @@ body{background:var(--sand);color:var(--ink);font-family:var(--font);min-height:
 .mc-next.nd-ok{color:var(--ink-3);}
 .mc-next.nd-soon{color:var(--amber);}
 .mc-next.nd-overdue{color:var(--red);}
-.mc-arrow{color:var(--ink-4);font-size:16px;flex-shrink:0;margin-top:2px;}
+.mc-arrow{color:var(--ink-4);font-size:16px;flex-shrink:0;}
 
 /* BADGES */
 .badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;border:1px solid transparent;}
@@ -150,7 +130,6 @@ body{background:var(--sand);color:var(--ink);font-family:var(--font);min-height:
 .b-danger{background:var(--red-bg);color:var(--red);border-color:var(--red-bd);}
 .b-danger::before{background:var(--red);animation:blink 1s infinite;}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
-
 .sector-tag{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:600;}
 .type-tag{display:inline-block;padding:2px 9px;border-radius:var(--r-xs);font-size:11px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;}
 .t-prev{background:var(--blue-bg);color:var(--blue);}
@@ -159,33 +138,23 @@ body{background:var(--sand);color:var(--ink);font-family:var(--font);min-height:
 /* FILTER CHIPS */
 .filter-row{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:14px;scrollbar-width:none;}
 .filter-row::-webkit-scrollbar{display:none;}
-.chip{
-  padding:7px 14px;border-radius:20px;font-size:12.5px;font-weight:600;
-  border:1.5px solid var(--sand-3);color:var(--ink-3);cursor:pointer;
-  white-space:nowrap;transition:all .15s;background:var(--white);font-family:var(--font);
-}
+.chip{padding:7px 14px;border-radius:20px;font-size:12.5px;font-weight:600;border:1.5px solid var(--sand-3);color:var(--ink-3);cursor:pointer;white-space:nowrap;background:var(--white);font-family:var(--font);}
 .chip:active{transform:scale(.96);}
 .chip.active{background:var(--ink);color:var(--white);border-color:var(--ink);}
 .chip.c-ok.active{background:var(--green);border-color:var(--green);}
 .chip.c-warn.active{background:var(--amber);border-color:var(--amber);}
 .chip.c-danger.active{background:var(--red);border-color:var(--red);}
 
-/* ALERT */
-.alert-banner{
-  background:var(--red-bg);border:1px solid var(--red-bd);border-left:4px solid var(--red);
-  border-radius:var(--r-sm);padding:11px 14px;display:flex;gap:10px;align-items:flex-start;
-  margin-bottom:14px;font-size:13px;color:var(--ink-2);animation:slideDown .25s ease;
-}
-.alert-banner.hidden{display:none;}
-@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+/* MACHINES PAGE HEADER */
+.page-inner-header{background:var(--white);border-bottom:1px solid var(--sand-2);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;margin:-16px -16px 14px;}
 
 /* UPCOMING */
 .upcoming-item{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--sand-2);}
 .upcoming-item:last-child{border-bottom:none;padding-bottom:0;}
 .date-chip{background:var(--rust-bg);border:1px solid var(--rust-bd);border-radius:8px;padding:5px 7px;text-align:center;min-width:42px;flex-shrink:0;}
-.date-chip .d{font-family:var(--serif);font-size:20px;color:var(--rust);line-height:1;}
+.date-chip .d{font-family:var(--serif);font-style:normal;font-size:20px;color:var(--rust);line-height:1;}
 .date-chip .m{font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);}
-.ui-name{font-size:13px;font-weight:700;color:var(--ink);}
+.ui-name{font-size:13px;font-weight:700;}
 .ui-sub{font-size:11.5px;color:var(--ink-3);margin-top:2px;}
 
 /* ACTIVITY */
@@ -196,36 +165,38 @@ body{background:var(--sand);color:var(--ink);font-family:var(--font);min-height:
 .act-text strong{color:var(--ink);font-weight:700;}
 .act-time{font-size:11px;color:var(--ink-4);margin-top:3px;}
 
+/* CARD */
+.card{background:var(--white);border:1px solid var(--sand-2);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;}
+.card+.card{margin-top:12px;}
+.card-header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--sand-2);}
+.card-title{font-size:13.5px;font-weight:700;}
+.card-body{padding:14px 16px;}
+
 /* DETAIL */
 .detail-hero{background:var(--white);border:1px solid var(--sand-2);border-radius:var(--r);padding:18px 16px;margin-bottom:12px;box-shadow:var(--sh);}
-.detail-name{font-family:var(--serif);font-size:24px;font-weight:600;color:var(--ink);margin-bottom:10px;line-height:1.2;}
+.detail-name{font-family:var(--serif);font-style:normal;font-size:24px;font-weight:600;color:var(--ink);margin-bottom:10px;line-height:1.2;}
 .detail-meta-grid{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:8px;}
 .dmi{font-size:12.5px;color:var(--ink-3);display:flex;align-items:center;gap:5px;}
 .detail-notes{margin-top:12px;padding:10px 12px;background:var(--sand);border-radius:var(--r-sm);font-size:13px;color:var(--ink-2);line-height:1.5;}
+.back-row{display:flex;align-items:center;gap:8px;padding:4px 0 12px;cursor:pointer;color:var(--ink-3);font-size:14px;font-weight:600;}
+.back-row:active{color:var(--ink);}
 
 /* HIST CARDS */
 .hist-card{background:var(--white);border:1px solid var(--sand-2);border-radius:var(--r-sm);padding:13px 14px;margin-bottom:8px;box-shadow:var(--sh);}
 .hist-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;gap:8px;}
 .hist-date{font-size:12px;color:var(--ink-3);font-weight:600;}
 .hist-desc{font-size:13px;color:var(--ink-2);line-height:1.45;margin-bottom:6px;}
-.hist-footer{display:flex;gap:10px;flex-wrap:wrap;}
+.hist-footer{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;padding-top:8px;border-top:1px solid var(--sand-2);}
 .hist-meta{font-size:11.5px;color:var(--ink-3);display:flex;align-items:center;gap:4px;}
 
-/* FAB */
-.fab{
-  position:fixed;right:16px;bottom:calc(var(--nav-h) + 12px);
-  width:52px;height:52px;border-radius:50%;background:var(--rust);color:var(--white);
-  border:none;cursor:pointer;font-size:22px;
-  box-shadow:0 4px 16px rgba(194,78,26,.4);
-  display:flex;align-items:center;justify-content:center;
-  z-index:199;transition:transform .15s,box-shadow .15s;
-}
-.fab:active{transform:scale(.94);}
-.fab.hidden{display:none;}
-
-/* BACK */
-.back-row{display:flex;align-items:center;gap:8px;padding:12px 0 4px;margin-bottom:4px;cursor:pointer;color:var(--ink-3);font-size:14px;font-weight:600;}
-.back-row:active{color:var(--ink);}
+/* HISTORIAL PERIOD BAR */
+.period-bar{display:flex;gap:8px;align-items:center;margin-bottom:14px;flex-wrap:wrap;}
+.period-select{flex:1;min-width:140px;background:var(--white);border:1.5px solid var(--sand-3);border-radius:var(--r-sm);padding:9px 12px;font-size:13px;font-family:var(--font);color:var(--ink);outline:none;}
+.period-select:focus{border-color:var(--rust);}
+.period-dates{display:flex;gap:6px;width:100%;}
+.period-dates input{flex:1;background:var(--white);border:1.5px solid var(--sand-3);border-radius:var(--r-sm);padding:9px 10px;font-size:13px;font-family:var(--font);color:var(--ink);outline:none;}
+.period-dates input:focus{border-color:var(--rust);}
+.period-dates.hidden{display:none;}
 
 /* EMPTY */
 .empty{text-align:center;padding:48px 24px;color:var(--ink-3);}
@@ -250,7 +221,7 @@ body{background:var(--sand);color:var(--ink);font-family:var(--font);min-height:
 @keyframes modalUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
 .modal-handle{width:36px;height:4px;background:var(--sand-3);border-radius:2px;margin:10px auto 0;}
 .modal-header{padding:14px 18px 12px;border-bottom:1px solid var(--sand-2);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:var(--white);z-index:1;}
-.modal-title{font-family:var(--serif);font-size:19px;font-weight:600;color:var(--ink);}
+.modal-title{font-family:var(--serif);font-style:normal;font-size:19px;font-weight:600;color:var(--ink);}
 .modal-close{width:32px;height:32px;border-radius:50%;background:var(--sand-2);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:17px;color:var(--ink-3);}
 .modal-body{padding:16px 18px 8px;}
 .modal-footer{padding:12px 18px 16px;display:flex;gap:8px;position:sticky;bottom:0;background:var(--white);border-top:1px solid var(--sand-2);}
@@ -258,19 +229,19 @@ body{background:var(--sand);color:var(--ink);font-family:var(--font);min-height:
 
 /* FORMS */
 .form-group{margin-bottom:14px;}
-.form-label{display:block;font-size:12px;font-weight:700;color:var(--ink-2);margin-bottom:6px;letter-spacing:.02em;}
-.form-input,.form-select,.form-textarea{width:100%;background:var(--sand);border:1.5px solid var(--sand-3);border-radius:var(--r-sm);padding:11px 13px;color:var(--ink);font-family:var(--font);font-size:14px;outline:none;transition:border-color .15s,box-shadow .15s;-webkit-appearance:none;}
-.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--rust);box-shadow:0 0 0 3px rgba(194,78,26,.12);background:var(--white);}
+.form-label{display:block;font-size:12px;font-weight:700;color:var(--ink-2);margin-bottom:6px;}
+.form-input,.form-select,.form-textarea{width:100%;background:var(--sand);border:1.5px solid var(--sand-3);border-radius:var(--r-sm);padding:11px 13px;color:var(--ink);font-family:var(--font);font-size:14px;outline:none;transition:border-color .15s;-webkit-appearance:none;}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--rust);background:var(--white);}
 .form-textarea{resize:vertical;min-height:80px;line-height:1.5;}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 
 /* SECTOR EDITOR */
 .sector-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--sand-2);}
 .sector-row:last-child{border-bottom:none;}
-input[type=color].color-swatch{width:30px;height:30px;border-radius:50%;border:2px solid var(--sand-3);padding:0;cursor:pointer;background:none;flex-shrink:0;}
+input[type=color].color-swatch{width:30px;height:30px;border-radius:50%;border:2px solid var(--sand-3);padding:0;cursor:pointer;flex-shrink:0;}
 .sector-name-in{flex:1;border:1.5px solid transparent;background:transparent;font-family:var(--font);font-size:14px;color:var(--ink);padding:6px 8px;border-radius:var(--r-xs);outline:none;}
 .sector-name-in:focus{border-color:var(--sand-3);background:var(--sand);}
-.sector-del{background:none;border:none;cursor:pointer;color:var(--ink-4);font-size:18px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:6px;}
+.sector-del{background:none;border:none;cursor:pointer;color:var(--ink-4);font-size:20px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:6px;}
 .sector-del:active{background:var(--red-bg);color:var(--red);}
 
 /* EXPORT */
@@ -281,11 +252,11 @@ input[type=color].color-swatch{width:30px;height:30px;border-radius:50%;border:2
 .export-opt:active{background:var(--sand);}
 
 /* TOAST */
-.toast-wrap{position:fixed;top:70px;left:50%;transform:translateX(-50%);z-index:1000;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none;width:90%;max-width:340px;}
+.toast-wrap{position:fixed;top:64px;left:50%;transform:translateX(-50%);z-index:1000;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none;width:90%;max-width:320px;}
 .toast{background:var(--ink);color:var(--white);border-radius:var(--r-sm);padding:11px 16px;font-size:13px;font-weight:600;box-shadow:var(--sh-md);animation:toastIn .2s ease;display:flex;align-items:center;gap:8px;width:100%;}
 .toast.s{background:var(--green);}
 .toast.e{background:var(--red);}
-@keyframes toastIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1}}
+@keyframes toastIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1}}
 
 #view-detail{display:none;}
 #view-detail.open{display:block;}
@@ -295,9 +266,10 @@ input[type=color].color-swatch{width:30px;height:30px;border-radius:50%;border:2
 @media(min-width:640px){
   .bottom-nav{display:none;}
   body{display:flex;}
-  .desktop-sidebar{width:220px;flex-shrink:0;background:var(--white);border-right:1px solid var(--sand-2);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;padding:20px 0;}
+  .desktop-sidebar{width:230px;flex-shrink:0;background:var(--white);border-right:1px solid var(--sand-2);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;padding:20px 0;}
   .ds-logo{padding:0 16px 20px;border-bottom:1px solid var(--sand-2);margin-bottom:12px;}
-  .ds-sub{font-size:12px;color:var(--ink-3);margin-top:4px;font-weight:500;}
+  .ds-logo-pill{background:var(--rust);color:var(--white);font-family:var(--serif);font-style:normal;font-size:15px;font-weight:600;padding:5px 13px;border-radius:20px;display:inline-block;}
+  .ds-sub{font-size:12px;color:var(--ink-3);margin-top:6px;font-weight:500;}
   .ds-section{padding:8px 12px 4px;}
   .ds-section-label{font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-4);padding:0 4px;margin-bottom:4px;}
   .ds-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:var(--r-sm);cursor:pointer;font-size:13px;font-weight:500;color:var(--ink-3);transition:all .12s;border:none;background:none;width:100%;text-align:left;font-family:var(--font);}
@@ -307,7 +279,8 @@ input[type=color].color-swatch{width:30px;height:30px;border-radius:50%;border:2
   .ds-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
   .ds-footer{margin-top:auto;padding:14px 16px;border-top:1px solid var(--sand-2);font-size:11px;color:var(--ink-4);line-height:1.7;}
   .desktop-main{flex:1;overflow-y:auto;height:100vh;}
-  .page{padding:20px 24px 24px;max-width:900px;}
+  .hamburger-btn{display:none;}
+  .page{padding:20px 24px 24px;max-width:860px;}
   .modal-overlay{align-items:center;}
   .modal{border-radius:16px;max-height:88vh;}
   @keyframes modalUp{from{opacity:0;transform:translateY(12px) scale(.97)}to{opacity:1;transform:none}}
@@ -315,8 +288,9 @@ input[type=color].color-swatch{width:30px;height:30px;border-radius:50%;border:2
   .fab{right:24px;bottom:24px;}
   .kpi-row{grid-template-columns:repeat(4,1fr);}
   .content-side{display:grid;grid-template-columns:1fr 280px;gap:16px;}
+  .page-inner-header{margin:-20px -24px 16px;padding:14px 24px;}
 }
-::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar{width:5px;}
 ::-webkit-scrollbar-thumb{background:var(--sand-3);border-radius:3px;}
 </style>
 </head>
@@ -328,24 +302,49 @@ input[type=color].color-swatch{width:30px;height:30px;border-radius:50%;border:2
   <div class="loading-text">Cargando Amsterdam…</div>
 </div>
 
+<!-- DRAWER OVERLAY -->
+<div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
+
+<!-- DRAWER -->
+<div class="drawer" id="drawer">
+  <div class="drawer-header">
+    <div class="drawer-logo">Amsterdam</div>
+    <button class="drawer-close" onclick="closeDrawer()">×</button>
+  </div>
+  <div class="drawer-section">
+    <div class="drawer-section-lbl">Navegación</div>
+    <button class="drawer-item active" id="di-dashboard" onclick="showPage('dashboard',this);closeDrawer()"><span class="di-icon">◈</span>Inicio</button>
+    <button class="drawer-item" id="di-machines" onclick="showPage('machines',this);closeDrawer()"><span class="di-icon">⚙</span>Máquinas</button>
+    <button class="drawer-item" id="di-historial" onclick="showPage('historial',this);closeDrawer()"><span class="di-icon">📋</span>Historial</button>
+  </div>
+  <div class="drawer-section">
+    <div class="drawer-section-lbl">Sectores</div>
+    <div id="drawer-sectors"></div>
+  </div>
+  <div class="drawer-section">
+    <button class="drawer-item" onclick="openModal('modal-sectors');closeDrawer()"><span class="di-icon">🏭</span>Gestionar sectores</button>
+  </div>
+  <div class="drawer-footer"><span id="drawer-today"></span><br><span id="drawer-count">—</span></div>
+</div>
+
 <!-- DESKTOP SIDEBAR -->
 <aside class="desktop-sidebar" id="desktop-sidebar">
   <div class="ds-logo">
-    <div class="logo-pill">Amsterdam</div>
+    <div class="ds-logo-pill">Amsterdam</div>
     <div class="ds-sub">Mantenimiento</div>
   </div>
   <div class="ds-section">
     <div class="ds-section-label">General</div>
-    <button class="ds-item active" onclick="showPage('dashboard',this)"><span class="ds-icon">◈</span> Dashboard</button>
-    <button class="ds-item" onclick="showPage('machines',this)"><span class="ds-icon">⚙</span> Máquinas</button>
-    <button class="ds-item" onclick="showPage('historial',this)"><span class="ds-icon">📋</span> Historial</button>
+    <button class="ds-item active" onclick="showPage('dashboard',this)"><span class="ds-icon">◈</span>Dashboard</button>
+    <button class="ds-item" onclick="showPage('machines',this)"><span class="ds-icon">⚙</span>Máquinas</button>
+    <button class="ds-item" onclick="showPage('historial',this)"><span class="ds-icon">📋</span>Historial</button>
   </div>
   <div class="ds-section">
     <div class="ds-section-label">Sectores</div>
     <div id="ds-sectors"></div>
   </div>
   <div class="ds-section">
-    <button class="ds-item" onclick="openModal('modal-sectors')"><span class="ds-icon">🏭</span> Gestionar sectores</button>
+    <button class="ds-item" onclick="openModal('modal-sectors')"><span class="ds-icon">🏭</span>Gestionar sectores</button>
   </div>
   <div class="ds-footer"><span id="ds-today"></span><br><span id="ds-count">—</span></div>
 </aside>
@@ -355,9 +354,11 @@ input[type=color].color-swatch{width:30px;height:30px;border-radius:50%;border:2
 <header class="app-header">
   <div class="header-logo">
     <div class="logo-pill">Amsterdam</div>
-    <div class="header-title" id="header-title">Dashboard</div>
+    <div class="header-title" id="header-title">Inicio</div>
   </div>
-  <div class="header-actions" id="header-actions"></div>
+  <button class="hamburger-btn" onclick="openDrawer()">
+    <span></span><span></span><span></span>
+  </button>
 </header>
 
 <!-- DASHBOARD -->
@@ -386,9 +387,9 @@ input[type=color].color-swatch{width:30px;height:30px;border-radius:50%;border:2
     </div>
     <div>
       <div class="section-label">Próximos mantenimientos</div>
-      <div class="card"><div class="card-body" id="upcoming-body"><div class="empty" style="padding:20px 0;"><p style="font-size:12.5px;">Sin mantenimientos próximos</p></div></div></div>
-      <div class="section-label" style="margin-top:14px;">Últimas intervenciones</div>
-      <div class="card"><div class="card-body" id="activity-body"><div class="empty" style="padding:20px 0;"><p style="font-size:12.5px;">Sin intervenciones</p></div></div></div>
+      <div class="card"><div class="card-body" id="upcoming-body"><div class="empty" style="padding:20px 0"><p style="font-size:12.5px">Sin mantenimientos próximos</p></div></div></div>
+      <div class="section-label" style="margin-top:14px">Últimas intervenciones</div>
+      <div class="card"><div class="card-body" id="activity-body"><div class="empty" style="padding:20px 0"><p style="font-size:12.5px">Sin intervenciones</p></div></div></div>
     </div>
   </div>
 </div>
@@ -396,6 +397,10 @@ input[type=color].color-swatch{width:30px;height:30px;border-radius:50%;border:2
 <!-- MACHINES -->
 <div id="page-machines" class="page">
   <div id="view-list">
+    <div class="page-inner-header">
+      <div style="font-family:var(--serif);font-size:20px;font-weight:600;">Máquinas</div>
+      <button class="btn btn-primary btn-sm" onclick="openModal('modal-machine')">＋ Nueva máquina</button>
+    </div>
     <div class="filter-row">
       <div class="chip active" onclick="mFilter('all',this)">Todas</div>
       <div class="chip c-ok" onclick="mFilter('ok',this)">OK</div>
@@ -406,15 +411,15 @@ input[type=color].color-swatch{width:30px;height:30px;border-radius:50%;border:2
     <div id="machines-list"></div>
     <div id="machines-empty" class="empty hidden">
       <div class="empty-icon">⚙️</div><p>No hay máquinas.</p>
-      <button class="empty-action" onclick="openModal('modal-machine')">+ Nueva máquina</button>
+      <button class="empty-action" onclick="openModal('modal-machine')">＋ Nueva máquina</button>
     </div>
   </div>
   <div id="view-detail">
     <div class="back-row" onclick="closeDetail()">← Volver a máquinas</div>
     <div id="detail-hero" class="detail-hero"></div>
-    <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
-      <button class="btn btn-primary btn-sm" onclick="openEventForCurrent()">+ Intervención</button>
-      <button class="btn btn-ghost btn-sm" onclick="editCurrentMachine()">✏️ Editar</button>
+    <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;">
+      <button class="btn btn-primary btn-sm" onclick="openEventForCurrent()">＋ Intervención</button>
+      <button class="btn btn-ghost btn-sm" onclick="editCurrentMachine()">✏️ Editar máquina</button>
       <div class="export-wrap" style="margin-left:auto;">
         <button class="btn btn-ghost btn-sm" onclick="toggleExport('det-exp')">⬇ Exportar</button>
         <div class="export-menu" id="det-exp">
@@ -428,24 +433,43 @@ input[type=color].color-swatch{width:30px;height:30px;border-radius:50%;border:2
     <div id="detail-history"></div>
     <div id="detail-empty" class="empty hidden">
       <div class="empty-icon">📋</div><p>Sin intervenciones aún.</p>
-      <button class="empty-action" onclick="openEventForCurrent()">+ Registrar intervención</button>
+      <button class="empty-action" onclick="openEventForCurrent()">＋ Registrar intervención</button>
     </div>
   </div>
 </div>
 
 <!-- HISTORIAL -->
 <div id="page-historial" class="page">
+  <div class="period-bar">
+    <select class="period-select" id="period-select" onchange="onPeriodChange()">
+      <option value="30">Últimos 30 días</option>
+      <option value="90">Últimos 3 meses</option>
+      <option value="365">Este año</option>
+      <option value="all">Todo el historial</option>
+      <option value="custom">Rango personalizado</option>
+    </select>
+    <div class="export-wrap">
+      <button class="btn btn-ghost btn-sm" onclick="toggleExport('hist-exp')">⬇ Exportar</button>
+      <div class="export-menu" id="hist-exp">
+        <button class="export-opt" onclick="exportHistorialExcel()">📊 Excel</button>
+        <button class="export-opt" onclick="exportHistorialPDF()">📄 PDF</button>
+      </div>
+    </div>
+  </div>
+  <div class="period-dates hidden" id="period-dates">
+    <input type="date" id="date-from" onchange="renderHistorial()">
+    <input type="date" id="date-to" onchange="renderHistorial()">
+  </div>
   <div id="historial-list"></div>
-  <div id="historial-empty" class="empty hidden"><div class="empty-icon">📋</div><p>Sin intervenciones registradas.</p></div>
+  <div id="historial-empty" class="empty hidden"><div class="empty-icon">📋</div><p>Sin intervenciones en este período.</p></div>
 </div>
+
 </div><!-- /desktop-main -->
 
 <!-- BOTTOM NAV -->
 <nav class="bottom-nav">
-  <button class="nav-tab active" onclick="showPage('dashboard',this)" id="tab-dashboard"><div class="nav-icon">◈</div><div>Inicio</div></button>
-  <button class="nav-tab" onclick="showPage('machines',this)" id="tab-machines"><div class="nav-icon">⚙</div><div>Máquinas</div></button>
-  <button class="nav-tab" onclick="showPage('historial',this)" id="tab-historial"><div class="nav-icon">📋</div><div>Historial</div></button>
-  <button class="nav-tab" onclick="openModal('modal-sectors')" id="tab-config"><div class="nav-icon">🏭</div><div>Sectores</div></button>
+  <button class="nav-tab active" id="tab-dashboard" onclick="showPage('dashboard',this)"><div class="nav-icon">◈</div><div>Inicio</div></button>
+  <button class="nav-tab" id="tab-historial" onclick="showPage('historial',this)"><div class="nav-icon">📋</div><div>Historial</div></button>
 </nav>
 
 <button class="fab" id="fab" onclick="onFabClick()">＋</button>
@@ -494,10 +518,11 @@ input[type=color].color-swatch{width:30px;height:30px;border-radius:50%;border:2
   <div class="modal">
     <div class="modal-handle"></div>
     <div class="modal-header">
-      <div class="modal-title">Registrar intervención</div>
+      <div class="modal-title" id="me-title">Registrar intervención</div>
       <button class="modal-close" onclick="closeModal('modal-event')">×</button>
     </div>
     <div class="modal-body">
+      <input type="hidden" id="e-id">
       <div class="form-group"><label class="form-label">Máquina *</label><select class="form-select" id="e-machine"><option value="">Elegir...</option></select></div>
       <div class="form-row">
         <div class="form-group"><label class="form-label">Tipo *</label>
@@ -552,669 +577,356 @@ input[type=color].color-swatch{width:30px;height:30px;border-radius:50%;border:2
 </div>
 
 <script>
-// ══════════════════════════════════════════
-// SUPABASE INIT
-// ══════════════════════════════════════════
 const SUPABASE_URL = 'https://lyzfmbiusuxsuyoowrdy.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx5emZtYml1c3V4c3V5b293cmR5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUyNjU0MjAsImV4cCI6MjEwMDg0MTQyMH0.AYz5L8IExegZNhZ423IXmGJucY2bDJkWlpHZFuR8cFg';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// ══════════════════════════════════════════
-// CACHE LOCAL (para velocidad)
-// ══════════════════════════════════════════
-let _sectors  = [];
-let _machines = [];
-let _events   = [];
+let _sectors=[], _machines=[], _events=[];
 
-// ══════════════════════════════════════════
-// LOAD ALL DATA
-// ══════════════════════════════════════════
-async function loadAll() {
-  const [sec, mac, ev] = await Promise.all([
+async function loadAll(){
+  const [sec,mac,ev] = await Promise.all([
     sb.from('sectors').select('*').order('created_at'),
     sb.from('machines').select('*').order('created_at'),
-    sb.from('events').select('*').order('date', { ascending: false }),
+    sb.from('events').select('*').order('date',{ascending:false}),
   ]);
-  if (sec.error || mac.error || ev.error) {
-    toast('Error al cargar datos. Verificá la conexión.', 'e');
-    return false;
-  }
-  _sectors  = sec.data  || [];
-  _machines = mac.data  || [];
-  _events   = ev.data   || [];
+  if(sec.error||mac.error||ev.error){toast('Error al cargar datos','e');return false;}
+  _sectors=sec.data||[]; _machines=mac.data||[]; _events=ev.data||[];
   return true;
 }
 
-// ══════════════════════════════════════════
-// HELPERS
-// ══════════════════════════════════════════
-const getSec = id => _sectors.find(s => s.id === id);
-function hexBg(hex, a = .13) {
-  const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
-  return `rgba(${r},${g},${b},${a})`;
+// ── HELPERS ──
+const getSec=id=>_sectors.find(s=>s.id===id);
+function hexBg(hex,a=.13){const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);return`rgba(${r},${g},${b},${a})`;}
+const MON=['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
+const fmtD=d=>{if(!d)return'—';const[y,m,dd]=d.split('-');return`${dd}/${m}/${y}`;};
+const fmtCost=n=>(!n||n==0)?'—':'$ '+parseInt(n).toLocaleString('es-UY');
+const badgeHtml=s=>({ok:`<span class="badge b-ok">Operativa</span>`,warn:`<span class="badge b-warn">Atención</span>`,danger:`<span class="badge b-danger">Urgente</span>`}[s]||'');
+function nextLabel(d){
+  if(!d)return{cls:'nd-ok',txt:'—'};
+  const t=new Date();t.setHours(0,0,0,0);
+  const dt=new Date(d+'T00:00:00');
+  const diff=Math.round((dt-t)/86400000);
+  if(diff<0)return{cls:'nd-overdue',txt:`Vencida ${Math.abs(diff)}d`};
+  if(diff===0)return{cls:'nd-soon',txt:'Hoy'};
+  if(diff<=7)return{cls:'nd-soon',txt:`En ${diff}d`};
+  return{cls:'nd-ok',txt:fmtD(d)};
 }
-const MON = ['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
-const fmtD = d => { if(!d) return '—'; const [y,m,dd] = d.split('-'); return `${dd}/${m}/${y}`; };
-const fmtCost = n => (!n || n == 0) ? '—' : '$ ' + parseInt(n).toLocaleString('es-UY');
-const badgeHtml = s => ({ok:`<span class="badge b-ok">Operativa</span>`,warn:`<span class="badge b-warn">Atención</span>`,danger:`<span class="badge b-danger">Urgente</span>`}[s] || '');
-function nextLabel(dateStr) {
-  if (!dateStr) return { cls: 'nd-ok', txt: '—' };
-  const today = new Date(); today.setHours(0,0,0,0);
-  const d = new Date(dateStr + 'T00:00:00');
-  const diff = Math.round((d - today) / 86400000);
-  if (diff < 0) return { cls:'nd-overdue', txt:`Vencida hace ${Math.abs(diff)}d` };
-  if (diff === 0) return { cls:'nd-soon', txt:'Hoy' };
-  if (diff <= 7) return { cls:'nd-soon', txt:`En ${diff}d` };
-  return { cls:'nd-ok', txt: fmtD(dateStr) };
-}
-function sectorTag(sectorId) {
-  const s = getSec(sectorId);
-  if (!s) return '';
-  return `<span class="sector-tag" style="background:${hexBg(s.color)};color:${s.color}">${s.name}</span>`;
-}
-function mcEmoji(name) {
-  const n = name.toLowerCase();
-  if (n.includes('horno')) return '🔥';
-  if (n.includes('amasa')) return '🌀';
-  if (n.includes('divis')) return '✂️';
-  if (n.includes('envas')) return '📦';
-  if (n.includes('cort')) return '🔪';
-  if (n.includes('balan')) return '⚖️';
-  if (n.includes('cámara') || n.includes('camara') || n.includes('fermen')) return '❄️';
-  if (n.includes('lamin')) return '📋';
-  return '⚙️';
-}
-const uid = () => crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2);
+function sectorTag(id){const s=getSec(id);if(!s)return'';return`<span class="sector-tag" style="background:${hexBg(s.color)};color:${s.color}">${s.name}</span>`;}
+function mcEmoji(n){const v=n.toLowerCase();if(v.includes('horno'))return'🔥';if(v.includes('amasa'))return'🌀';if(v.includes('divis'))return'✂️';if(v.includes('envas'))return'📦';if(v.includes('cort'))return'🔪';if(v.includes('balan'))return'⚖️';if(v.includes('cámara')||v.includes('camara')||v.includes('fermen'))return'❄️';if(v.includes('lamin'))return'📋';return'⚙️';}
 
-// ══════════════════════════════════════════
-// STATE
-// ══════════════════════════════════════════
-let curPage = 'dashboard';
-let curMachineId = null;
-let dashF = 'all', machF = 'all';
-let activeSecs = new Set();
-let editMachId = null;
-let tempSecs = [];
+// ── STATE ──
+let curPage='dashboard', curMachineId=null, dashF='all', machF='all';
+let activeSecs=new Set(), editMachId=null, editEventId=null, tempSecs=[];
 
-// ══════════════════════════════════════════
-// NAVIGATION
-// ══════════════════════════════════════════
-async function showPage(page, el) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('page-' + page).classList.add('active');
-  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-  const tab = document.getElementById('tab-' + page);
-  if (tab) tab.classList.add('active');
-  document.querySelectorAll('.ds-item').forEach(i => i.classList.remove('active'));
-  if (el && el.classList.contains('ds-item')) el.classList.add('active');
-  curPage = page;
-  document.getElementById('header-title').textContent = {dashboard:'Dashboard',machines:'Máquinas',historial:'Historial'}[page] || '';
-  updateHeaderActions(page);
-  updateFab(page);
+// ── DRAWER ──
+function openDrawer(){document.getElementById('drawer').classList.add('open');document.getElementById('drawer-overlay').classList.add('open');}
+function closeDrawer(){document.getElementById('drawer').classList.remove('open');document.getElementById('drawer-overlay').classList.remove('open');}
+
+// ── NAVIGATION ──
+async function showPage(page, el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  const tab=document.getElementById('tab-'+page);
+  if(tab)tab.classList.add('active');
+  document.querySelectorAll('.ds-item').forEach(i=>i.classList.remove('active'));
+  document.querySelectorAll('.drawer-item').forEach(i=>i.classList.remove('active'));
+  if(el&&(el.classList.contains('ds-item')||el.classList.contains('drawer-item')))el.classList.add('active');
+  // sync both sidebars
+  const diMap={dashboard:'di-dashboard',machines:'di-machines',historial:'di-historial'};
+  if(diMap[page]){const di=document.getElementById(diMap[page]);if(di)di.classList.add('active');}
+  curPage=page;
+  document.getElementById('header-title').textContent={dashboard:'Inicio',machines:'Máquinas',historial:'Historial'}[page]||'';
+  document.getElementById('fab').classList.toggle('hidden',page==='historial');
   showLoading(true);
   await loadAll();
   showLoading(false);
-  if (page === 'dashboard') renderDashboard();
-  if (page === 'machines') { closeDetail(); renderMachinesPage(); }
-  if (page === 'historial') renderHistorial();
-  renderSidebarSectors();
-  updateFooterCount();
+  if(page==='dashboard')renderDashboard();
+  if(page==='machines'){closeDetail();renderMachinesPage();}
+  if(page==='historial')renderHistorial();
+  renderSidebarSectors();renderDrawerSectors();updateCount();
 }
 
-function showLoading(v) { document.getElementById('app-loading').classList.toggle('hidden', !v); }
-
-function updateHeaderActions(page) {
-  const el = document.getElementById('header-actions');
-  if (page === 'dashboard')
-    el.innerHTML = `<button class="btn btn-ghost btn-sm" onclick="openModal('modal-machine')">+ Máquina</button>`;
-  else if (page === 'machines')
-    el.innerHTML = `
-      <button class="btn btn-ghost btn-sm" onclick="openModal('modal-machine')">+ Máquina</button>
-      <div class="export-wrap">
-        <button class="btn btn-ghost btn-sm" onclick="toggleExport('hdr-exp')">⬇</button>
-        <div class="export-menu" id="hdr-exp">
-          <button class="export-opt" onclick="exportMachinesExcel()">📊 Excel</button>
-          <button class="export-opt" onclick="exportMachinesPDF()">📄 PDF</button>
-        </div>
-      </div>`;
-  else if (page === 'historial')
-    el.innerHTML = `
-      <div class="export-wrap">
-        <button class="btn btn-ghost btn-sm" onclick="toggleExport('hdr-hist')">⬇ Exportar</button>
-        <div class="export-menu" id="hdr-hist">
-          <button class="export-opt" onclick="exportHistorialExcel()">📊 Excel</button>
-          <button class="export-opt" onclick="exportHistorialPDF()">📄 PDF</button>
-        </div>
-      </div>`;
-  else el.innerHTML = '';
+function showLoading(v){document.getElementById('app-loading').classList.toggle('hidden',!v);}
+function updateCount(){
+  const txt=`${_machines.length} máquinas · ${_events.length} intervenciones`;
+  document.getElementById('ds-count').textContent=txt;
+  document.getElementById('drawer-count').textContent=txt;
 }
 
-function onFabClick() {
-  if (curPage === 'machines' && document.getElementById('view-detail').classList.contains('open'))
+function onFabClick(){
+  if(curPage==='machines'&&document.getElementById('view-detail').classList.contains('open'))
     openEventForCurrent();
   else openModal('modal-event');
 }
-function updateFab(page) {
-  const fab = document.getElementById('fab');
-  fab.classList.toggle('hidden', page === 'historial');
-}
-function updateFooterCount() {
-  document.getElementById('ds-count').textContent = `${_machines.length} máquinas · ${_events.length} intervenciones`;
-}
 
-// ══════════════════════════════════════════
-// DASHBOARD
-// ══════════════════════════════════════════
-function renderDashboard() {
-  const today = new Date(); today.setHours(0,0,0,0);
-  document.getElementById('k-total').textContent = _machines.length;
-  document.getElementById('k-ok').textContent   = _machines.filter(m => m.status === 'ok').length;
-  document.getElementById('k-warn').textContent  = _machines.filter(m => m.status === 'warn').length;
-  document.getElementById('k-crit').textContent  = _machines.filter(m => m.status === 'danger').length;
-
-  const urgent = _machines.filter(m => m.status === 'danger' || (m.next_maint && new Date(m.next_maint + 'T00:00:00') < today));
-  const ab = document.getElementById('alert-banner');
-  if (urgent.length) {
-    ab.classList.remove('hidden');
-    document.getElementById('alert-text').innerHTML = `<strong>${urgent.length} máquina${urgent.length > 1 ? 's requieren' : ' requiere'} atención:</strong> ${urgent.map(m => m.name).join(', ')}.`;
-  } else ab.classList.add('hidden');
-
-  renderMachineCards('dash-list', 'dash-empty', _machines, dashF, null);
-
+// ── DASHBOARD ──
+function renderDashboard(){
+  const today=new Date();today.setHours(0,0,0,0);
+  document.getElementById('k-total').textContent=_machines.length;
+  document.getElementById('k-ok').textContent=_machines.filter(m=>m.status==='ok').length;
+  document.getElementById('k-warn').textContent=_machines.filter(m=>m.status==='warn').length;
+  document.getElementById('k-crit').textContent=_machines.filter(m=>m.status==='danger').length;
+  const urgent=_machines.filter(m=>m.status==='danger'||(m.next_maint&&new Date(m.next_maint+'T00:00:00')<today));
+  const ab=document.getElementById('alert-banner');
+  if(urgent.length){ab.classList.remove('hidden');document.getElementById('alert-text').innerHTML=`<strong>${urgent.length} máquina${urgent.length>1?'s requieren':' requiere'} atención:</strong> ${urgent.map(m=>m.name).join(', ')}.`;}
+  else ab.classList.add('hidden');
+  renderMachineCards('dash-list','dash-empty',_machines,dashF,null);
   // Upcoming
-  const upcoming = _machines
-    .filter(m => m.next_maint)
-    .map(m => ({ ...m, diff: Math.round((new Date(m.next_maint + 'T00:00:00') - today) / 86400000) }))
-    .filter(m => m.diff >= 0 && m.diff <= 30)
-    .sort((a,b) => a.diff - b.diff).slice(0, 5);
-
-  document.getElementById('upcoming-body').innerHTML = upcoming.length
-    ? upcoming.map(m => {
-        const d = new Date(m.next_maint + 'T00:00:00');
-        const s = getSec(m.sector_id);
-        return `<div class="upcoming-item">
-          <div class="date-chip"><div class="d">${d.getDate()}</div><div class="m">${MON[d.getMonth()]}</div></div>
-          <div><div class="ui-name">${m.name}</div><div class="ui-sub">${s ? s.name : '—'} · ${m.diff === 0 ? 'Hoy' : `En ${m.diff}d`}</div></div>
-        </div>`;
-      }).join('')
-    : `<div class="empty" style="padding:16px 0;"><p style="font-size:12.5px;">Sin mantenimientos en 30 días</p></div>`;
-
-  // Activity
-  const recent = _events.slice(0, 5);
-  document.getElementById('activity-body').innerHTML = recent.length
-    ? recent.map(ev => {
-        const m = _machines.find(x => x.id === ev.machine_id);
-        return `<div class="act-item">
-          <div class="act-dot" style="background:${ev.type === 'preventivo' ? 'var(--blue)' : 'var(--red)'}"></div>
-          <div>
-            <div class="act-text"><strong>${m ? m.name : '—'}</strong> — ${ev.description.slice(0,60)}${ev.description.length > 60 ? '…' : ''}</div>
-            <div class="act-time">${fmtD(ev.date)}${ev.tech ? ' · ' + ev.tech : ''}</div>
-          </div>
-        </div>`;
-      }).join('')
-    : `<div class="empty" style="padding:16px 0;"><p style="font-size:12.5px;">Sin intervenciones</p></div>`;
+  const upcoming=_machines.filter(m=>m.next_maint).map(m=>({...m,diff:Math.round((new Date(m.next_maint+'T00:00:00')-today)/86400000)})).filter(m=>m.diff>=0&&m.diff<=30).sort((a,b)=>a.diff-b.diff).slice(0,5);
+  document.getElementById('upcoming-body').innerHTML=upcoming.length?upcoming.map(m=>{const d=new Date(m.next_maint+'T00:00:00');const s=getSec(m.sector_id);return`<div class="upcoming-item"><div class="date-chip"><div class="d">${d.getDate()}</div><div class="m">${MON[d.getMonth()]}</div></div><div><div class="ui-name">${m.name}</div><div class="ui-sub">${s?s.name:'—'} · ${m.diff===0?'Hoy':`En ${m.diff}d`}</div></div></div>`;}).join(''):`<div class="empty" style="padding:16px 0"><p style="font-size:12.5px">Sin mantenimientos en 30 días</p></div>`;
+  const recent=_events.slice(0,5);
+  document.getElementById('activity-body').innerHTML=recent.length?recent.map(ev=>{const m=_machines.find(x=>x.id===ev.machine_id);return`<div class="act-item"><div class="act-dot" style="background:${ev.type==='preventivo'?'var(--blue)':'var(--red)'}"></div><div><div class="act-text"><strong>${m?m.name:'—'}</strong> — ${ev.description.slice(0,60)}${ev.description.length>60?'…':''}</div><div class="act-time">${fmtD(ev.date)}${ev.tech?' · '+ev.tech:''}</div></div></div>`;}).join(''):`<div class="empty" style="padding:16px 0"><p style="font-size:12.5px">Sin intervenciones</p></div>`;
 }
+function dashFilter(f,el){dashF=f;document.querySelectorAll('#page-dashboard .chip').forEach(c=>c.classList.remove('active'));el.classList.add('active');renderMachineCards('dash-list','dash-empty',_machines,f,null);}
 
-function dashFilter(f, el) {
-  dashF = f;
-  document.querySelectorAll('#page-dashboard .chip').forEach(c => c.classList.remove('active'));
-  el.classList.add('active');
-  renderMachineCards('dash-list', 'dash-empty', _machines, f, null);
-}
-
-// ══════════════════════════════════════════
-// MACHINE CARDS
-// ══════════════════════════════════════════
-function renderMachineCards(listId, emptyId, machines, statusF, sectorSet) {
-  let filtered = machines;
-  if (statusF !== 'all') filtered = filtered.filter(m => m.status === statusF);
-  if (sectorSet && sectorSet.size > 0) filtered = filtered.filter(m => sectorSet.has(m.sector_id));
-  const el = document.getElementById(listId);
-  const empty = document.getElementById(emptyId);
-  if (!filtered.length) { el.innerHTML = ''; empty.classList.remove('hidden'); return; }
+// ── MACHINE CARDS ──
+function renderMachineCards(listId,emptyId,machines,statusF,sectorSet){
+  let f=machines;
+  if(statusF!=='all')f=f.filter(m=>m.status===statusF);
+  if(sectorSet&&sectorSet.size>0)f=f.filter(m=>sectorSet.has(m.sector_id));
+  const el=document.getElementById(listId),empty=document.getElementById(emptyId);
+  if(!f.length){el.innerHTML='';empty.classList.remove('hidden');return;}
   empty.classList.add('hidden');
-  el.innerHTML = filtered.map(m => {
-    const { cls, txt } = nextLabel(m.next_maint);
-    const s = getSec(m.sector_id);
-    return `<div class="machine-card mc-${m.status}" onclick="openDetail('${m.id}')">
-      <div class="mc-icon mc-icon-${m.status}">${mcEmoji(m.name)}</div>
-      <div class="mc-body">
-        <div class="mc-name">${m.name}</div>
-        <div class="mc-meta">${s ? s.name : '—'}${m.model ? ' · ' + m.model : ''}</div>
-        <div class="mc-footer">${badgeHtml(m.status)}<span class="mc-next ${cls}">📅 ${txt}</span></div>
-      </div>
-      <div class="mc-arrow">›</div>
-    </div>`;
-  }).join('');
+  el.innerHTML=f.map(m=>{const{cls,txt}=nextLabel(m.next_maint);const s=getSec(m.sector_id);return`<div class="machine-card mc-${m.status}" onclick="openDetail('${m.id}')"><div class="mc-icon mc-icon-${m.status}">${mcEmoji(m.name)}</div><div class="mc-body"><div class="mc-name">${m.name}</div><div class="mc-meta">${s?s.name:'—'}${m.model?' · '+m.model:''}</div><div class="mc-footer">${badgeHtml(m.status)}<span class="mc-next ${cls}">📅 ${txt}</span></div></div><div class="mc-arrow">›</div></div>`;}).join('');
 }
 
-// ══════════════════════════════════════════
-// MACHINES PAGE
-// ══════════════════════════════════════════
-function renderMachinesPage() {
-  renderSectorChips();
-  renderMachineCards('machines-list', 'machines-empty', _machines, machF, activeSecs.size ? activeSecs : null);
+// ── MACHINES PAGE ──
+function renderMachinesPage(){renderSectorChips();renderMachineCards('machines-list','machines-empty',_machines,machF,activeSecs.size?activeSecs:null);}
+function mFilter(f,el){machF=f;document.querySelectorAll('#page-machines .chip:not(.sec-chip)').forEach(c=>c.classList.remove('active'));el.classList.add('active');renderMachinesPage();}
+function renderSectorChips(){
+  const c=document.getElementById('sector-chips');if(!c)return;
+  c.innerHTML=_sectors.map(s=>`<div class="chip sec-chip" id="sc-${s.id}" style="${activeSecs.has(s.id)?`background:${s.color};border-color:${s.color};color:#fff`:''}" onclick="toggleSecChip('${s.id}','${s.color}',this)">${s.name}</div>`).join('');
 }
-function mFilter(f, el) {
-  machF = f;
-  document.querySelectorAll('#page-machines .chip:not(.sec-chip)').forEach(c => c.classList.remove('active'));
-  el.classList.add('active');
-  renderMachinesPage();
+function toggleSecChip(id,color,el){if(activeSecs.has(id)){activeSecs.delete(id);el.style.cssText='';}else{activeSecs.add(id);el.style.background=color;el.style.borderColor=color;el.style.color='#fff';}renderMachinesPage();}
+
+function renderSidebarSectors(){
+  const el=document.getElementById('ds-sectors');if(!el)return;
+  el.innerHTML=_sectors.map(s=>`<button class="ds-item" onclick="activeSecs.clear();activeSecs.add('${s.id}');showPage('machines',this)"><span class="ds-dot" style="background:${s.color}"></span>${s.name}</button>`).join('');
 }
-function renderSectorChips() {
-  const container = document.getElementById('sector-chips');
-  if (!container) return;
-  container.innerHTML = _sectors.map(s => `
-    <div class="chip sec-chip" id="sc-${s.id}"
-      style="${activeSecs.has(s.id) ? `background:${s.color};border-color:${s.color};color:#fff` : ''}"
-      onclick="toggleSecChip('${s.id}','${s.color}',this)">${s.name}</div>
-  `).join('');
-}
-function toggleSecChip(id, color, el) {
-  if (activeSecs.has(id)) { activeSecs.delete(id); el.style.cssText = ''; }
-  else { activeSecs.add(id); el.style.background = color; el.style.borderColor = color; el.style.color = '#fff'; }
-  renderMachinesPage();
-}
-function renderSidebarSectors() {
-  const el = document.getElementById('ds-sectors');
-  if (!el) return;
-  el.innerHTML = _sectors.map(s => `
-    <button class="ds-item" onclick="activeSecs.clear();activeSecs.add('${s.id}');showPage('machines',this)">
-      <span class="ds-dot" style="background:${s.color}"></span>${s.name}
-    </button>
-  `).join('');
+function renderDrawerSectors(){
+  const el=document.getElementById('drawer-sectors');if(!el)return;
+  el.innerHTML=_sectors.map(s=>`<button class="drawer-item" onclick="activeSecs.clear();activeSecs.add('${s.id}');showPage('machines',this);closeDrawer()"><span class="di-dot" style="background:${s.color}"></span>${s.name}</button>`).join('');
 }
 
-// ══════════════════════════════════════════
-// DETAIL
-// ══════════════════════════════════════════
-async function openDetail(machineId) {
-  curMachineId = machineId;
+// ── DETAIL ──
+async function openDetail(machineId){
+  curMachineId=machineId;
   document.getElementById('view-list').classList.add('hidden');
   document.getElementById('view-detail').classList.add('open');
-  const m = _machines.find(x => x.id === machineId);
-  if (!m) return;
-  const { cls, txt } = nextLabel(m.next_maint);
-  document.getElementById('detail-hero').innerHTML = `
-    <div style="margin-bottom:8px">${sectorTag(m.sector_id)}</div>
-    <div class="detail-name">${m.name}</div>
-    ${badgeHtml(m.status)}
-    <div class="detail-meta-grid">
-      ${m.model ? `<div class="dmi">⚙ ${m.model}</div>` : ''}
-      ${m.serial ? `<div class="dmi"># ${m.serial}</div>` : ''}
-      ${m.install ? `<div class="dmi">📅 Instalada ${fmtD(m.install)}</div>` : ''}
-      ${m.freq ? `<div class="dmi">🔄 Cada ${m.freq}d</div>` : ''}
-      <div class="dmi mc-next ${cls}">📅 Próximo: ${txt}</div>
-    </div>
-    ${m.notes ? `<div class="detail-notes">${m.notes}</div>` : ''}
-  `;
+  const m=_machines.find(x=>x.id===machineId);if(!m)return;
+  const{cls,txt}=nextLabel(m.next_maint);
+  document.getElementById('detail-hero').innerHTML=`<div style="margin-bottom:8px">${sectorTag(m.sector_id)}</div><div class="detail-name">${m.name}</div>${badgeHtml(m.status)}<div class="detail-meta-grid">${m.model?`<div class="dmi">⚙ ${m.model}</div>`:''} ${m.serial?`<div class="dmi"># ${m.serial}</div>`:''} ${m.install?`<div class="dmi">📅 Instalada ${fmtD(m.install)}</div>`:''} ${m.freq?`<div class="dmi">🔄 Cada ${m.freq}d</div>`:''}<div class="dmi mc-next ${cls}">📅 Próximo: ${txt}</div></div>${m.notes?`<div class="detail-notes">${m.notes}</div>`:''}`;
   renderDetailHistory(machineId);
   document.getElementById('fab').classList.remove('hidden');
 }
-function renderDetailHistory(machineId) {
-  const evs = _events.filter(e => e.machine_id === machineId);
-  const el = document.getElementById('detail-history');
-  const empty = document.getElementById('detail-empty');
-  if (!evs.length) { el.innerHTML = ''; empty.classList.remove('hidden'); return; }
+function renderDetailHistory(machineId){
+  const evs=_events.filter(e=>e.machine_id===machineId);
+  const el=document.getElementById('detail-history'),empty=document.getElementById('detail-empty');
+  if(!evs.length){el.innerHTML='';empty.classList.remove('hidden');return;}
   empty.classList.add('hidden');
-  el.innerHTML = evs.map(ev => `
-    <div class="hist-card">
-      <div class="hist-top">
-        <div><span class="type-tag ${ev.type === 'preventivo' ? 't-prev' : 't-corr'}">${ev.type}</span>
-        <span style="font-size:12px;color:var(--ink-3);margin-left:8px;">${fmtD(ev.date)}</span></div>
-        ${badgeHtml(ev.new_status)}
-      </div>
-      <div class="hist-desc">${ev.description}</div>
-      <div class="hist-footer">
-        ${ev.tech ? `<div class="hist-meta">👷 ${ev.tech}</div>` : ''}
-        ${ev.cost ? `<div class="hist-meta">💲 ${fmtCost(ev.cost)}</div>` : ''}
-        ${ev.next_date ? `<div class="hist-meta">📅 Próx: ${fmtD(ev.next_date)}</div>` : ''}
-      </div>
-    </div>`).join('');
+  el.innerHTML=evs.map(ev=>`<div class="hist-card"><div class="hist-top"><div><span class="type-tag ${ev.type==='preventivo'?'t-prev':'t-corr'}">${ev.type}</span><span style="font-size:12px;color:var(--ink-3);margin-left:8px">${fmtD(ev.date)}</span></div>${badgeHtml(ev.new_status)}</div><div class="hist-desc">${ev.description}</div><div class="hist-footer">${ev.tech?`<div class="hist-meta">👷 ${ev.tech}</div>`:''} ${ev.cost?`<div class="hist-meta">💲 ${fmtCost(ev.cost)}</div>`:''} ${ev.next_date?`<div class="hist-meta">📅 Próx: ${fmtD(ev.next_date)}</div>`:''}<button class="btn btn-ghost btn-sm" style="margin-left:auto" onclick="openEditEvent('${ev.id}')">✏️ Editar</button></div></div>`).join('');
 }
-function closeDetail() {
-  curMachineId = null;
-  document.getElementById('view-list').classList.remove('hidden');
-  document.getElementById('view-detail').classList.remove('open');
-}
-function openEventForCurrent() { openEventFor(curMachineId); }
-function editCurrentMachine() { if (curMachineId) openEditMachine(curMachineId); }
-async function deleteCurrentMachine() {
-  const m = _machines.find(x => x.id === curMachineId);
-  if (!m || !confirm(`¿Eliminás "${m.name}" y todo su historial?`)) return;
-  showLoading(true);
-  await sb.from('machines').delete().eq('id', curMachineId);
-  await loadAll();
-  showLoading(false);
-  closeDetail(); renderMachinesPage();
-  toast('Máquina eliminada', 's');
+function closeDetail(){curMachineId=null;document.getElementById('view-list').classList.remove('hidden');document.getElementById('view-detail').classList.remove('open');}
+function openEventForCurrent(){openEventFor(curMachineId);}
+function editCurrentMachine(){if(curMachineId)openEditMachine(curMachineId);}
+async function deleteCurrentMachine(){
+  const m=_machines.find(x=>x.id===curMachineId);
+  if(!m||!confirm(`¿Eliminás "${m.name}" y todo su historial?`))return;
+  showLoading(true);await sb.from('machines').delete().eq('id',curMachineId);await loadAll();showLoading(false);
+  closeDetail();renderMachinesPage();toast('Máquina eliminada','s');
 }
 
-// ══════════════════════════════════════════
-// HISTORIAL
-// ══════════════════════════════════════════
-function renderHistorial() {
-  const el = document.getElementById('historial-list');
-  const empty = document.getElementById('historial-empty');
-  if (!_events.length) { el.innerHTML = ''; empty.classList.remove('hidden'); return; }
+// ── HISTORIAL ──
+function getFilteredEvents(){
+  const period=document.getElementById('period-select').value;
+  if(period==='all')return _events;
+  if(period==='custom'){
+    const from=document.getElementById('date-from').value;
+    const to=document.getElementById('date-to').value;
+    return _events.filter(e=>(!from||e.date>=from)&&(!to||e.date<=to));
+  }
+  const cutoff=new Date();cutoff.setDate(cutoff.getDate()-parseInt(period));
+  const cutoffStr=cutoff.toISOString().slice(0,10);
+  return _events.filter(e=>e.date>=cutoffStr);
+}
+function onPeriodChange(){
+  const period=document.getElementById('period-select').value;
+  document.getElementById('period-dates').classList.toggle('hidden',period!=='custom');
+  renderHistorial();
+}
+function renderHistorial(){
+  const events=getFilteredEvents();
+  const el=document.getElementById('historial-list'),empty=document.getElementById('historial-empty');
+  if(!events.length){el.innerHTML='';empty.classList.remove('hidden');return;}
   empty.classList.add('hidden');
-  el.innerHTML = _events.map(ev => {
-    const m = _machines.find(x => x.id === ev.machine_id);
-    return `<div class="hist-card">
-      <div class="hist-top">
-        <div><span class="type-tag ${ev.type === 'preventivo' ? 't-prev' : 't-corr'}">${ev.type}</span> ${m ? sectorTag(m.sector_id) : ''}</div>
-        <span class="hist-date">${fmtD(ev.date)}</span>
-      </div>
-      <div style="font-weight:700;font-size:13.5px;margin-bottom:4px;">${m ? m.name : '—'}</div>
-      <div class="hist-desc">${ev.description}</div>
-      <div class="hist-footer">
-        ${ev.tech ? `<div class="hist-meta">👷 ${ev.tech}</div>` : ''}
-        ${ev.cost ? `<div class="hist-meta">💲 ${fmtCost(ev.cost)}</div>` : ''}
-      </div>
-    </div>`;
-  }).join('');
+  el.innerHTML=events.map(ev=>{const m=_machines.find(x=>x.id===ev.machine_id);return`<div class="hist-card"><div class="hist-top"><div><span class="type-tag ${ev.type==='preventivo'?'t-prev':'t-corr'}">${ev.type}</span> ${m?sectorTag(m.sector_id):''}</div><span class="hist-date">${fmtD(ev.date)}</span></div><div style="font-weight:700;font-size:13.5px;margin-bottom:4px">${m?m.name:'—'}</div><div class="hist-desc">${ev.description}</div><div class="hist-footer">${ev.tech?`<div class="hist-meta">👷 ${ev.tech}</div>`:''} ${ev.cost?`<div class="hist-meta">💲 ${fmtCost(ev.cost)}</div>`:''}<button class="btn btn-ghost btn-sm" style="margin-left:auto" onclick="openEditEvent('${ev.id}')">✏️ Editar</button></div></div>`;}).join('');
 }
 
-// ══════════════════════════════════════════
-// MODALS
-// ══════════════════════════════════════════
-function openModal(id) {
-  if (id === 'modal-machine') fillSectorSelect(editMachId ? _machines.find(m=>m.id===editMachId)?.sector_id : null);
-  if (id === 'modal-event') { fillMachineSelect(); document.getElementById('e-date').value = new Date().toISOString().slice(0,10); }
-  if (id === 'modal-sectors') { tempSecs = JSON.parse(JSON.stringify(_sectors)); renderSectorsEditor(); }
+// ── MODALS ──
+function openModal(id){
+  if(id==='modal-machine')fillSectorSelect(editMachId?_machines.find(m=>m.id===editMachId)?.sector_id:null);
+  if(id==='modal-event'&&!editEventId){fillMachineSelect();document.getElementById('e-date').value=new Date().toISOString().slice(0,10);}
+  if(id==='modal-sectors'){tempSecs=JSON.parse(JSON.stringify(_sectors));renderSectorsEditor();}
   document.getElementById(id).classList.add('open');
 }
-function closeModal(id) {
+function closeModal(id){
   document.getElementById(id).classList.remove('open');
-  if (id === 'modal-machine') { clearMachForm(); editMachId = null; document.getElementById('mm-title').textContent = 'Nueva máquina'; }
+  if(id==='modal-machine'){clearMachForm();editMachId=null;document.getElementById('mm-title').textContent='Nueva máquina';}
+  if(id==='modal-event'){clearEventForm();editEventId=null;document.getElementById('me-title').textContent='Registrar intervención';}
 }
-document.querySelectorAll('.modal-overlay').forEach(o => o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); }));
+document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');}));
 
-function fillSectorSelect(selected) {
-  document.getElementById('m-sector').innerHTML = '<option value="">Elegir...</option>' +
-    _sectors.map(s => `<option value="${s.id}"${s.id === selected ? ' selected' : ''}>${s.name}</option>`).join('');
+function fillSectorSelect(selected){document.getElementById('m-sector').innerHTML='<option value="">Elegir...</option>'+_sectors.map(s=>`<option value="${s.id}"${s.id===selected?' selected':''}>${s.name}</option>`).join('');}
+function fillMachineSelect(selectedId){document.getElementById('e-machine').innerHTML='<option value="">Elegir...</option>'+_machines.map(m=>`<option value="${m.id}"${m.id===(selectedId||curMachineId)?'selected':''}>${m.name} (${getSec(m.sector_id)?.name||'—'})</option>`).join('');}
+function clearMachForm(){['m-id','m-name','m-model','m-serial','m-install','m-notes'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});document.getElementById('m-sector').value='';document.getElementById('m-status').value='ok';document.getElementById('m-freq').value='';}
+function clearEventForm(){['e-id','e-desc','e-tech','e-cost','e-next'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});document.getElementById('e-type').value='preventivo';document.getElementById('e-status').value='ok';document.getElementById('e-machine').value='';document.getElementById('e-date').value='';}
+
+function openEventFor(machineId){curMachineId=machineId;fillMachineSelect(machineId);document.getElementById('e-date').value=new Date().toISOString().slice(0,10);openModal('modal-event');}
+
+function openEditEvent(eventId){
+  const ev=_events.find(x=>x.id===eventId);if(!ev)return;
+  editEventId=eventId;
+  document.getElementById('me-title').textContent='Editar intervención';
+  document.getElementById('e-id').value=eventId;
+  fillMachineSelect(ev.machine_id);
+  document.getElementById('e-machine').value=ev.machine_id;
+  document.getElementById('e-type').value=ev.type;
+  document.getElementById('e-date').value=ev.date;
+  document.getElementById('e-desc').value=ev.description;
+  document.getElementById('e-tech').value=ev.tech||'';
+  document.getElementById('e-cost').value=ev.cost||'';
+  document.getElementById('e-status').value=ev.new_status||'ok';
+  document.getElementById('e-next').value=ev.next_date||'';
+  document.getElementById('modal-event').classList.add('open');
 }
-function fillMachineSelect(selectedId) {
-  document.getElementById('e-machine').innerHTML = '<option value="">Elegir...</option>' +
-    _machines.map(m => `<option value="${m.id}"${m.id === (selectedId || curMachineId) ? ' selected' : ''}>${m.name} (${getSec(m.sector_id)?.name || '—'})</option>`).join('');
-}
-function clearMachForm() {
-  ['m-id','m-name','m-model','m-serial','m-install','m-notes'].forEach(id => { const e = document.getElementById(id); if(e) e.value=''; });
-  document.getElementById('m-sector').value = '';
-  document.getElementById('m-status').value = 'ok';
-  document.getElementById('m-freq').value = '';
-}
-function openEventFor(machineId) {
-  curMachineId = machineId;
-  fillMachineSelect(machineId);
-  document.getElementById('e-date').value = new Date().toISOString().slice(0,10);
-  openModal('modal-event');
-}
-function openEditMachine(machineId) {
-  const m = _machines.find(x => x.id === machineId);
-  if (!m) return;
-  editMachId = machineId;
-  document.getElementById('mm-title').textContent = 'Editar máquina';
-  document.getElementById('m-id').value = machineId;
-  document.getElementById('m-name').value = m.name || '';
-  document.getElementById('m-model').value = m.model || '';
-  document.getElementById('m-serial').value = m.serial || '';
-  document.getElementById('m-status').value = m.status || 'ok';
-  document.getElementById('m-freq').value = m.freq || '';
-  document.getElementById('m-install').value = m.install || '';
-  document.getElementById('m-notes').value = m.notes || '';
+function openEditMachine(machineId){
+  const m=_machines.find(x=>x.id===machineId);if(!m)return;
+  editMachId=machineId;
+  document.getElementById('mm-title').textContent='Editar máquina';
+  document.getElementById('m-id').value=machineId;
+  document.getElementById('m-name').value=m.name||'';
+  document.getElementById('m-model').value=m.model||'';
+  document.getElementById('m-serial').value=m.serial||'';
+  document.getElementById('m-status').value=m.status||'ok';
+  document.getElementById('m-freq').value=m.freq||'';
+  document.getElementById('m-install').value=m.install||'';
+  document.getElementById('m-notes').value=m.notes||'';
   fillSectorSelect(m.sector_id);
   openModal('modal-machine');
 }
 
-// ══════════════════════════════════════════
-// SAVE MACHINE
-// ══════════════════════════════════════════
-async function saveMachine() {
-  const name = document.getElementById('m-name').value.trim();
-  const sectorId = document.getElementById('m-sector').value;
-  if (!name || !sectorId) { toast('Completá nombre y sector', 'e'); return; }
-  const editId = document.getElementById('m-id').value;
-  const freq = parseInt(document.getElementById('m-freq').value) || null;
-  const data = {
-    name, sector_id: sectorId,
-    model: document.getElementById('m-model').value.trim() || null,
-    status: document.getElementById('m-status').value,
-    serial: document.getElementById('m-serial').value.trim() || null,
-    freq,
-    install: document.getElementById('m-install').value || null,
-    notes: document.getElementById('m-notes').value.trim() || null,
-  };
+// ── SAVE MACHINE ──
+async function saveMachine(){
+  const name=document.getElementById('m-name').value.trim();
+  const sectorId=document.getElementById('m-sector').value;
+  if(!name||!sectorId){toast('Completá nombre y sector','e');return;}
+  const editId=document.getElementById('m-id').value;
+  const freq=parseInt(document.getElementById('m-freq').value)||null;
+  const data={name,sector_id:sectorId,model:document.getElementById('m-model').value.trim()||null,status:document.getElementById('m-status').value,serial:document.getElementById('m-serial').value.trim()||null,freq,install:document.getElementById('m-install').value||null,notes:document.getElementById('m-notes').value.trim()||null};
   showLoading(true);
-  if (editId) {
-    await sb.from('machines').update(data).eq('id', editId);
-    toast('Máquina actualizada', 's');
+  if(editId){await sb.from('machines').update(data).eq('id',editId);toast('Máquina actualizada','s');}
+  else{if(freq){const d=new Date();d.setDate(d.getDate()+freq);data.next_maint=d.toISOString().slice(0,10);}await sb.from('machines').insert(data);toast('Máquina agregada','s');}
+  await loadAll();showLoading(false);closeModal('modal-machine');
+  if(curPage==='dashboard')renderDashboard();
+  if(curPage==='machines'){renderMachinesPage();if(editId&&curMachineId===editId)openDetail(editId);}
+  renderSidebarSectors();renderDrawerSectors();updateCount();
+}
+
+// ── SAVE EVENT ──
+async function saveEvent(){
+  const machineId=document.getElementById('e-machine').value;
+  const date=document.getElementById('e-date').value;
+  const description=document.getElementById('e-desc').value.trim();
+  if(!machineId||!date||!description){toast('Completá máquina, fecha y descripción','e');return;}
+  const newStatus=document.getElementById('e-status').value;
+  const nextDate=document.getElementById('e-next').value||null;
+  const editId=document.getElementById('e-id').value;
+  showLoading(true);
+  const evData={machine_id:machineId,type:document.getElementById('e-type').value,date,description,tech:document.getElementById('e-tech').value.trim()||null,cost:parseFloat(document.getElementById('e-cost').value)||0,new_status:newStatus,next_date:nextDate};
+  if(editId){
+    await sb.from('events').update(evData).eq('id',editId);
+    toast('Intervención actualizada','s');
   } else {
-    if (freq) {
-      const d = new Date(); d.setDate(d.getDate() + freq);
-      data.next_maint = d.toISOString().slice(0,10);
-    }
-    await sb.from('machines').insert(data);
-    toast('Máquina agregada', 's');
+    await sb.from('events').insert(evData);
+    const freq=_machines.find(m=>m.id===machineId)?.freq;
+    const upd={status:newStatus};
+    if(nextDate)upd.next_maint=nextDate;
+    else if(freq){const d=new Date(date+'T00:00:00');d.setDate(d.getDate()+freq);upd.next_maint=d.toISOString().slice(0,10);}
+    await sb.from('machines').update(upd).eq('id',machineId);
+    toast('Intervención registrada ✓','s');
   }
-  await loadAll();
-  showLoading(false);
-  closeModal('modal-machine');
-  if (curPage === 'dashboard') renderDashboard();
-  if (curPage === 'machines') { renderMachinesPage(); if (editId && curMachineId === editId) openDetail(editId); }
-  renderSidebarSectors(); updateFooterCount();
+  await loadAll();showLoading(false);closeModal('modal-event');
+  if(curPage==='dashboard')renderDashboard();
+  if(curPage==='machines'){if(curMachineId)renderDetailHistory(curMachineId);else renderMachinesPage();}
+  if(curPage==='historial')renderHistorial();
+  updateCount();
 }
 
-// ══════════════════════════════════════════
-// SAVE EVENT
-// ══════════════════════════════════════════
-async function saveEvent() {
-  const machineId = document.getElementById('e-machine').value;
-  const date = document.getElementById('e-date').value;
-  const description = document.getElementById('e-desc').value.trim();
-  if (!machineId || !date || !description) { toast('Completá máquina, fecha y descripción', 'e'); return; }
-  const newStatus = document.getElementById('e-status').value;
-  const nextDate = document.getElementById('e-next').value || null;
-  const freq = _machines.find(m => m.id === machineId)?.freq;
+// ── SECTORS ──
+function renderSectorsEditor(){document.getElementById('sectors-editor').innerHTML=tempSecs.map((s,i)=>`<div class="sector-row"><input type="color" class="color-swatch" value="${s.color}" onchange="tempSecs[${i}].color=this.value"><input class="sector-name-in" value="${s.name}" oninput="tempSecs[${i}].name=this.value" placeholder="Nombre"><button class="sector-del" onclick="delTempSec(${i})">×</button></div>`).join('');}
+function addTempSector(){const colors=['#0891b2','#d97706','#9333ea','#be185d','#b45309'];tempSecs.push({id:null,name:'Nuevo sector',color:colors[tempSecs.length%colors.length]});renderSectorsEditor();}
+function delTempSec(i){if(tempSecs.length<=1){toast('Mínimo un sector','e');return;}tempSecs.splice(i,1);renderSectorsEditor();}
+async function saveSectors(){
+  const valid=tempSecs.filter(s=>s.name.trim());if(!valid.length){toast('Al menos un sector con nombre','e');return;}
   showLoading(true);
-  await sb.from('events').insert({
-    machine_id: machineId, type: document.getElementById('e-type').value,
-    date, description,
-    tech: document.getElementById('e-tech').value.trim() || null,
-    cost: parseFloat(document.getElementById('e-cost').value) || 0,
-    new_status: newStatus, next_date: nextDate,
-  });
-  // Update machine status and next_maint
-  const updateData = { status: newStatus };
-  if (nextDate) updateData.next_maint = nextDate;
-  else if (freq) {
-    const d = new Date(date + 'T00:00:00'); d.setDate(d.getDate() + freq);
-    updateData.next_maint = d.toISOString().slice(0,10);
-  }
-  await sb.from('machines').update(updateData).eq('id', machineId);
-  await loadAll();
-  showLoading(false);
-  ['e-desc','e-tech','e-cost','e-next'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('e-type').value = 'preventivo';
-  document.getElementById('e-status').value = 'ok';
-  closeModal('modal-event');
-  toast('Intervención registrada ✓', 's');
-  if (curPage === 'dashboard') renderDashboard();
-  if (curPage === 'machines') { if (curMachineId) renderDetailHistory(curMachineId); else renderMachinesPage(); }
-  if (curPage === 'historial') renderHistorial();
-  updateFooterCount();
+  for(const s of valid){s.name=s.name.trim();if(s.id)await sb.from('sectors').update({name:s.name,color:s.color}).eq('id',s.id);else await sb.from('sectors').insert({name:s.name,color:s.color});}
+  const keptIds=valid.filter(s=>s.id).map(s=>s.id);
+  for(const s of _sectors.filter(s=>!keptIds.includes(s.id)))await sb.from('sectors').delete().eq('id',s.id);
+  await loadAll();showLoading(false);closeModal('modal-sectors');
+  renderSidebarSectors();renderDrawerSectors();
+  if(curPage==='machines')renderMachinesPage();
+  if(curPage==='dashboard')renderDashboard();
+  toast('Sectores guardados','s');
 }
 
-// ══════════════════════════════════════════
-// SECTORS
-// ══════════════════════════════════════════
-function renderSectorsEditor() {
-  document.getElementById('sectors-editor').innerHTML = tempSecs.map((s,i) => `
-    <div class="sector-row">
-      <input type="color" class="color-swatch" value="${s.color}" onchange="tempSecs[${i}].color=this.value">
-      <input class="sector-name-in" value="${s.name}" oninput="tempSecs[${i}].name=this.value" placeholder="Nombre">
-      <button class="sector-del" onclick="delTempSec(${i})">×</button>
-    </div>`).join('');
-}
-function addTempSector() {
-  const colors = ['#0891b2','#d97706','#9333ea','#be185d','#b45309'];
-  tempSecs.push({ id: null, name: 'Nuevo sector', color: colors[tempSecs.length % colors.length] });
-  renderSectorsEditor();
-}
-function delTempSec(i) {
-  if (tempSecs.length <= 1) { toast('Mínimo un sector', 'e'); return; }
-  tempSecs.splice(i, 1); renderSectorsEditor();
-}
-async function saveSectors() {
-  const valid = tempSecs.filter(s => s.name.trim());
-  if (!valid.length) { toast('Al menos un sector con nombre', 'e'); return; }
-  showLoading(true);
-  for (const s of valid) {
-    s.name = s.name.trim();
-    if (s.id) await sb.from('sectors').update({ name: s.name, color: s.color }).eq('id', s.id);
-    else await sb.from('sectors').insert({ name: s.name, color: s.color });
-  }
-  // Delete removed sectors
-  const keptIds = valid.filter(s => s.id).map(s => s.id);
-  const toDelete = _sectors.filter(s => !keptIds.includes(s.id));
-  for (const s of toDelete) await sb.from('sectors').delete().eq('id', s.id);
-  await loadAll();
-  showLoading(false);
-  closeModal('modal-sectors');
-  renderSidebarSectors();
-  if (curPage === 'machines') renderMachinesPage();
-  if (curPage === 'dashboard') renderDashboard();
-  toast('Sectores guardados', 's');
-}
+// ── EXPORT ──
+function toggleExport(menuId){document.querySelectorAll('.export-menu').forEach(m=>{if(m.id!==menuId)m.classList.remove('open');});document.getElementById(menuId)?.classList.toggle('open');}
+document.addEventListener('click',e=>{if(!e.target.closest('.export-wrap'))document.querySelectorAll('.export-menu').forEach(m=>m.classList.remove('open'));});
 
-// ══════════════════════════════════════════
-// EXPORT
-// ══════════════════════════════════════════
-function toggleExport(menuId) {
-  document.querySelectorAll('.export-menu').forEach(m => { if (m.id !== menuId) m.classList.remove('open'); });
-  document.getElementById(menuId)?.classList.toggle('open');
-}
-document.addEventListener('click', e => { if (!e.target.closest('.export-wrap')) document.querySelectorAll('.export-menu').forEach(m => m.classList.remove('open')); });
+function makeXLSX(data,filename){const ws=XLSX.utils.json_to_sheet(data);const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Datos');if(data.length)ws['!cols']=Object.keys(data[0]).map(k=>({wch:Math.min(Math.max(k.length,...data.map(r=>(r[k]||'').toString().length)),50)}));XLSX.writeFile(wb,filename+'.xlsx');toast('Excel descargado ✓','s');}
+function makePDF(title,headers,rows){const w=window.open('','_blank');const today=new Date().toLocaleDateString('es-UY');w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${title}</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:Arial,sans-serif;font-size:11px;padding:20px}h1{font-size:15px;margin-bottom:3px}p{font-size:11px;color:#666;margin-bottom:14px}table{width:100%;border-collapse:collapse}th{background:#f4f4f4;padding:7px 8px;text-align:left;font-size:10px;text-transform:uppercase;border-bottom:2px solid #ddd}td{padding:7px 8px;border-bottom:1px solid #eee;font-size:11px;vertical-align:top}tr:nth-child(even) td{background:#fafafa}</style></head><body><h1>${title}</h1><p>Generado el ${today}</p><table><thead><tr>${headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></body></html>`);w.document.close();setTimeout(()=>w.print(),400);toast('PDF listo','s');}
 
-function makeXLSX(data, filename) {
-  const ws = XLSX.utils.json_to_sheet(data);
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, 'Datos');
-  if (data.length) ws['!cols'] = Object.keys(data[0]).map(k => ({ wch: Math.min(Math.max(k.length, ...data.map(r => (r[k]||'').toString().length)), 50) }));
-  XLSX.writeFile(wb, filename + '.xlsx');
-  toast('Excel descargado ✓', 's');
-}
-function makePDF(title, headers, rows) {
-  const w = window.open('', '_blank');
-  const today = new Date().toLocaleDateString('es-UY');
-  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${title}</title>
-  <style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:Arial,sans-serif;font-size:11px;padding:20px}
-  h1{font-size:15px;margin-bottom:3px}p{font-size:11px;color:#666;margin-bottom:14px}
-  table{width:100%;border-collapse:collapse}th{background:#f4f4f4;padding:7px 8px;text-align:left;font-size:10px;text-transform:uppercase;border-bottom:2px solid #ddd}
-  td{padding:7px 8px;border-bottom:1px solid #eee;font-size:11px;vertical-align:top}
-  tr:nth-child(even) td{background:#fafafa}</style></head><body>
-  <h1>${title}</h1><p>Generado el ${today}</p>
-  <table><thead><tr>${headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead>
-  <tbody>${rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody>
-  </table></body></html>`);
-  w.document.close(); setTimeout(() => w.print(), 400);
-  toast('PDF listo', 's');
-}
-function exportMachinesExcel() {
-  makeXLSX(_machines.map(m => ({ 'Nombre':m.name,'Modelo':m.model||'','Sector':getSec(m.sector_id)?.name||'','Estado':m.status==='ok'?'Operativa':m.status==='warn'?'Atención':'Urgente','N° Serie':m.serial||'','Frec.(días)':m.freq||'','Instalación':m.install||'','Próximo mant.':m.next_maint||'','Notas':m.notes||'' })), 'Maquinas_Amsterdam');
-}
-function exportMachinesPDF() {
-  makePDF('Máquinas — Amsterdam', ['Máquina','Sector','Estado','Próximo mant.'],
-    _machines.map(m => [m.name, getSec(m.sector_id)?.name||'—', m.status==='ok'?'Operativa':m.status==='warn'?'Atención':'Urgente', m.next_maint?fmtD(m.next_maint):'—']));
-}
-function exportHistorialExcel() {
-  makeXLSX(_events.map(ev => { const m=_machines.find(x=>x.id===ev.machine_id); return { 'Fecha':ev.date,'Máquina':m?m.name:'—','Sector':m?getSec(m.sector_id)?.name||'—':'—','Tipo':ev.type,'Descripción':ev.description,'Técnico':ev.tech||'','Costo ($)':ev.cost||0,'Próximo mant.':ev.next_date||'' }; }), 'Historial_Amsterdam');
-}
-function exportHistorialPDF() {
-  makePDF('Historial — Amsterdam', ['Fecha','Máquina','Sector','Tipo','Descripción','Técnico','Costo'],
-    _events.map(ev => { const m=_machines.find(x=>x.id===ev.machine_id); return [fmtD(ev.date),m?m.name:'—',m?getSec(m.sector_id)?.name||'—':'—',ev.type,ev.description.slice(0,60),ev.tech||'—',fmtCost(ev.cost)]; }));
-}
-function exportDetailExcel() {
-  if (!curMachineId) return;
-  const m = _machines.find(x=>x.id===curMachineId);
-  const evs = _events.filter(e=>e.machine_id===curMachineId);
-  makeXLSX(evs.map(ev => ({ 'Fecha':ev.date,'Tipo':ev.type,'Descripción':ev.description,'Técnico':ev.tech||'','Costo ($)':ev.cost||0,'Próximo mant.':ev.next_date||'' })), `Historial_${m?m.name:'Maquina'}`);
-}
-function exportDetailPDF() {
-  if (!curMachineId) return;
-  const m = _machines.find(x=>x.id===curMachineId);
-  const evs = _events.filter(e=>e.machine_id===curMachineId);
-  makePDF(`Historial — ${m?m.name:'Máquina'}`, ['Fecha','Tipo','Descripción','Técnico','Costo'],
-    evs.map(ev => [fmtD(ev.date),ev.type,ev.description.slice(0,60),ev.tech||'—',fmtCost(ev.cost)]));
-}
+function exportMachinesExcel(){makeXLSX(_machines.map(m=>({'Nombre':m.name,'Modelo':m.model||'','Sector':getSec(m.sector_id)?.name||'','Estado':m.status==='ok'?'Operativa':m.status==='warn'?'Atención':'Urgente','N° Serie':m.serial||'','Frec.(días)':m.freq||'','Instalación':m.install||'','Próximo mant.':m.next_maint||'','Notas':m.notes||''})),(   'Maquinas_Amsterdam');}
+function exportMachinesPDF(){makePDF('Máquinas — Amsterdam',['Máquina','Sector','Estado','Próximo mant.'],_machines.map(m=>[m.name,getSec(m.sector_id)?.name||'—',m.status==='ok'?'Operativa':m.status==='warn'?'Atención':'Urgente',m.next_maint?fmtD(m.next_maint):'—']));}
+function exportHistorialExcel(){const events=getFilteredEvents();makeXLSX(events.map(ev=>{const m=_machines.find(x=>x.id===ev.machine_id);return{'Fecha':ev.date,'Máquina':m?m.name:'—','Sector':m?getSec(m.sector_id)?.name||'—':'—','Tipo':ev.type,'Descripción':ev.description,'Técnico':ev.tech||'','Costo ($)':ev.cost||0,'Próximo mant.':ev.next_date||''};}),(   'Historial_Amsterdam'));}
+function exportHistorialPDF(){const events=getFilteredEvents();makePDF('Historial — Amsterdam',['Fecha','Máquina','Sector','Tipo','Descripción','Técnico','Costo'],events.map(ev=>{const m=_machines.find(x=>x.id===ev.machine_id);return[fmtD(ev.date),m?m.name:'—',m?getSec(m.sector_id)?.name||'—':'—',ev.type,ev.description.slice(0,60),ev.tech||'—',fmtCost(ev.cost)];}));}
+function exportDetailExcel(){if(!curMachineId)return;const m=_machines.find(x=>x.id===curMachineId);const evs=_events.filter(e=>e.machine_id===curMachineId);makeXLSX(evs.map(ev=>({'Fecha':ev.date,'Tipo':ev.type,'Descripción':ev.description,'Técnico':ev.tech||'','Costo ($)':ev.cost||0,'Próximo mant.':ev.next_date||''})),`Historial_${m?m.name:'Maquina'}`);}
+function exportDetailPDF(){if(!curMachineId)return;const m=_machines.find(x=>x.id===curMachineId);const evs=_events.filter(e=>e.machine_id===curMachineId);makePDF(`Historial — ${m?m.name:'Máquina'}`,['Fecha','Tipo','Descripción','Técnico','Costo'],evs.map(ev=>[fmtD(ev.date),ev.type,ev.description.slice(0,60),ev.tech||'—',fmtCost(ev.cost)]));}
 
-// ══════════════════════════════════════════
-// TOAST
-// ══════════════════════════════════════════
-function toast(msg, type = 's') {
-  const c = document.getElementById('toasts');
-  const t = document.createElement('div');
-  t.className = `toast ${type}`;
-  t.innerHTML = `${type==='s'?'✓':'✕'} ${msg}`;
-  c.appendChild(t);
-  setTimeout(() => t.remove(), 2800);
-}
+// ── TOAST ──
+function toast(msg,type='s'){const c=document.getElementById('toasts');const t=document.createElement('div');t.className=`toast ${type}`;t.innerHTML=`${type==='s'?'✓':'✕'} ${msg}`;c.appendChild(t);setTimeout(()=>t.remove(),2800);}
 
-// ══════════════════════════════════════════
-// INIT
-// ══════════════════════════════════════════
-// ══════════════════════════════════════════
-// REALTIME — sincronización entre dispositivos
-// ══════════════════════════════════════════
-function setupRealtime() {
+// ── REALTIME ──
+function setupRealtime(){
   sb.channel('amsterdam-sync')
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'machines' }, handleRemoteChange)
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'events' },   handleRemoteChange)
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'sectors' },  handleRemoteChange)
+    .on('postgres_changes',{event:'*',schema:'public',table:'machines'},handleRemoteChange)
+    .on('postgres_changes',{event:'*',schema:'public',table:'events'},handleRemoteChange)
+    .on('postgres_changes',{event:'*',schema:'public',table:'sectors'},handleRemoteChange)
     .subscribe();
 }
-
-let syncTimeout = null;
-async function handleRemoteChange() {
-  // Debounce: si llegan varios cambios juntos, esperamos 400ms y recargamos una sola vez
+let syncTimeout=null;
+async function handleRemoteChange(){
   clearTimeout(syncTimeout);
-  syncTimeout = setTimeout(async () => {
+  syncTimeout=setTimeout(async()=>{
     await loadAll();
-    refreshCurrentPage();
-    renderSidebarSectors();
-    updateFooterCount();
-  }, 400);
+    if(curPage==='dashboard')renderDashboard();
+    if(curPage==='machines'){if(curMachineId&&document.getElementById('view-detail').classList.contains('open')){const ok=_machines.find(m=>m.id===curMachineId);if(ok)renderDetailHistory(curMachineId);else closeDetail();}else renderMachinesPage();}
+    if(curPage==='historial')renderHistorial();
+    renderSidebarSectors();renderDrawerSectors();updateCount();
+  },400);
 }
 
-function refreshCurrentPage() {
-  if (curPage === 'dashboard') renderDashboard();
-  if (curPage === 'machines') {
-    if (curMachineId && document.getElementById('view-detail').classList.contains('open')) {
-      // Verificar que la máquina siga existiendo
-      const stillExists = _machines.find(m => m.id === curMachineId);
-      if (stillExists) renderDetailHistory(curMachineId);
-      else closeDetail();
-    } else {
-      renderMachinesPage();
-    }
-  }
-  if (curPage === 'historial') renderHistorial();
-}
-
-async function init() {
-  const d = new Date();
-  const months = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
-  document.getElementById('ds-today').textContent = `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
-  updateHeaderActions('dashboard');
-  updateFab('dashboard');
-  const ok = await loadAll();
+// ── INIT ──
+async function init(){
+  const d=new Date();
+  const months=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  const dateStr=`${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+  document.getElementById('ds-today').textContent=dateStr;
+  document.getElementById('drawer-today').textContent=dateStr;
+  const ok=await loadAll();
   showLoading(false);
-  if (ok) {
-    renderDashboard();
-    renderSidebarSectors();
-    updateFooterCount();
-    setupRealtime();
-  }
+  if(ok){renderDashboard();renderSidebarSectors();renderDrawerSectors();updateCount();setupRealtime();}
 }
 init();
 </script>
