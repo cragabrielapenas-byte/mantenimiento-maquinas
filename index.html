@@ -623,7 +623,7 @@ function openDrawer(){document.getElementById('drawer').classList.add('open');do
 function closeDrawer(){document.getElementById('drawer').classList.remove('open');document.getElementById('drawer-overlay').classList.remove('open');}
 
 // ── NAVIGATION ──
-async function showPage(page, el){
+function showPage(page, el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById('page-'+page).classList.add('active');
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
@@ -638,9 +638,6 @@ async function showPage(page, el){
   curPage=page;
   document.getElementById('header-title').textContent={dashboard:'Inicio',machines:'Máquinas',historial:'Historial'}[page]||'';
   document.getElementById('fab').classList.toggle('hidden',page==='historial');
-  showLoading(true);
-  await loadAll();
-  showLoading(false);
   if(page==='dashboard')renderDashboard();
   if(page==='machines'){closeDetail();renderMachinesPage();}
   if(page==='historial')renderHistorial();
