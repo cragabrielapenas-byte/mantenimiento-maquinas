@@ -584,14 +584,29 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let _sectors=[], _machines=[], _events=[];
 
 async function loadAll(){
-  const [sec,mac,ev] = await Promise.all([
-    sb.from('sectors').select('*').order('created_at'),
-    sb.from('machines').select('*').order('created_at'),
-    sb.from('events').select('*').order('date',{ascending:false}),
-  ]);
-  if(sec.error||mac.error||ev.error){toast('Error al cargar datos','e');return false;}
-  _sectors=sec.data||[]; _machines=mac.data||[]; _events=ev.data||[];
-  return true;
+  try {
+    const timeout = new Promise((_,reject) => setTimeout(()=>reject(new Error('timeout')), 8000));
+    const queries = Promise.all([
+      sb.from('sectors').select('*').order('created_at'),
+      sb.from('machines').select('*').order('created_at'),
+      sb.from('events').select('*').order('date',{ascending:false}),
+    ]);
+    const [sec,mac,ev] = await Promise.race([queries, timeout]);
+    if(sec.error||mac.error||ev.error){toast('Error al cargar datos','e');return false;}
+    _sectors=sec.data||[]; _machines=mac.data||[]; _events=ev.data||[];
+    return true;
+  } catch(e) {
+    showLoading(false);
+    document.getElementById('app-loading').innerHTML = `
+      <div style="text-align:center;padding:24px;font-family:var(--font)">
+        <div style="font-size:32px;margin-bottom:12px">⚠️</div>
+        <div style="font-size:15px;font-weight:700;color:var(--ink);margin-bottom:8px">Sin conexión</div>
+        <div style="font-size:13px;color:var(--ink-3);margin-bottom:20px">No se pudo conectar a Supabase.<br>Verificá tu conexión a internet.</div>
+        <button onclick="location.reload()" style="background:var(--rust);color:#fff;border:none;border-radius:8px;padding:10px 20px;font-size:14px;font-weight:600;font-family:var(--font);cursor:pointer;">Reintentar</button>
+      </div>`;
+    document.getElementById('app-loading').classList.remove('hidden');
+    return false;
+  }
 }
 
 // ── HELPERS ──
@@ -884,9 +899,16 @@ document.addEventListener('click',e=>{if(!e.target.closest('.export-wrap'))docum
 function makeXLSX(data,filename){const ws=XLSX.utils.json_to_sheet(data);const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Datos');if(data.length)ws['!cols']=Object.keys(data[0]).map(k=>({wch:Math.min(Math.max(k.length,...data.map(r=>(r[k]||'').toString().length)),50)}));XLSX.writeFile(wb,filename+'.xlsx');toast('Excel descargado ✓','s');}
 function makePDF(title,headers,rows){const w=window.open('','_blank');const today=new Date().toLocaleDateString('es-UY');w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${title}</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:Arial,sans-serif;font-size:11px;padding:20px}h1{font-size:15px;margin-bottom:3px}p{font-size:11px;color:#666;margin-bottom:14px}table{width:100%;border-collapse:collapse}th{background:#f4f4f4;padding:7px 8px;text-align:left;font-size:10px;text-transform:uppercase;border-bottom:2px solid #ddd}td{padding:7px 8px;border-bottom:1px solid #eee;font-size:11px;vertical-align:top}tr:nth-child(even) td{background:#fafafa}</style></head><body><h1>${title}</h1><p>Generado el ${today}</p><table><thead><tr>${headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></body></html>`);w.document.close();setTimeout(()=>w.print(),400);toast('PDF listo','s');}
 
-function exportMachinesExcel(){makeXLSX(_machines.map(m=>({'Nombre':m.name,'Modelo':m.model||'','Sector':getSec(m.sector_id)?.name||'','Estado':m.status==='ok'?'Operativa':m.status==='warn'?'Atención':'Urgente','N° Serie':m.serial||'','Frec.(días)':m.freq||'','Instalación':m.install||'','Próximo mant.':m.next_maint||'','Notas':m.notes||''})),(   'Maquinas_Amsterdam');}
+function exportMachinesExcel(){
+  var data=_machines.map(function(m){return{'Nombre':m.name,'Modelo':m.model||'','Sector':getSec(m.sector_id)?getSec(m.sector_id).name:'','Estado':m.status==='ok'?'Operativa':m.status==='warn'?'Atención':'Urgente','N Serie':m.serial||'','Frec dias':m.freq||'','Instalacion':m.install||'','Proximo mant':m.next_maint||'','Notas':m.notes||''};});
+  makeXLSX(data,'Maquinas_Amsterdam');
+}
 function exportMachinesPDF(){makePDF('Máquinas — Amsterdam',['Máquina','Sector','Estado','Próximo mant.'],_machines.map(m=>[m.name,getSec(m.sector_id)?.name||'—',m.status==='ok'?'Operativa':m.status==='warn'?'Atención':'Urgente',m.next_maint?fmtD(m.next_maint):'—']));}
-function exportHistorialExcel(){const events=getFilteredEvents();makeXLSX(events.map(ev=>{const m=_machines.find(x=>x.id===ev.machine_id);return{'Fecha':ev.date,'Máquina':m?m.name:'—','Sector':m?getSec(m.sector_id)?.name||'—':'—','Tipo':ev.type,'Descripción':ev.description,'Técnico':ev.tech||'','Costo ($)':ev.cost||0,'Próximo mant.':ev.next_date||''};}),(   'Historial_Amsterdam'));}
+function exportHistorialExcel(){
+  var events=getFilteredEvents();
+  var data=events.map(function(ev){var m=_machines.find(function(x){return x.id===ev.machine_id;});return{'Fecha':ev.date,'Maquina':m?m.name:'','Sector':m?(getSec(m.sector_id)?getSec(m.sector_id).name:''):'','Tipo':ev.type,'Descripcion':ev.description,'Tecnico':ev.tech||'','Costo':ev.cost||0,'Proximo mant':ev.next_date||''};});
+  makeXLSX(data,'Historial_Amsterdam');
+}
 function exportHistorialPDF(){const events=getFilteredEvents();makePDF('Historial — Amsterdam',['Fecha','Máquina','Sector','Tipo','Descripción','Técnico','Costo'],events.map(ev=>{const m=_machines.find(x=>x.id===ev.machine_id);return[fmtD(ev.date),m?m.name:'—',m?getSec(m.sector_id)?.name||'—':'—',ev.type,ev.description.slice(0,60),ev.tech||'—',fmtCost(ev.cost)];}));}
 function exportDetailExcel(){if(!curMachineId)return;const m=_machines.find(x=>x.id===curMachineId);const evs=_events.filter(e=>e.machine_id===curMachineId);makeXLSX(evs.map(ev=>({'Fecha':ev.date,'Tipo':ev.type,'Descripción':ev.description,'Técnico':ev.tech||'','Costo ($)':ev.cost||0,'Próximo mant.':ev.next_date||''})),`Historial_${m?m.name:'Maquina'}`);}
 function exportDetailPDF(){if(!curMachineId)return;const m=_machines.find(x=>x.id===curMachineId);const evs=_events.filter(e=>e.machine_id===curMachineId);makePDF(`Historial — ${m?m.name:'Máquina'}`,['Fecha','Tipo','Descripción','Técnico','Costo'],evs.map(ev=>[fmtD(ev.date),ev.type,ev.description.slice(0,60),ev.tech||'—',fmtCost(ev.cost)]));}
