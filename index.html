@@ -264,6 +264,8 @@ input[type=color].cswatch{width:30px;height:30px;border-radius:50%;border:2px so
   .bnav{display:none}
   .fab{right:24px;bottom:24px}
   .drw-overlay,.drw{display:none !important}
+  #sidebar{display:flex !important}
+  #desk-hdr{display:flex !important}
 
   .sidebar{
     width:230px;flex-shrink:0;background:var(--white);
@@ -331,7 +333,7 @@ input[type=color].cswatch{width:30px;height:30px;border-radius:50%;border:2px so
 </div>
 
 <!-- DESKTOP SIDEBAR -->
-<aside class="sidebar">
+<aside class="sidebar" id="sidebar" style="display:none">
   <div class="sb-logo">
     <div class="sb-pill">Amsterdam</div>
     <div class="sb-sub">Mantenimiento</div>
@@ -353,7 +355,7 @@ input[type=color].cswatch{width:30px;height:30px;border-radius:50%;border:2px so
 </aside>
 
 <!-- DESKTOP MAIN -->
-<div class="desk-main">
+<div class="desk-main" id="desk-main">
 
   <!-- MOBILE HEADER -->
   <header class="mob-header">
@@ -362,7 +364,7 @@ input[type=color].cswatch{width:30px;height:30px;border-radius:50%;border:2px so
   </header>
 
   <!-- DESKTOP HEADER -->
-  <div class="desk-hdr">
+  <div class="desk-hdr" style="display:none" id="desk-hdr">
     <div style="display:flex;align-items:center;gap:10px">
       <div class="sb-pill" style="font-size:13px;padding:3px 10px">Amsterdam</div>
       <div class="desk-hdr-title" id="desk-title">Inicio</div>
