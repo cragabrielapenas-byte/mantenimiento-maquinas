@@ -359,14 +359,10 @@ input[type=color].cswatch{width:28px;height:28px;border-radius:50%;border:2px so
   <div id="page-dashboard" class="page on">
     <div class="alert off" id="alert-bar"><span style="font-size:18px;flex-shrink:0">⚠️</span><div id="alert-txt"></div></div>
     <div class="rem-banner off" id="rem-banner"><div class="rem-banner-title">🔔 Recordatorios de hoy</div><div id="rem-banner-list"></div></div>
-    <!-- QUICK EVENT BAR -->
-    <div class="quick-ev-bar">
-      <div class="quick-ev-title">⚡ Registrar intervención rápida</div>
-      <div class="quick-ev-search">
-        <span class="search-icon">🔍</span>
-        <input class="quick-ev-input" id="quick-search" placeholder="Buscá una máquina o tarea..." oninput="quickSearch(this.value)" autocomplete="off">
-      </div>
-      <div class="search-results" id="quick-results"></div>
+    <!-- GREETING -->
+    <div id="dash-greeting" style="margin-bottom:16px;padding:16px 18px;background:var(--white);border:1px solid var(--sand2);border-radius:var(--r);box-shadow:var(--sh)">
+      <div style="font-family:var(--serif);font-size:20px;font-weight:600;color:var(--ink)" id="greeting-text">Hola!</div>
+      <div style="font-size:13px;color:var(--ink3);margin-top:3px" id="greeting-sub"></div>
     </div>
     <!-- KPIs -->
     <div class="kpi-grid">
@@ -675,7 +671,7 @@ async function startApp(){
   var ok=await loadAll();
   showLoad(false);
   if(!ok)return;
-  applyRole();setUserLabels();renderDash();renderSbSubcats();checkReminders();setupRT();
+  applyRole();setUserLabels();renderGreeting();renderDash();renderSbSubcats();checkReminders();setupRT();
 }
 
 function applyRole(){
@@ -760,6 +756,20 @@ function checkReminders(){
     var isToday=r.due_date===today;
     return '<div class="rem-item-line">'+(isToday?'📅':'⚠️')+' <strong>'+r.title+'</strong>'+(r.due_date<today?' (vencido '+fmtD(r.due_date)+')':'')+'</div>';
   }).join('');
+}
+
+function renderGreeting(){
+  var greetEl=document.getElementById('greeting-text');
+  var subEl=document.getElementById('greeting-sub');
+  if(!greetEl)return;
+  var name=curUser?curUser.name.split(' ')[0]:'';
+  var msgs=["Hoy va a ser un gran dia! 💪","Todo bajo control! ✅","A darle con todo! 🚀","Que arranque bien el dia! ☀️","Las maquinas te esperan! ⚙️","Todo en orden, vamos! 💼"];
+  var msg=msgs[Math.floor(Math.random()*msgs.length)];
+  greetEl.textContent='Hola, '+name+'!';
+  var today=new Date();
+  var dias=['Domingo','Lunes','Martes','Miercoles','Jueves','Viernes','Sabado'];
+  var meses=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  subEl.textContent=dias[today.getDay()]+' '+today.getDate()+' de '+meses[today.getMonth()]+' · '+msg;
 }
 
 var EMOJIS=['⚙️','🔥','🌀','✂️','📦','🔪','⚖️','❄️','🧹','🏗️','🔧','🔩','💧','⚡','🧯','🖨️','🏭','🛢️','🔬','📐','🧲','🪛','🔨','🪚','💨','🌡️','🔋','📡','🚿','🪣'];
