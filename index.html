@@ -225,6 +225,33 @@ input[type=color].cswatch{width:28px;height:28px;border-radius:50%;border:2px so
 .exp-menu.on{display:block}
 .exp-opt{display:flex;align-items:center;gap:10px;padding:12px 14px;font-size:13px;color:var(--ink2);cursor:pointer;border:none;background:none;width:100%;font-family:var(--font);font-weight:500}
 .exp-opt:active{background:var(--sand)}
+.sb-arr{margin-left:auto;font-size:12px;transition:transform .2s;display:inline-block}
+.sb-arr.open{transform:rotate(90deg)}
+.sb-subs{padding-left:12px}
+.sb-sub-item{display:flex;align-items:center;gap:7px;padding:6px 10px;border-radius:var(--r-sm);font-size:12px;font-weight:500;color:var(--ink3);cursor:pointer;border:none;background:none;width:100%;text-align:left;font-family:var(--font)}
+.sb-sub-item:hover{background:var(--sand);color:var(--ink2)}
+.sb-sub-item.on{color:var(--rust);font-weight:700}
+.sb-sub-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.dash-blocks{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.dash-block{background:var(--white);border:1px solid var(--sand2);border-radius:var(--r);padding:14px;box-shadow:var(--sh);cursor:pointer;transition:box-shadow .15s;position:relative;overflow:hidden}
+.dash-block:active{transform:scale(.98)}
+.dash-block::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:4px 0 0 4px}
+.dash-block-icon{font-size:22px;margin-bottom:6px}
+.dash-block-name{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:4px}
+.dash-block-stats{display:flex;gap:6px;flex-wrap:wrap}
+.dash-block-stat{font-size:11px;font-weight:600;padding:2px 7px;border-radius:20px}
+.dash-block-stat.s-ok{background:var(--green-bg);color:var(--green)}
+.dash-block-stat.s-warn{background:var(--amber-bg);color:var(--amber)}
+.dash-block-stat.s-danger{background:var(--red-bg);color:var(--red)}
+.emoji-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;margin-top:8px}
+.emoji-btn{width:36px;height:36px;border-radius:8px;border:1.5px solid var(--sand3);background:var(--sand);cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.emoji-btn:active{background:var(--rust-bg);border-color:var(--rust)}
+.emoji-btn.selected{background:var(--rust-bg);border-color:var(--rust)}
+.quick-ev-bar{background:var(--white);border:1px solid var(--sand2);border-radius:var(--r);padding:14px 16px;margin-bottom:16px;box-shadow:var(--sh)}
+.quick-ev-title{font-size:13px;font-weight:700;margin-bottom:10px;color:var(--ink)}
+.quick-ev-search{position:relative}
+.quick-ev-input{width:100%;background:var(--sand);border:1.5px solid var(--sand3);border-radius:var(--r-sm);padding:10px 14px 10px 36px;font-size:14px;font-family:var(--font);color:var(--ink);outline:none}
+.quick-ev-input:focus{border-color:var(--rust);background:var(--white)}
 .toast-wrap{position:fixed;top:64px;left:50%;transform:translateX(-50%);z-index:1000;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none;width:90%;max-width:320px}
 .toast{background:var(--ink);color:var(--white);border-radius:var(--r-sm);padding:11px 16px;font-size:13px;font-weight:600;box-shadow:var(--sh-md);animation:tin .2s ease;display:flex;align-items:center;gap:8px;width:100%}
 .toast.s{background:var(--green)}.toast.e{background:var(--red)}
@@ -298,8 +325,14 @@ input[type=color].cswatch{width:28px;height:28px;border-radius:50%;border:2px so
   <div class="sb-sec">
     <div class="sb-sec-lbl">Menú</div>
     <button class="sb-item on" id="si-dashboard" onclick="goPage('dashboard')"><span class="sb-icon">◈</span>Inicio</button>
-    <button class="sb-item" id="si-machines" onclick="goPage('machines')"><span class="sb-icon">⚙</span>Maquinarias</button>
-    <button class="sb-item" id="si-tasks" onclick="goPage('tasks')"><span class="sb-icon">📋</span>Tareas Generales</button>
+    <div id="sb-machines-group">
+      <button class="sb-item" id="si-machines" onclick="goPage('machines');toggleSbGroup('sb-mach-subs')"><span class="sb-icon">⚙</span>Maquinarias<span class="sb-arr" id="sba-machines">›</span></button>
+      <div id="sb-mach-subs" class="sb-subs" style="display:none"></div>
+    </div>
+    <div id="sb-tasks-group">
+      <button class="sb-item" id="si-tasks" onclick="goPage('tasks');toggleSbGroup('sb-task-subs')"><span class="sb-icon">📋</span>Tareas Generales<span class="sb-arr" id="sba-tasks">›</span></button>
+      <div id="sb-task-subs" class="sb-subs" style="display:none"></div>
+    </div>
     <button class="sb-item admin-only" id="si-reports" onclick="goPage('reports')"><span class="sb-icon">📊</span>Reportes</button>
     <button class="sb-item" id="si-reminders" onclick="goPage('reminders')"><span class="sb-icon">🔔</span>Recordatorios</button>
     <button class="sb-item admin-only" id="si-audit" onclick="goPage('audit')"><span class="sb-icon">🔍</span>Auditoría</button>
@@ -326,12 +359,26 @@ input[type=color].cswatch{width:28px;height:28px;border-radius:50%;border:2px so
   <div id="page-dashboard" class="page on">
     <div class="alert off" id="alert-bar"><span style="font-size:18px;flex-shrink:0">⚠️</span><div id="alert-txt"></div></div>
     <div class="rem-banner off" id="rem-banner"><div class="rem-banner-title">🔔 Recordatorios de hoy</div><div id="rem-banner-list"></div></div>
-    <div class="kpi-grid">
-      <div class="kpi kpi-b"><div class="kpi-num" id="k-total">—</div><div class="kpi-lbl">Equipos</div></div>
-      <div class="kpi kpi-g"><div class="kpi-num" id="k-ok">—</div><div class="kpi-lbl">Operativos</div></div>
-      <div class="kpi kpi-a"><div class="kpi-num" id="k-warn">—</div><div class="kpi-lbl">Atención</div></div>
-      <div class="kpi kpi-r"><div class="kpi-num" id="k-crit">—</div><div class="kpi-lbl">Urgentes</div></div>
+    <!-- QUICK EVENT BAR -->
+    <div class="quick-ev-bar">
+      <div class="quick-ev-title">⚡ Registrar intervención rápida</div>
+      <div class="quick-ev-search">
+        <span class="search-icon">🔍</span>
+        <input class="quick-ev-input" id="quick-search" placeholder="Buscá una máquina o tarea..." oninput="quickSearch(this.value)" autocomplete="off">
+      </div>
+      <div class="search-results" id="quick-results"></div>
     </div>
+    <!-- KPIs -->
+    <div class="kpi-grid">
+      <div class="kpi kpi-b" onclick="goPage('machines')" style="cursor:pointer"><div class="kpi-num" id="k-total">—</div><div class="kpi-lbl">Equipos</div></div>
+      <div class="kpi kpi-g" onclick="goPage('machines');machF('ok',document.querySelector('#mach-status-chips .chip:nth-child(2)'))" style="cursor:pointer"><div class="kpi-num" id="k-ok">—</div><div class="kpi-lbl">Operativos</div></div>
+      <div class="kpi kpi-a" onclick="goPage('machines');machF('warn',document.querySelector('#mach-status-chips .chip:nth-child(3)'))" style="cursor:pointer"><div class="kpi-num" id="k-warn">—</div><div class="kpi-lbl">Atención</div></div>
+      <div class="kpi kpi-r" onclick="goPage('machines');machF('danger',document.querySelector('#mach-status-chips .chip:nth-child(4)'))" style="cursor:pointer"><div class="kpi-num" id="k-crit">—</div><div class="kpi-lbl">Urgentes</div></div>
+    </div>
+    <!-- SUBCATEGORY BLOCKS -->
+    <div class="slbl">Estado por sector</div>
+    <div class="dash-blocks" id="dash-blocks"></div>
+    <!-- MAIN GRID -->
     <div class="dash-grid">
       <div>
         <div class="slbl">Últimas 8 intervenciones</div>
@@ -456,6 +503,16 @@ input[type=color].cswatch{width:28px;height:28px;border-radius:50%;border:2px so
     <div class="modal-hdr"><div class="modal-title" id="mm-title">Nueva máquina</div><button class="modal-x" onclick="closeM('modal-machine')">×</button></div>
     <div class="modal-body">
       <input type="hidden" id="m-id">
+      <div class="fg"><label class="fl">Ícono</label>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+          <div id="m-icon-preview" style="width:40px;height:40px;border-radius:10px;background:var(--sand);display:flex;align-items:center;justify-content:center;font-size:22px;border:1.5px solid var(--sand3)">⚙️</div>
+          <button type="button" class="btn btn-g btn-sm" onclick="toggleEmojiPicker()">Cambiar ícono</button>
+        </div>
+        <div id="emoji-picker" style="display:none">
+          <div class="emoji-grid" id="emoji-grid"></div>
+        </div>
+        <input type="hidden" id="m-icon" value="⚙️">
+      </div>
       <div class="fg"><label class="fl">Nombre *</label><input class="fi" id="m-name" placeholder="Ej: Amasadora N°1"></div>
       <div class="frow"><div class="fg"><label class="fl">Modelo</label><input class="fi" id="m-model" placeholder="Ej: Diosna SP100"></div><div class="fg"><label class="fl">N° serie</label><input class="fi" id="m-serial"></div></div>
       <div class="fg"><label class="fl">Categoría *</label><select class="fs" id="m-cat" onchange="loadSubcats('m-subcat',this.value)"><option value="">Elegir...</option></select></div>
@@ -618,7 +675,7 @@ async function startApp(){
   var ok=await loadAll();
   showLoad(false);
   if(!ok)return;
-  applyRole();setUserLabels();renderDash();checkReminders();setupRT();
+  applyRole();setUserLabels();renderDash();renderSbSubcats();checkReminders();setupRT();
 }
 
 function applyRole(){
@@ -705,6 +762,147 @@ function checkReminders(){
   }).join('');
 }
 
+var EMOJIS=['⚙️','🔥','🌀','✂️','📦','🔪','⚖️','❄️','🧹','🏗️','🔧','🔩','💧','⚡','🧯','🖨️','🏭','🛢️','🔬','📐','🧲','🪛','🔨','🪚','💨','🌡️','🔋','📡','🚿','🪣'];
+
+function toggleEmojiPicker(){
+  var ep=document.getElementById('emoji-picker');
+  if(!ep)return;
+  if(ep.style.display==='none'){
+    ep.style.display='block';
+    var grid=document.getElementById('emoji-grid');
+    if(grid&&!grid.innerHTML){
+      grid.innerHTML=EMOJIS.map(function(e){return '<button type="button" class="emoji-btn" data-e="'+e+'" title="'+e+'">'+e+'</button>';}).join('');grid.querySelectorAll('.emoji-btn').forEach(function(b){b.addEventListener('click',function(){selectEmoji(b.getAttribute('data-e'));});});
+    }
+  }else ep.style.display='none';
+}
+
+function selectEmoji(emoji){
+  document.getElementById('m-icon').value=emoji;
+  document.getElementById('m-icon-preview').textContent=emoji;
+  document.getElementById('emoji-picker').style.display='none';
+  // update selected state
+  document.querySelectorAll('.emoji-btn').forEach(function(b){b.classList.toggle('selected',b.textContent===emoji);});
+}
+
+function quickSearch(q){
+  var res=document.getElementById('quick-results');
+  if(!q||q.length<2){res.classList.remove('on');return;}
+  var ql=q.toLowerCase();
+  var results=[];
+  _machines.forEach(function(m){if(m.name.toLowerCase().indexOf(ql)>=0){var sc=getSubcat(m.subcategory_id);results.push({id:m.id,name:m.name,icon:m.icon||'⚙️',sub:sc?sc.name:'Máquina',type:'machine'});}});
+  _tasks.forEach(function(t){if(t.name.toLowerCase().indexOf(ql)>=0){var sc=getSubcat(t.subcategory_id);results.push({id:t.id,name:t.name,icon:'📋',sub:sc?sc.name:'Tarea',type:'task'});}});
+  if(!results.length){res.innerHTML='<div style="padding:12px 14px;font-size:13px;color:var(--ink3)">Sin resultados</div>';res.classList.add('on');return;}
+  var qitems=results.slice(0,8);
+  res.innerHTML=qitems.map(function(r,i){return '<div class="search-result-item" data-qi="'+i+'"><div class="search-result-name">'+r.icon+' '+r.name+'</div><div class="search-result-sub">'+(r.type==='machine'?'⚙ ':'📋 ')+r.sub+'</div></div>';}).join('');
+  res.querySelectorAll('.search-result-item').forEach(function(el){el.addEventListener('click',function(){var r=qitems[parseInt(el.getAttribute('data-qi'))];document.getElementById('quick-search').value='';res.classList.remove('on');openEventFor(r.id,r.type);});});
+  res.classList.add('on');
+}
+
+function quickOpenEvent(id,type,name,icon){
+  document.getElementById('quick-search').value='';
+  document.getElementById('quick-results').classList.remove('on');
+  openEventFor(id,type);
+}
+
+function renderDashBlocks(){
+  var el=document.getElementById('dash-blocks');if(!el)return;
+  var allMachCats=_cats.filter(function(c){return c.type==='machines';});
+  var blocks=[];
+  allMachCats.forEach(function(cat){
+    var catSubs=_subcats.filter(function(s){return s.category_id===cat.id;});
+    catSubs.forEach(function(sub){
+      var macs=_machines.filter(function(m){return m.subcategory_id===sub.id;});
+      if(!macs.length)return;
+      blocks.push({sub:sub,macs:macs});
+    });
+  });
+  if(!blocks.length){el.innerHTML='';return;}
+  el.innerHTML=blocks.map(function(b){
+    var ok=b.macs.filter(function(m){return m.status==='ok';}).length;
+    var warn=b.macs.filter(function(m){return m.status==='warn';}).length;
+    var danger=b.macs.filter(function(m){return m.status==='danger';}).length;
+    var bg=hexBg(b.sub.color,0.08);
+    return '<div class="dash-block" style="border-left-color:'+b.sub.color+';background:'+bg+'" data-subid="'+b.sub.id+'">'+
+      '<div class="dash-block-icon" style="margin-bottom:4px">'+b.sub.name.split(' ')[0].length<=2?b.sub.name.charAt(0):'🏭'+'</div>'+
+      '<div class="dash-block-name">'+b.sub.name+'</div>'+
+      '<div class="dash-block-stats">'+
+      (ok?'<span class="dash-block-stat s-ok">'+ok+' OK</span>':'')+
+      (warn?'<span class="dash-block-stat s-warn">'+warn+' atención</span>':'')+
+      (danger?'<span class="dash-block-stat s-danger">'+danger+' urgente</span>':'')+
+      '</div></div>';
+  }).join('');
+}
+
+function filterBySub(subcatId){
+  goPage('machines');
+  machFilt='all';
+  document.querySelectorAll('#mach-status-chips .chip').forEach(function(c){c.classList.remove('on');});
+  var first=document.querySelector('#mach-status-chips .chip');if(first)first.classList.add('on');
+  // filter by subcat
+  var filtered=_machines.filter(function(m){return m.subcategory_id===subcatId;});
+  var container=document.getElementById('mach-cats');
+  var empty=document.getElementById('mach-empty');
+  if(!filtered.length){container.innerHTML='';empty.style.display='block';return;}
+  empty.style.display='none';
+  var sc=getSubcat(subcatId);
+  var html='<div class="cat-section"><div class="subcat-section"><div class="subcat-header"><div class="subcat-dot" style="background:'+(sc?sc.color:'#999')+'"></div><div class="subcat-name">'+(sc?sc.name:'—')+'</div></div>';
+  filtered.forEach(function(m){html+=renderMcCard(m,'machine');});
+  html+='</div></div>';
+  container.innerHTML=html;
+}
+
+function renderSbSubcats(){
+  var machSubs=document.getElementById('sb-mach-subs');
+  var taskSubs=document.getElementById('sb-task-subs');
+  if(machSubs){
+    var machCats=_cats.filter(function(c){return c.type==='machines';});
+    machSubs.innerHTML=machCats.map(function(cat){
+      var subs=_subcats.filter(function(s){return s.category_id===cat.id;});
+      return subs.map(function(s){
+        var count=_machines.filter(function(m){return m.subcategory_id===s.id;}).length;
+        return '<button class="sb-sub-item" data-subid="'+s.id+'"><div class="sb-sub-dot" style="background:'+s.color+'"></div>'+s.name+' <span style="margin-left:auto;font-size:10px;color:var(--ink4)">'+count+'</span></button>';
+      }).join('');
+    }).join('');
+    machSubs.querySelectorAll('.sb-sub-item').forEach(function(b){b.addEventListener('click',function(){filterBySub(b.getAttribute('data-subid'));});});
+  }
+  if(taskSubs){
+    var taskCats=_cats.filter(function(c){return c.type==='tasks';});
+    taskSubs.innerHTML=taskCats.map(function(cat){
+      var subs=_subcats.filter(function(s){return s.category_id===cat.id;});
+      return subs.map(function(s){
+        var count=_tasks.filter(function(t){return t.subcategory_id===s.id;}).length;
+        return '<button class="sb-sub-item" data-subid="'+s.id+'"><div class="sb-sub-dot" style="background:'+s.color+'"></div>'+s.name+' <span style="margin-left:auto;font-size:10px;color:var(--ink4)">'+count+'</span></button>';
+      }).join('');
+    }).join('');
+    taskSubs.querySelectorAll('.sb-sub-item').forEach(function(b){b.addEventListener('click',function(){filterByTaskSub(b.getAttribute('data-subid'));});});
+  }
+}
+
+function filterByTaskSub(subcatId){
+  goPage('tasks');
+  taskFilt='all';
+  document.querySelectorAll('#task-status-chips .chip').forEach(function(c){c.classList.remove('on');});
+  var first=document.querySelector('#task-status-chips .chip');if(first)first.classList.add('on');
+  var filtered=_tasks.filter(function(t){return t.subcategory_id===subcatId;});
+  var container=document.getElementById('task-cats');var empty=document.getElementById('task-empty');
+  if(!filtered.length){container.innerHTML='';empty.style.display='block';return;}
+  empty.style.display='none';
+  var sc=getSubcat(subcatId);
+  var html='<div class="cat-section"><div class="subcat-section"><div class="subcat-header"><div class="subcat-dot" style="background:'+(sc?sc.color:'#999')+'"></div><div class="subcat-name">'+(sc?sc.name:'—')+'</div></div>';
+  filtered.forEach(function(t){html+=renderMcCard(t,'task');});
+  html+='</div></div>';
+  container.innerHTML=html;
+}
+
+function toggleSbGroup(id){
+  var el=document.getElementById(id);if(!el)return;
+  var isOpen=el.style.display!=='none';
+  el.style.display=isOpen?'none':'block';
+  var page=id.indexOf('mach')>=0?'machines':'tasks';
+  var arr=document.getElementById('sba-'+page);
+  if(arr)arr.classList.toggle('open',!isOpen);
+}
+
 function renderDash(){
   var today=new Date();today.setHours(0,0,0,0);
   var all=_machines.concat(_tasks);
@@ -716,6 +914,7 @@ function renderDash(){
   var ab=document.getElementById('alert-bar');
   if(urgent.length){ab.classList.remove('off');document.getElementById('alert-txt').innerHTML='<strong>'+urgent.length+' equipo'+(urgent.length>1?'s requieren':' requiere')+' atención:</strong> '+urgent.map(function(m){return m.name;}).join(', ')+'.';}
   else ab.classList.add('off');
+  renderDashBlocks();
   var recent=_events.slice(0,8);
   var incEl=document.getElementById('dash-incidents');
   var incEmp=document.getElementById('dash-inc-empty');
@@ -726,15 +925,27 @@ function renderDash(){
       var m=_machines.find(function(x){return x.id===ev.machine_id;});
       var tk=_tasks.find(function(x){return x.id===ev.task_id;});
       var item=m||tk;
-      return '<div class="inc-card"><div class="inc-top"><div class="inc-name">'+(item?item.name:'—')+'</div><span class="inc-date">'+fmtD(ev.date)+'</span></div>'+
+      var itemIcon=item&&item.icon?item.icon:(m?'⚙️':'📋');
+      var dattrs=(ev.machine_id?(' data-machid="'+ev.machine_id+'"'):'')+(ev.task_id?(' data-taskid="'+ev.task_id+'"'):'');
+      return '<div class="inc-card" '+dattrs+' style="cursor:pointer">'+
+        '<div class="inc-top"><div class="inc-name">'+itemIcon+' '+(item?item.name:'—')+'</div><span class="inc-date">'+fmtD(ev.date)+'</span></div>'+
         '<div class="inc-desc">'+ev.description+'</div>'+
         '<div class="inc-meta"><span class="type-tag '+(ev.type==='preventivo'?'t-prev':'t-corr')+'">'+ev.type+'</span>'+catTag(item?item.subcategory_id:null)+(ev.tech?'<span style="font-size:11px;color:var(--ink3)">👷 '+ev.tech+'</span>':'')+'</div></div>';
     }).join('');
+    incEl.querySelectorAll('.inc-card').forEach(function(card){card.addEventListener('click',function(){var mid=card.getAttribute('data-machid');var tid=card.getAttribute('data-taskid');if(mid)openDetail(mid);else if(tid)openTaskDetail(tid);});});
   }
   var upcoming=all.filter(function(m){return m.next_maint;}).map(function(m){return Object.assign({},m,{diff:Math.round((new Date(m.next_maint+'T00:00:00')-today)/86400000)});}).filter(function(m){return m.diff>=0&&m.diff<=30;}).sort(function(a,b){return a.diff-b.diff;}).slice(0,6);
   var upEl=document.getElementById('up-body');
   if(!upcoming.length){upEl.innerHTML='<div style="text-align:center;padding:16px;font-size:12.5px;color:var(--ink3)">Sin mantenimientos en 30 días</div>';return;}
-  upEl.innerHTML=upcoming.map(function(m){var dt=new Date(m.next_maint+'T00:00:00');var sc=getSubcat(m.subcategory_id);return '<div class="up-item"><div class="date-chip"><div class="d">'+dt.getDate()+'</div><div class="m">'+MON[dt.getMonth()]+'</div></div><div><div class="up-name">'+m.name+'</div><div class="up-sub">'+(sc?sc.name:'—')+' · '+(m.diff===0?'Hoy':'En '+m.diff+'d')+'</div></div></div>';}).join('');
+  upEl.innerHTML=upcoming.map(function(m){
+    var dt=new Date(m.next_maint+'T00:00:00');var sc=getSubcat(m.subcategory_id);
+    var icon=m.icon||'⚙️';
+    var uttype=m.task_id?'task':'machine';
+    return '<div class="up-item" data-uid="'+m.id+'" data-utype="'+uttype+'" style="cursor:pointer">'+
+      '<div class="date-chip"><div class="d">'+dt.getDate()+'</div><div class="m">'+MON[dt.getMonth()]+'</div></div>'+
+      '<div><div class="up-name">'+icon+' '+m.name+'</div><div class="up-sub">'+(sc?sc.name:'—')+' · '+(m.diff===0?'Hoy':'En '+m.diff+'d')+'</div></div></div>';
+  }).join('');
+  upEl.querySelectorAll('.up-item').forEach(function(el){el.addEventListener('click',function(){var id=el.getAttribute('data-uid');var type=el.getAttribute('data-utype');if(type==='task')openTaskDetail(id);else openDetail(id);});});
 }
 
 function dashFilter(f,el){var df=document.querySelectorAll('#page-dashboard .chip');df.forEach(function(c){c.classList.remove('on');});el.classList.add('on');}
@@ -928,7 +1139,7 @@ function loadSubcats(selId,catId){
   var subs=_subcats.filter(function(s){return s.category_id===catId;});
   sel.innerHTML='<option value="">Elegir subcategoría...</option>'+subs.map(function(s){return '<option value="'+s.id+'">'+s.name+'</option>';}).join('');
 }
-function clearMachForm(){['m-id','m-name','m-model','m-serial','m-install','m-notes'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});document.getElementById('m-cat').value='';document.getElementById('m-subcat').innerHTML='<option value="">Elegir...</option>';document.getElementById('m-status').value='ok';document.getElementById('m-freq').value='';}
+function clearMachForm(){['m-id','m-name','m-model','m-serial','m-install','m-notes'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});document.getElementById('m-cat').value='';document.getElementById('m-subcat').innerHTML='<option value="">Elegir...</option>';document.getElementById('m-status').value='ok';document.getElementById('m-freq').value='';var ic=document.getElementById('m-icon');if(ic)ic.value='⚙️';var ip=document.getElementById('m-icon-preview');if(ip)ip.textContent='⚙️';var ep=document.getElementById('emoji-picker');if(ep)ep.style.display='none';}
 function clearTaskForm(){['t-id','t-name','t-notes'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});document.getElementById('t-cat').value='';document.getElementById('t-subcat').innerHTML='<option value="">Elegir...</option>';document.getElementById('t-status').value='ok';document.getElementById('t-freq').value='';}
 function clearEvForm(){['e-id','e-desc','e-tech','e-next','e-machine-id','e-search'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});document.getElementById('e-type').value='preventivo';document.getElementById('e-status').value='ok';document.getElementById('e-entity-type').value='machine';var es=document.getElementById('e-selected');if(es)es.textContent='';}
 
@@ -943,6 +1154,7 @@ function openEditMachine(machId){
   document.getElementById('m-serial').value=m.serial||'';document.getElementById('m-status').value=m.status||'ok';
   document.getElementById('m-freq').value=m.freq||'';document.getElementById('m-install').value=m.install||'';
   document.getElementById('m-notes').value=m.notes||'';
+  var ic=document.getElementById('m-icon');if(ic)ic.value=m.icon||'⚙️';var ip=document.getElementById('m-icon-preview');if(ip)ip.textContent=m.icon||'⚙️';
   document.getElementById('modal-machine').classList.add('on');
 }
 function openEditTask(taskId){
@@ -975,7 +1187,7 @@ async function saveMachine(){
   if(!name){toast('Completá el nombre','e');return;}
   var editId=document.getElementById('m-id').value;
   var freq=parseInt(document.getElementById('m-freq').value)||null;
-  var data={name:name,subcategory_id:document.getElementById('m-subcat').value||null,model:document.getElementById('m-model').value.trim()||null,status:document.getElementById('m-status').value,serial:document.getElementById('m-serial').value.trim()||null,freq:freq,install:document.getElementById('m-install').value||null,notes:document.getElementById('m-notes').value.trim()||null};
+  var iconEl=document.getElementById('m-icon');var data={name:name,subcategory_id:document.getElementById('m-subcat').value||null,model:document.getElementById('m-model').value.trim()||null,status:document.getElementById('m-status').value,serial:document.getElementById('m-serial').value.trim()||null,freq:freq,install:document.getElementById('m-install').value||null,notes:document.getElementById('m-notes').value.trim()||null,icon:iconEl?iconEl.value:'⚙️'};
   showLoad(true);
   if(editId){await sb.from('am_machines').update(data).eq('id',editId);await logAudit('editar','am_machines',editId,'Máquina: '+name);toast('Actualizada','s');}
   else{if(freq){var d=new Date();d.setDate(d.getDate()+freq);data.next_maint=d.toISOString().slice(0,10);}var ins=await sb.from('am_machines').insert(data).select().single();await logAudit('crear','am_machines',ins.data?ins.data.id:null,'Máquina: '+name);toast('Agregada','s');}
@@ -1182,6 +1394,7 @@ async function handleRT(){
     if(curPage==='tasks'){if(curTaskId&&document.getElementById('view-tasks-detail').classList.contains('on')){if(_tasks.find(function(t){return t.id===curTaskId;}))renderDetHist(curTaskId,'task');else closeTaskDetail();}else renderTasks();}
     if(curPage==='reports')renderReports();
     if(curPage==='reminders'){renderReminders();checkReminders();}
+    renderSbSubcats();
   },400);
 }
 
