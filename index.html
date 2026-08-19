@@ -331,14 +331,19 @@ input[type=color].cswatch{width:28px;height:28px;border-radius:50%;border:2px so
   <div class="sb-sec">
     <div class="sb-sec-lbl">Menú</div>
     <button class="sb-item on" id="si-dashboard" onclick="goPage('dashboard')"><span class="sb-icon">◈</span>Inicio</button>
-    <div id="sb-machines-group">
-      <button class="sb-item" id="si-machines" onclick="goPage('machines');toggleSbGroup('sb-mach-subs')"><span class="sb-icon">⚙</span>Maquinarias<span class="sb-arr" id="sba-machines">›</span></button>
-      <div id="sb-mach-subs" class="sb-subs" style="display:none"></div>
-    </div>
-    <div id="sb-tasks-group">
-      <button class="sb-item" id="si-tasks" onclick="goPage('tasks');toggleSbGroup('sb-task-subs')"><span class="sb-icon">📋</span>Tareas Generales<span class="sb-arr" id="sba-tasks">›</span></button>
-      <div id="sb-task-subs" class="sb-subs" style="display:none"></div>
-    </div>
+  </div>
+  <div class="sb-sec">
+    <div class="sb-sec-lbl">Maquinarias</div>
+    <div id="sb-mach-subs"></div>
+    <button class="sb-item" id="si-machines" onclick="goPage('machines')" style="margin-top:4px;font-size:11px;color:var(--ink4)"><span class="sb-icon" style="font-size:11px">⚙</span>Ver todas</button>
+  </div>
+  <div class="sb-sec">
+    <div class="sb-sec-lbl">Tareas Generales</div>
+    <div id="sb-task-subs"></div>
+    <button class="sb-item" id="si-tasks" onclick="goPage('tasks')" style="margin-top:4px;font-size:11px;color:var(--ink4)"><span class="sb-icon" style="font-size:11px">📋</span>Ver todas</button>
+  </div>
+  <div class="sb-sec">
+    <div class="sb-sec-lbl">Más</div>
     <button class="sb-item admin-only" id="si-reports" onclick="goPage('reports')"><span class="sb-icon">📊</span>Reportes</button>
     <button class="sb-item" id="si-reminders" onclick="goPage('reminders')"><span class="sb-icon">🔔</span>Recordatorios</button>
     <button class="sb-item admin-only" id="si-audit" onclick="goPage('audit')"><span class="sb-icon">🔍</span>Auditoría</button>
@@ -828,13 +833,15 @@ function renderDashBlocks(){
     var catSubs=_subcats.filter(function(s){return s.category_id===cat.id;});
     catSubs.forEach(function(sub){
       var macs=_machines.filter(function(m){return m.subcategory_id===sub.id;});
+      if(!macs.length)return;
       var warn=macs.filter(function(m){return m.status==='warn';}).length;
       var danger=macs.filter(function(m){return m.status==='danger';}).length;
       var statusHtml='';
       if(warn)statusHtml+='<span class="dash-block-stat s-warn">'+warn+' atención</span>';
       if(danger)statusHtml+='<span class="dash-block-stat s-danger">'+danger+' urgente</span>';
+      var ico=mcEmoji(sub.name);
       html+='<div class="dash-block" data-subid="'+sub.id+'" style="--bc:'+sub.color+'">'
-        +'<div class="dash-block-dot" style="background:'+hexBg(sub.color,0.15)+'"><span style="font-size:16px">'+mcEmoji(sub.name)+'</span></div>'
+        +'<div class="dash-block-dot" style="background:'+hexBg(sub.color,0.15)+'">'+ico+'</div>'
         +'<div class="dash-block-body">'
         +'<div class="dash-block-name">'+sub.name+'</div>'
         +'<div class="dash-block-count">'+macs.length+' '+(macs.length===1?'equipo':'equipos')+'</div>'
@@ -871,28 +878,31 @@ function renderSbSubcats(){
   var taskSubs=document.getElementById('sb-task-subs');
   if(machSubs){
     var machCats=_cats.filter(function(c){return c.type==='machines';});
-    machSubs.innerHTML=machCats.map(function(cat){
+    var html='';
+    machCats.forEach(function(cat){
       var subs=_subcats.filter(function(s){return s.category_id===cat.id;});
-      if(!subs.length)return '';
-      var subsHtml=subs.map(function(s){
+      if(!subs.length)return;
+      html+='<div style="padding:2px 4px 0;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink4);margin-top:8px">'+cat.name+'</div>';
+      subs.forEach(function(s){
         var count=_machines.filter(function(m){return m.subcategory_id===s.id;}).length;
-        return '<button class="sb-sub-item" data-subid="'+s.id+'"><div class="sb-sub-dot" style="background:'+s.color+'"></div>'+s.name+'<span style="margin-left:auto;font-size:10px;color:var(--ink4)">'+count+'</span></button>';
-      }).join('');
-      return '<div class="sb-cat-group"><div class="sb-cat-hdr"><span class="sb-cat-icon">'+(cat.icon||'📁')+'</span>'+cat.name+'</div><div class="sb-subs">'+subsHtml+'</div></div>';
-    }).join('');
+        html+='<button class="sb-sub-item" data-subid="'+s.id+'"><div class="sb-sub-dot" style="background:'+s.color+'"></div>'+s.name+'<span style="margin-left:auto;font-size:10px;color:var(--ink4)">'+count+'</span></button>';
+      });
+    });
+    machSubs.innerHTML=html;
     machSubs.querySelectorAll('.sb-sub-item').forEach(function(b){b.addEventListener('click',function(){filterBySub(b.getAttribute('data-subid'));});});
   }
   if(taskSubs){
     var taskCats=_cats.filter(function(c){return c.type==='tasks';});
-    taskSubs.innerHTML=taskCats.map(function(cat){
+    var html2='';
+    taskCats.forEach(function(cat){
       var subs=_subcats.filter(function(s){return s.category_id===cat.id;});
-      if(!subs.length)return '';
-      var subsHtml=subs.map(function(s){
+      if(!subs.length)return;
+      subs.forEach(function(s){
         var count=_tasks.filter(function(t){return t.subcategory_id===s.id;}).length;
-        return '<button class="sb-sub-item" data-subid="'+s.id+'"><div class="sb-sub-dot" style="background:'+s.color+'"></div>'+s.name+'<span style="margin-left:auto;font-size:10px;color:var(--ink4)">'+count+'</span></button>';
-      }).join('');
-      return '<div class="sb-cat-group"><div class="sb-cat-hdr"><span class="sb-cat-icon">'+(cat.icon||'📁')+'</span>'+cat.name+'</div><div class="sb-subs">'+subsHtml+'</div></div>';
-    }).join('');
+        html2+='<button class="sb-sub-item" data-subid="'+s.id+'"><div class="sb-sub-dot" style="background:'+s.color+'"></div>'+s.name+'<span style="margin-left:auto;font-size:10px;color:var(--ink4)">'+count+'</span></button>';
+      });
+    });
+    taskSubs.innerHTML=html2;
     taskSubs.querySelectorAll('.sb-sub-item').forEach(function(b){b.addEventListener('click',function(){filterByTaskSub(b.getAttribute('data-subid'));});});
   }
 }
