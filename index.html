@@ -307,6 +307,69 @@ input[type=color].cswatch{width:28px;height:28px;border-radius:50%;border:2px so
 #lightbox.on{display:flex}
 #lightbox img{max-width:100%;max-height:100%;border-radius:8px}
 #lightbox button{position:absolute;top:14px;right:14px;width:40px;height:40px;border-radius:50%;border:none;background:rgba(255,255,255,.15);color:#fff;font-size:24px;cursor:pointer}
+.pri-pill,.st-pill{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:20px;font-size:10.5px;font-weight:700;border:1px solid transparent;white-space:nowrap}
+.oc{background:var(--white);border:1px solid var(--sand2);border-radius:var(--r);padding:12px 14px 12px 17px;margin-bottom:8px;box-shadow:var(--sh);cursor:pointer;position:relative;overflow:hidden}
+.oc::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--pc)}
+.oc:active{opacity:.85}
+.oc-top{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:6px}
+.oc-code{font-size:11px;font-weight:800;color:var(--ink3);letter-spacing:.03em}
+.oc-title{font-size:14px;font-weight:700;color:var(--ink);line-height:1.3;margin-bottom:3px}
+.oc-sub{font-size:12px;color:var(--ink3)}
+.oc-foot{display:flex;gap:12px;margin-top:7px;padding-top:7px;border-top:1px solid var(--sand2);font-size:11.5px;color:var(--ink2);flex-wrap:wrap}
+.big-cta{display:flex;flex-direction:column;align-items:flex-start;gap:4px;width:100%;padding:18px 20px;margin-bottom:18px;border:none;border-radius:var(--r);background:var(--rust);color:#fff;font-family:var(--font);font-size:17px;font-weight:700;cursor:pointer;box-shadow:0 6px 18px rgba(194,78,26,.3);text-align:left}
+.big-cta small{font-size:12.5px;font-weight:500;opacity:.88}
+.big-cta:active{transform:scale(.99)}
+.link-btn{background:none;border:none;color:var(--rust);font-family:var(--font);font-weight:700;font-size:13px;cursor:pointer;padding:6px 0;margin-bottom:12px}
+.empty-mini{background:var(--white);border:1px dashed var(--sand3);border-radius:var(--r-sm);padding:16px;text-align:center;font-size:13px;color:var(--ink3);margin-bottom:14px}
+.ol{margin-bottom:16px}
+.pri-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pri-opt{text-align:left;padding:11px 12px;border-radius:var(--r-sm);border:1.5px solid var(--sand3);background:var(--white);cursor:pointer;font-family:var(--font)}
+.pri-opt.on{border-color:var(--pc);background:var(--sand);box-shadow:0 0 0 1.5px var(--pc) inset}
+.pri-opt-t{font-size:13.5px;font-weight:700;color:var(--ink)}
+.pri-opt-d{font-size:11px;color:var(--ink3);margin-top:2px;line-height:1.3}
+.sel-chip{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--rust-bg);border:1.5px solid var(--rust-bd);border-radius:var(--r-sm);font-size:14px;font-weight:700}
+.sel-chip button{margin-left:auto;background:none;border:none;color:var(--rust);font-weight:700;font-family:var(--font);cursor:pointer;font-size:12px}
+.od-title{font-family:var(--serif);font-size:21px;font-weight:600;line-height:1.25;margin:6px 0}
+.od-target{font-size:13.5px;font-weight:600;color:var(--ink2);margin-bottom:10px}
+.od-target.link{cursor:pointer;color:var(--rust)}
+.od-desc{font-size:13.5px;color:var(--ink2);line-height:1.5;margin-bottom:10px;white-space:pre-wrap}
+.od-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0 12px}
+.od-mi{background:var(--sand);border-radius:var(--r-sm);padding:8px 10px}
+.od-mi b{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink3);margin-bottom:2px}
+.od-mi span{font-size:13px;font-weight:700;color:var(--ink);display:block}
+.od-mi small{font-size:11px;color:var(--ink3)}
+.od-box{border-radius:var(--r-sm);padding:11px 13px;margin-bottom:10px;font-size:13px;line-height:1.5;color:var(--ink2)}
+.od-box.res{background:var(--green-bg);border:1px solid var(--green-bd)}
+.od-box.wait{background:#f1eef8;border:1px solid #d6cdea}
+.od-box.closed{background:var(--sand);border:1px solid var(--sand3)}
+.od-box-t{font-weight:700;margin-bottom:4px;color:var(--ink)}
+.tl{border-left:2px solid var(--sand3);margin-left:5px;padding-left:14px}
+.tl-i{position:relative;padding:0 0 11px;font-size:12.5px;color:var(--ink2);line-height:1.4}
+.tl-i::before{content:'';position:absolute;left:-19px;top:4px;width:8px;height:8px;border-radius:50%;background:var(--rust)}
+.tl-i small{display:block;color:var(--ink4);font-size:11px}
+.tl-note{color:var(--ink3)}
+.nbadge{background:var(--red);color:#fff;font-size:10px;font-weight:800;min-width:18px;height:18px;border-radius:9px;display:inline-flex;align-items:center;justify-content:center;padding:0 5px;margin-left:auto;letter-spacing:0}
+.btab .nbadge{position:absolute;top:5px;left:calc(50% + 5px);margin:0}
+.load-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--sand2);font-size:13px}
+.load-row:last-child{border-bottom:none}
+.load-bar{flex:1;height:8px;background:var(--sand2);border-radius:4px;overflow:hidden}
+.load-bar i{display:block;height:100%;background:var(--rust);border-radius:4px}
+.modal-foot.wrap{flex-wrap:wrap}
+.modal-foot.wrap .btn{flex:1 1 40%}
+.modal-foot.wrap .btn-icon{flex:0 0 auto}
+.toast.i{background:var(--blue)}
+.kpi[data-of]{cursor:pointer}
+.chip-n{font-weight:800;opacity:.7;margin-left:2px}
+.stat-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.stat{background:var(--white);border:1px solid var(--sand2);border-radius:var(--r);padding:12px 14px;box-shadow:var(--sh)}
+.stat b{display:block;font-family:var(--serif);font-size:22px;font-weight:600;color:var(--ink)}
+.stat span{font-size:11.5px;color:var(--ink3)}
+.tech-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--sand2)}
+.tech-row.off{opacity:.55}
+.prev-ev{background:var(--sand);border-radius:var(--r-sm);padding:9px 11px;margin-bottom:6px;font-size:12.5px;line-height:1.45}
+.prev-ev .ph-strip{margin:6px 0 0}
+.ctx-box{background:var(--sand);border-radius:var(--r-sm);padding:10px 12px;font-size:13px;color:var(--ink2);margin-bottom:14px;line-height:1.45}
+@media(min-width:640px){.stat-row{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
@@ -316,7 +379,7 @@ input[type=color].cswatch{width:28px;height:28px;border-radius:50%;border:2px so
     <div class="login-logo">Amsterdam</div>
     <div class="login-sub">Control de Mantenimiento</div>
     <div class="login-err" id="login-err">Usuario o contraseña incorrectos</div>
-    <div class="fg"><label class="fl">Email</label><input class="fi" id="login-email" type="email" placeholder="usuario@amsterdam.com"></div>
+    <div class="fg"><label class="fl">Usuario</label><input class="fi" id="login-email" type="text" autocapitalize="none" autocorrect="off" autocomplete="username" placeholder="Ej: sergio"></div>
     <div class="fg"><label class="fl">Contraseña</label><input class="fi" id="login-pass" type="password" placeholder="••••••••"></div>
     <button class="btn btn-p" style="width:100%;justify-content:center;margin-top:4px" onclick="doLogin()">Ingresar</button>
   </div>
@@ -327,11 +390,16 @@ input[type=color].cswatch{width:28px;height:28px;border-radius:50%;border:2px so
   <div class="drw-sec">
     <div class="drw-sec-lbl">Menú</div>
     <button class="drw-item on" id="di-dashboard" onclick="goPage('dashboard');closeDrw()"><span class="drw-icon">◈</span>Inicio</button>
-    <button class="drw-item" id="di-machines" onclick="goPage('machines');closeDrw()"><span class="drw-icon">⚙</span>Maquinarias</button>
-    <button class="drw-item" id="di-tasks" onclick="goPage('tasks');closeDrw()"><span class="drw-icon">📋</span>Tareas Generales</button>
+    <button class="drw-item" id="di-orders" onclick="goPage('orders');closeDrw()"><span class="drw-icon">🧰</span>Órdenes de trabajo</button>
+    <button class="drw-item admin-only" id="di-machines" onclick="goPage('machines');closeDrw()"><span class="drw-icon">⚙</span>Maquinarias</button>
+    <button class="drw-item admin-only" id="di-tasks" onclick="goPage('tasks');closeDrw()"><span class="drw-icon">📋</span>Tareas Generales</button>
     <button class="drw-item admin-only" id="di-reports" onclick="goPage('reports');closeDrw()"><span class="drw-icon">📊</span>Reportes</button>
     <button class="drw-item" id="di-reminders" onclick="goPage('reminders');closeDrw()"><span class="drw-icon">🔔</span>Recordatorios</button>
     <button class="drw-item admin-only" id="di-audit" onclick="goPage('audit');closeDrw()"><span class="drw-icon">🔍</span>Auditoría</button>
+  </div>
+  <div class="drw-sec mgr-only">
+    <div class="drw-sec-lbl">Mantenimiento</div>
+    <button class="drw-item" onclick="openTechs();closeDrw()"><span class="drw-icon">👷</span>Equipo de mantenimiento</button>
   </div>
   <div class="drw-sec admin-only">
     <div class="drw-sec-lbl">Config.</div>
@@ -345,13 +413,14 @@ input[type=color].cswatch{width:28px;height:28px;border-radius:50%;border:2px so
   <div class="sb-sec">
     <div class="sb-sec-lbl">Menú</div>
     <button class="sb-item on" id="si-dashboard" onclick="goPage('dashboard')"><span class="sb-icon">◈</span>Inicio</button>
+    <button class="sb-item" id="si-orders" onclick="goPage('orders')"><span class="sb-icon">🧰</span>Órdenes de trabajo</button>
   </div>
-  <div class="sb-sec">
+  <div class="sb-sec admin-only">
     <div class="sb-sec-lbl">Maquinarias</div>
     <div id="sb-mach-subs"></div>
     <button class="sb-item" id="si-machines" onclick="goPage('machines')" style="margin-top:4px;font-size:11px;color:var(--ink4)"><span class="sb-icon" style="font-size:11px">⚙</span>Ver todas</button>
   </div>
-  <div class="sb-sec">
+  <div class="sb-sec admin-only">
     <div class="sb-sec-lbl">Tareas Generales</div>
     <div id="sb-task-subs"></div>
     <button class="sb-item" id="si-tasks" onclick="goPage('tasks')" style="margin-top:4px;font-size:11px;color:var(--ink4)"><span class="sb-icon" style="font-size:11px">📋</span>Ver todas</button>
@@ -361,6 +430,10 @@ input[type=color].cswatch{width:28px;height:28px;border-radius:50%;border:2px so
     <button class="sb-item admin-only" id="si-reports" onclick="goPage('reports')"><span class="sb-icon">📊</span>Reportes</button>
     <button class="sb-item" id="si-reminders" onclick="goPage('reminders')"><span class="sb-icon">🔔</span>Recordatorios</button>
     <button class="sb-item admin-only" id="si-audit" onclick="goPage('audit')"><span class="sb-icon">🔍</span>Auditoría</button>
+  </div>
+  <div class="sb-sec mgr-only">
+    <div class="sb-sec-lbl">Mantenimiento</div>
+    <button class="sb-item" onclick="openTechs()"><span class="sb-icon">👷</span>Equipo</button>
   </div>
   <div class="sb-sec admin-only">
     <div class="sb-sec-lbl">Config.</div>
@@ -389,6 +462,9 @@ input[type=color].cswatch{width:28px;height:28px;border-radius:50%;border:2px so
       <div style="font-family:var(--serif);font-size:20px;font-weight:600;color:var(--ink)" id="greeting-text">Hola!</div>
       <div style="font-size:13px;color:var(--ink3);margin-top:3px" id="greeting-sub"></div>
     </div>
+    <div id="dash-role"></div>
+    <div id="dash-classic">
+    <div class="slbl">Estado de equipos</div>
     <!-- KPIs -->
     <div class="kpi-grid">
       <div class="kpi kpi-b" onclick="goPage('machines')" style="cursor:pointer"><div class="kpi-num" id="k-total">—</div><div class="kpi-lbl">Equipos</div></div>
@@ -402,7 +478,7 @@ input[type=color].cswatch{width:28px;height:28px;border-radius:50%;border:2px so
     <!-- MAIN GRID -->
     <div class="dash-grid">
       <div>
-        <div class="slbl">Últimas 8 intervenciones</div>
+        <div class="slbl">Últimos trabajos realizados</div>
         <div id="dash-incidents"></div>
         <div id="dash-inc-empty" class="empty" style="display:none"><div class="empty-ico">📋</div><p>Sin intervenciones registradas.</p></div>
       </div>
@@ -411,8 +487,17 @@ input[type=color].cswatch{width:28px;height:28px;border-radius:50%;border:2px so
         <div class="card"><div class="card-body" id="up-body"></div></div>
       </div>
     </div>
+    </div>
   </div>
-  <div id="page-machines" class="page">
+  <div id="page-orders" class="page">
+    <div class="pg-hdr"><div class="pg-title">Órdenes de trabajo</div><div style="display:flex;gap:6px"><button class="btn btn-g btn-sm admin-only" onclick="expOrdersExcel()">⬇ Excel</button><button class="btn btn-p btn-sm" onclick="openNewOrder()">＋ Pedido</button></div></div>
+    <div class="chips" id="ord-scope"></div>
+    <div class="chips" id="ord-chips"></div>
+    <div class="search-box"><span class="search-icon">🔍</span><input class="search-input" id="ord-q" placeholder="Buscar máquina, problema, persona…" oninput="ordQ=this.value;renderOrders()"></div>
+    <div id="ord-list"></div>
+    <div id="ord-empty" class="empty" style="display:none"><div class="empty-ico">🧰</div><p>No hay órdenes acá.</p></div>
+  </div>
+  <div id="page-machines" class="page admin-only">
     <div id="view-list">
       <div class="pg-hdr"><div class="pg-title">Maquinarias</div><button class="btn btn-p btn-sm admin-only" onclick="openM('modal-machine')">＋ Nueva</button></div>
       <div class="chips" id="mach-status-chips">
@@ -428,16 +513,18 @@ input[type=color].cswatch{width:28px;height:28px;border-radius:50%;border:2px so
       <div class="back-row" onclick="closeDetail()">← Volver</div>
       <div class="det-hero" id="det-hero"></div>
       <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
-        <button class="btn btn-p btn-sm" onclick="openEventFor(curMachId,'machine')">＋ Intervención</button>
+        <button class="btn btn-p btn-sm" onclick="openNewOrder(curMachId,'machine')">＋ Pedido</button>
+        <button class="btn btn-g btn-sm mgr-only" onclick="openEventFor(curMachId,'machine')">＋ Registrar trabajo directo</button>
         <button class="btn btn-g btn-sm admin-only" onclick="editCurMachine()">✏️ Editar</button>
         <button class="btn btn-d btn-sm admin-only" onclick="delCurMachine()">🗑</button>
       </div>
+      <div id="det-orders"></div>
       <div class="slbl">Historial</div>
       <div id="det-hist"></div>
-      <div id="det-empty" class="empty" style="display:none"><div class="empty-ico">📋</div><p>Sin intervenciones.</p><button class="empty-cta" onclick="openEventFor(curMachId,'machine')">＋ Registrar</button></div>
+      <div id="det-empty" class="empty" style="display:none"><div class="empty-ico">📋</div><p>Sin intervenciones.</p><button class="empty-cta" onclick="openNewOrder(curMachId,'machine')">＋ Hacer un pedido</button></div>
     </div>
   </div>
-  <div id="page-tasks" class="page">
+  <div id="page-tasks" class="page admin-only">
     <div id="view-tasks-list">
       <div class="pg-hdr"><div class="pg-title">Tareas Generales</div><button class="btn btn-p btn-sm admin-only" onclick="openM('modal-task')">＋ Nueva</button></div>
       <div class="chips" id="task-status-chips">
@@ -453,10 +540,12 @@ input[type=color].cswatch{width:28px;height:28px;border-radius:50%;border:2px so
       <div class="back-row" onclick="closeTaskDetail()">← Volver</div>
       <div class="det-hero" id="task-det-hero"></div>
       <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
-        <button class="btn btn-p btn-sm" onclick="openEventFor(curTaskId,'task')">＋ Intervención</button>
+        <button class="btn btn-p btn-sm" onclick="openNewOrder(curTaskId,'task')">＋ Pedido</button>
+        <button class="btn btn-g btn-sm mgr-only" onclick="openEventFor(curTaskId,'task')">＋ Registrar trabajo directo</button>
         <button class="btn btn-g btn-sm admin-only" onclick="editCurTask()">✏️ Editar</button>
         <button class="btn btn-d btn-sm admin-only" onclick="delCurTask()">🗑</button>
       </div>
+      <div id="task-det-orders"></div>
       <div class="slbl">Historial</div>
       <div id="task-det-hist"></div>
       <div id="task-det-empty" class="empty" style="display:none"><div class="empty-ico">📋</div><p>Sin intervenciones.</p></div>
@@ -513,9 +602,10 @@ input[type=color].cswatch{width:28px;height:28px;border-radius:50%;border:2px so
 </div>
 <nav class="bnav">
   <button class="btab on" id="tab-dashboard" onclick="goPage('dashboard')"><div class="btab-icon">◈</div><div>Inicio</div></button>
-  <button class="btab" id="tab-machines" onclick="goPage('machines')"><div class="btab-icon">⚙</div><div>Máquinas</div></button>
-  <button class="btab" id="tab-tasks" onclick="goPage('tasks')"><div class="btab-icon">📋</div><div>Tareas</div></button>
-  <button class="btab" id="tab-reminders" onclick="goPage('reminders')"><div class="btab-icon">🔔</div><div>Avisos</div></button>
+  <button class="btab" id="tab-orders" onclick="goPage('orders')"><div class="btab-icon">🧰</div><div>Órdenes</div></button>
+  <button class="btab admin-only" id="tab-machines" onclick="goPage('machines')"><div class="btab-icon">⚙</div><div>Máquinas</div></button>
+  <button class="btab admin-only" id="tab-tasks" onclick="goPage('tasks')"><div class="btab-icon">📋</div><div>Tareas</div></button>
+  <button class="btab staff-only" id="tab-reminders" onclick="goPage('reminders')"><div class="btab-icon">🔔</div><div>Avisos</div></button>
 </nav>
 <button class="fab" id="fab" onclick="onFab()">＋</button>
 <div class="toast-wrap" id="toasts"></div>
@@ -628,20 +718,107 @@ input[type=color].cswatch{width:28px;height:28px;border-radius:50%;border:2px so
       <div style="border-top:1px solid var(--sand2);padding-top:14px">
         <div style="font-size:13px;font-weight:700;margin-bottom:12px">Nuevo usuario</div>
         <div class="fg"><label class="fl">Nombre</label><input class="fi" id="nu-name" placeholder="Nombre completo"></div>
-        <div class="fg"><label class="fl">Email</label><input class="fi" id="nu-email" type="email" placeholder="email@amsterdam.com"></div>
+        <div class="fg"><label class="fl">Usuario (para entrar)</label><input class="fi" id="nu-email" type="text" autocapitalize="none" placeholder="Ej: sergio"></div>
         <div class="fg"><label class="fl">Contraseña</label><input class="fi" id="nu-pass" placeholder="Contraseña inicial"></div>
-        <div class="fg"><label class="fl">Rol</label><select class="fs" id="nu-role"><option value="operario">Operario</option><option value="admin">Admin</option></select></div>
+        <div class="fg"><label class="fl">Rol</label><select class="fs" id="nu-role"><option value="encargado">Encargado (hace pedidos)</option><option value="jefe">Jefe de mantenimiento</option><option value="admin">Admin</option></select></div>
         <button class="btn btn-p btn-sm" onclick="addUser()">Crear usuario</button>
       </div>
     </div>
     <div class="modal-foot"><button class="btn btn-g" onclick="closeM('modal-users')">Cerrar</button></div>
   </div>
 </div>
+<div class="modal-ov" id="modal-order">
+  <div class="modal"><div class="modal-handle"></div>
+    <div class="modal-hdr"><div class="modal-title">Nuevo pedido</div><button class="modal-x" onclick="closeM('modal-order')">×</button></div>
+    <div class="modal-body">
+      <div class="fg"><label class="fl">1 · ¿Dónde? *</label>
+        <div id="o-search-wrap">
+          <div class="search-box"><span class="search-icon">🔍</span><input class="search-input" id="o-search" placeholder="Buscá la máquina o el sector…" oninput="oSearch(this.value)" autocomplete="off"></div>
+          <div class="search-results" id="o-search-results"></div>
+          <button type="button" class="link-btn" style="margin:0;font-size:12px" onclick="useOtherPlace()">📍 No está en la lista, escribir el lugar</button>
+        </div>
+        <div id="o-selected" style="display:none"></div>
+        <div id="o-place-wrap" style="display:none">
+          <input class="fi" id="o-place" placeholder="Ej: baño del vestuario, depósito, patio…">
+          <button type="button" class="link-btn" style="margin:4px 0 0;font-size:12px" onclick="clearOTarget()">← Buscar en la lista</button>
+        </div>
+      </div>
+      <div class="fg"><label class="fl">2 · ¿Qué pasa? *</label><input class="fi" id="o-title" maxlength="140" placeholder="Ej: La amasadora hace ruido y se frena"></div>
+      <div class="fg"><label class="fl">Más detalle (opcional)</label><textarea class="ft" id="o-desc" style="min-height:60px" placeholder="Desde cuándo, qué se probó, etc."></textarea></div>
+      <div class="fg"><label class="fl">3 · Prioridad *</label><div class="pri-opts" id="o-pri"></div></div>
+      <div class="fg"><label class="fl">Foto del problema (opcional)</label>
+        <button type="button" class="ph-pick" onclick="document.getElementById('o-photo-input').click()">📷 Sacar o adjuntar foto</button>
+        <input type="file" id="o-photo-input" accept="image/*" multiple style="display:none" onchange="psPick('ob',this.files);this.value=''">
+        <div class="ph-grid" id="o-photos-prev"></div>
+      </div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-g" onclick="closeM('modal-order')">Cancelar</button><button class="btn btn-p" onclick="saveOrder()">Enviar pedido</button></div>
+  </div>
+</div>
+<div class="modal-ov" id="modal-od">
+  <div class="modal"><div class="modal-handle"></div>
+    <div class="modal-hdr"><div class="modal-title" id="od-code">Orden</div><button class="modal-x" onclick="closeM('modal-od')">×</button></div>
+    <div class="modal-body" id="od-body"></div>
+    <div class="modal-foot wrap" id="od-foot"></div>
+  </div>
+</div>
+<div class="modal-ov" id="modal-assign">
+  <div class="modal"><div class="modal-handle"></div>
+    <div class="modal-hdr"><div class="modal-title">Asignar orden</div><button class="modal-x" onclick="closeM('modal-assign')">×</button></div>
+    <div class="modal-body">
+      <div class="ctx-box" id="a-ctx"></div>
+      <div class="fg"><label class="fl">¿Quién lo hace? *</label><select class="fs" id="a-tech"></select></div>
+      <div id="a-notechs" class="empty-mini" style="display:none">Todavía no cargaste a tu equipo.<br><button type="button" class="link-btn" style="margin:4px 0 0" onclick="openTechs()">＋ Cargar equipo</button></div>
+      <div class="fg"><label class="fl">¿Para cuándo? (opcional)</label><input type="date" class="fi" id="a-due"></div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-g" onclick="closeM('modal-assign')">Cancelar</button><button class="btn btn-p" onclick="saveAssign()">Asignar</button></div>
+  </div>
+</div>
+<div class="modal-ov" id="modal-resolve">
+  <div class="modal"><div class="modal-handle"></div>
+    <div class="modal-hdr"><div class="modal-title">Reportar trabajo</div><button class="modal-x" onclick="closeM('modal-resolve')">×</button></div>
+    <div class="modal-body">
+      <div class="ctx-box" id="r-ctx"></div>
+      <div class="fg"><label class="fl">¿Quién lo hizo? *</label><select class="fs" id="r-tech"></select></div>
+      <div class="fg"><label class="fl">¿Qué se hizo? *</label><textarea class="ft" id="r-text" placeholder="Ej: Se cambió la correa y se ajustó el tensor"></textarea></div>
+      <div class="fg"><label class="fl">Fotos del trabajo terminado *</label>
+        <button type="button" class="ph-pick" onclick="document.getElementById('r-photo-input').click()">📷 Sacar o adjuntar fotos</button>
+        <input type="file" id="r-photo-input" accept="image/*" multiple style="display:none" onchange="psPick('rs',this.files);this.value=''">
+        <div class="ph-grid" id="r-photos-prev"></div>
+      </div>
+      <div class="fg"><label class="fl">Repuestos / materiales usados</label><input class="fi" id="r-parts" placeholder="Ej: correa A-42, 2 rulemanes"></div>
+      <div class="frow">
+        <div class="fg" id="r-final-wrap"><label class="fl">¿Cómo quedó?</label><select class="fs" id="r-final"><option value="ok">✅ Funcionando bien</option><option value="warn">⚠️ Funciona, hay que seguirla</option><option value="danger">🔴 Sigue con problemas</option></select></div>
+        <div class="fg" id="r-next-wrap"><label class="fl">Próximo preventivo</label><input type="date" class="fi" id="r-next"></div>
+      </div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-g" onclick="closeM('modal-resolve')">Cancelar</button><button class="btn btn-p" onclick="saveResolve()">Guardar</button></div>
+  </div>
+</div>
+<div class="modal-ov" id="modal-note">
+  <div class="modal"><div class="modal-handle"></div>
+    <div class="modal-hdr"><div class="modal-title" id="note-title">Comentario</div><button class="modal-x" onclick="closeM('modal-note')">×</button></div>
+    <div class="modal-body"><div class="fg"><textarea class="ft" id="note-text"></textarea></div></div>
+    <div class="modal-foot"><button class="btn btn-g" onclick="closeM('modal-note')">Cancelar</button><button class="btn btn-p" onclick="saveNote()">Guardar</button></div>
+  </div>
+</div>
+<div class="modal-ov" id="modal-techs">
+  <div class="modal"><div class="modal-handle"></div>
+    <div class="modal-hdr"><div class="modal-title">Equipo de mantenimiento</div><button class="modal-x" onclick="closeM('modal-techs')">×</button></div>
+    <div class="modal-body">
+      <p style="font-size:13px;color:var(--ink3);margin-bottom:12px">Las personas a las que se les asignan las órdenes. No necesitan usuario: el jefe reporta por ellas.</p>
+      <div id="techs-list"></div>
+      <div style="display:flex;gap:8px;margin-top:14px"><input class="fi" id="tech-new" placeholder="Nombre" onkeydown="if(event.key==='Enter')addTech()"><button class="btn btn-p" onclick="addTech()">Agregar</button></div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-g" onclick="closeM('modal-techs')">Listo</button></div>
+  </div>
+</div>
+
 <script>
 var SB_URL='https://lyzfmbiusuxsuyoowrdy.supabase.co';
 var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx5emZtYml1c3V4c3V5b293cmR5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUyNjU0MjAsImV4cCI6MjEwMDg0MTQyMH0.AYz5L8IExegZNhZ423IXmGJucY2bDJkWlpHZFuR8cFg';
 var sb=supabase.createClient(SB_URL,SB_KEY);
-var _cats=[],_subcats=[],_machines=[],_tasks=[],_events=[],_reminders=[],_users=[],_audit=[];
+var _cats=[],_subcats=[],_machines=[],_tasks=[],_events=[],_reminders=[],_users=[],_audit=[],_orders=[],_techs=[];
 var curUser=null;
 function isAdmin(){return curUser&&curUser.role==='admin';}
 function saveSession(u){localStorage.setItem('ams_user',JSON.stringify(u));}
@@ -659,13 +836,16 @@ async function loadAll(){
       sb.from('am_events').select('*').order('date',{ascending:false}),
       sb.from('am_reminders').select('*').order('due_date'),
       sb.from('am_users').select('id,name,email,role,active').order('created_at'),
-      sb.from('am_audit').select('*').order('created_at',{ascending:false}).limit(100)
+      sb.from('am_audit').select('*').order('created_at',{ascending:false}).limit(100),
+      sb.from('am_orders').select('*').order('created_at',{ascending:false}),
+      sb.from('am_techs').select('*').order('name')
     ]);
     var res=await Promise.race([q,t]);
     _cats=res[0].data||[];_subcats=res[1].data||[];
     _machines=res[2].data||[];_tasks=res[3].data||[];
     _events=res[4].data||[];_reminders=res[5].data||[];
     _users=res[6].data||[];_audit=res[7].data||[];
+    _orders=res[8].data||[];_techs=res[9].data||[];
     return true;
   }catch(e){
     var ld=document.getElementById('loading');
@@ -676,11 +856,11 @@ async function loadAll(){
 }
 
 async function doLogin(){
-  var email=document.getElementById('login-email').value.trim();
+  var email=document.getElementById('login-email').value.trim().toLowerCase();
   var pass=document.getElementById('login-pass').value;
   if(!email||!pass)return;
   showLoad(true);
-  var res=await sb.from('am_users').select('*').eq('email',email).eq('password',pass).eq('active',true).single();
+  var res=await sb.from('am_users').select('*').ilike('email',email).eq('password',pass).eq('active',true).single();
   showLoad(false);
   if(res.error||!res.data){document.getElementById('login-err').classList.add('on');return;}
   curUser=res.data;saveSession(curUser);startApp();
@@ -701,17 +881,27 @@ async function startApp(){
   var ok=await loadAll();
   showLoad(false);
   if(!ok)return;
-  applyRole();setUserLabels();renderGreeting();renderDash();renderSbSubcats();checkReminders();setupRT();
+  var fresh=_users.find(function(u){return u.id===curUser.id;});
+  if(!fresh||fresh.active===false){doLogout();return;}
+  curUser.role=fresh.role;curUser.name=fresh.name;saveSession(curUser);
+  ordScope=isEnc()?'mine':'all';ordFilt='open';
+  if(canManage()){var nPrev=await genPreventives();if(nPrev){await loadAll();}}
+  applyRole();setUserLabels();renderGreeting();goPage('dashboard');renderSbSubcats();checkReminders();updateBadges();setupRT();
 }
 
 function applyRole(){
   var isAdm=isAdmin();
   document.querySelectorAll('.admin-only').forEach(function(el){el.style.display=isAdm?'':'none';});
+  var mgr=canManage();
+  document.querySelectorAll('.mgr-only').forEach(function(el){el.style.display=mgr?'':'none';});
+  document.querySelectorAll('.staff-only').forEach(function(el){el.style.display=isAdm?'none':'';});
 }
 function setUserLabels(){
   var n=curUser?curUser.name:'—';
   var a=document.getElementById('sb-username');var b=document.getElementById('drw-username');
-  if(a)a.textContent=n;if(b)b.textContent=n;
+  var rl=curUser?(ROLE_LBL[curUser.role]||''):'';
+  if(a)a.innerHTML=esc(n)+'<span style="display:block;font-weight:500;font-size:11px;color:var(--ink3)">'+rl+'</span>';
+  if(b)b.innerHTML=esc(n)+'<span style="display:block;font-weight:500;font-size:11px;color:var(--ink3)">'+rl+'</span>';
 }
 
 var MON=['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
@@ -742,6 +932,7 @@ function openDrw(){document.getElementById('drw').classList.add('on');document.g
 function closeDrw(){document.getElementById('drw').classList.remove('on');document.getElementById('drw-overlay').classList.remove('on');}
 
 function goPage(page){
+  if(!isAdmin()&&['machines','tasks','reports','audit'].indexOf(page)>=0)page='dashboard';
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('on');});
   var pg=document.getElementById('page-'+page);if(pg)pg.classList.add('on');
   document.querySelectorAll('.btab').forEach(function(t){t.classList.remove('on');});
@@ -750,12 +941,13 @@ function goPage(page){
   var si=document.getElementById('si-'+page);if(si)si.classList.add('on');
   var di=document.getElementById('di-'+page);if(di)di.classList.add('on');
   curPage=page;
-  var titles={dashboard:'Inicio',machines:'Maquinarias',tasks:'Tareas Generales',reports:'Reportes',reminders:'Recordatorios',audit:'Auditoría'};
+  var titles={dashboard:'Inicio',orders:'Órdenes de trabajo',machines:'Maquinarias',tasks:'Tareas Generales',reports:'Reportes',reminders:'Recordatorios',audit:'Auditoría'};
   var dt=document.getElementById('desk-title');if(dt)dt.textContent=titles[page]||'';
   var fab=document.getElementById('fab');
   if(fab)fab.classList.toggle('off',page==='reports'||page==='audit');
   updateDeskActions(page);
   if(page==='dashboard')renderDash();
+  if(page==='orders')renderOrders();
   if(page==='machines'){closeDetail();renderMachines();}
   if(page==='tasks'){closeTaskDetail();renderTasks();}
   if(page==='reports')renderReports();
@@ -771,8 +963,10 @@ function updateDeskActions(page){
 }
 
 function onFab(){
-  if(curPage==='reminders')openM('modal-reminder');
-  else openM('modal-event');
+  if(curPage==='reminders'){openM('modal-reminder');return;}
+  if(curPage==='machines'&&curMachId&&document.getElementById('view-detail').classList.contains('on')){openNewOrder(curMachId,'machine');return;}
+  if(curPage==='tasks'&&curTaskId&&document.getElementById('view-tasks-detail').classList.contains('on')){openNewOrder(curTaskId,'task');return;}
+  openNewOrder();
 }
 
 function checkReminders(){
@@ -952,6 +1146,7 @@ function toggleSbGroup(id){
 }
 
 function renderDash(){
+  renderRoleDash();updateBadges();
   var today=new Date();today.setHours(0,0,0,0);
   var all=_machines.concat(_tasks);
   document.getElementById('k-total').textContent=all.length;
@@ -960,7 +1155,7 @@ function renderDash(){
   document.getElementById('k-crit').textContent=all.filter(function(m){return m.status==='danger';}).length;
   var urgent=all.filter(function(m){return m.status==='danger'||(m.next_maint&&new Date(m.next_maint+'T00:00:00')<today);});
   var ab=document.getElementById('alert-bar');
-  if(urgent.length){ab.classList.remove('off');document.getElementById('alert-txt').innerHTML='<strong>'+urgent.length+' equipo'+(urgent.length>1?'s requieren':' requiere')+' atención:</strong> '+urgent.map(function(m){return m.name;}).join(', ')+'.';}
+  if(urgent.length&&isAdmin()){ab.classList.remove('off');document.getElementById('alert-txt').innerHTML='<strong>'+urgent.length+' equipo'+(urgent.length>1?'s requieren':' requiere')+' atención:</strong> '+urgent.map(function(m){return m.name;}).join(', ')+'.';}
   else ab.classList.add('off');
   renderDashBlocks();
   var recent=_events.slice(0,8);
@@ -1081,6 +1276,7 @@ function openDetail(machId){
   document.getElementById('det-hero').innerHTML=
     '<div style="margin-bottom:8px">'+catTag(m.subcategory_id)+'</div><div class="det-name">'+m.name+'</div>'+bdg(m.status)+
     '<div class="det-meta">'+(m.model?'<div class="det-mi">⚙ '+m.model+'</div>':'')+(m.serial?'<div class="det-mi"># '+m.serial+'</div>':'')+(m.install?'<div class="det-mi">📅 '+fmtD(m.install)+'</div>':'')+(m.freq?'<div class="det-mi">🔄 Cada '+m.freq+'d</div>':'')+'<div class="det-mi mc-next '+nl.cls+'">📅 Próximo: '+nl.txt+'</div></div>'+(m.notes?'<div class="det-notes">'+m.notes+'</div>':'');
+  renderEntityOrders(machId,'machine','det-orders');
   renderDetHist(machId,'machine');
   document.getElementById('fab').classList.remove('off');
 }
@@ -1095,8 +1291,8 @@ function renderDetHist(id,type){
   el.innerHTML=evs.map(function(ev){
     var canEdit=isAdmin();
     return '<div class="hcard"><div class="hcard-top"><div><span class="type-tag '+(ev.type==='preventivo'?'t-prev':'t-corr')+'">'+ev.type+'</span><span style="font-size:12px;color:var(--ink3);margin-left:8px">'+fmtD(ev.date)+'</span></div>'+bdg(ev.new_status)+'</div>'+
-      '<div class="hcard-desc">'+ev.description+'</div>'+photoStrip(ev)+
-      '<div class="hcard-foot">'+(ev.tech?'<div class="hcard-meta">👷 '+ev.tech+'</div>':'')+(ev.next_date?'<div class="hcard-meta">📅 '+fmtD(ev.next_date)+'</div>':'')+(canEdit?'<button class="btn btn-g btn-sm" style="margin-left:auto" onclick="openEditEv(\''+ev.id+'\')">✏️ Editar</button>':'')+'</div></div>';
+      '<div class="hcard-desc">'+esc(ev.description)+'</div>'+photoStrip(ev)+
+      '<div class="hcard-foot">'+(ev.order_id&&_orders.find(function(o){return o.id===ev.order_id;})?'<button class="btn btn-g btn-sm" onclick="openOrder(\''+ev.order_id+'\')">🧰 '+oCode(_orders.find(function(o){return o.id===ev.order_id;}))+'</button>':'')+(ev.tech?'<div class="hcard-meta">👷 '+ev.tech+'</div>':'')+(ev.next_date?'<div class="hcard-meta">📅 '+fmtD(ev.next_date)+'</div>':'')+(canEdit?'<button class="btn btn-g btn-sm" style="margin-left:auto" onclick="openEditEv(\''+ev.id+'\')">✏️ Editar</button>':'')+'</div></div>';
   }).join('');
 }
 
@@ -1117,6 +1313,7 @@ function openTaskDetail(taskId){
   document.getElementById('task-det-hero').innerHTML=
     '<div style="margin-bottom:8px">'+catTag(t.subcategory_id)+'</div><div class="det-name">'+t.name+'</div>'+bdg(t.status)+
     '<div class="det-meta">'+(t.freq?'<div class="det-mi">🔄 Cada '+t.freq+'d</div>':'')+'<div class="det-mi mc-next '+nl.cls+'">📅 Próximo: '+nl.txt+'</div></div>'+(t.notes?'<div class="det-notes">'+t.notes+'</div>':'');
+  renderEntityOrders(taskId,'task','task-det-orders');
   renderDetHist(taskId,'task');
   document.getElementById('fab').classList.remove('off');
 }
@@ -1189,7 +1386,7 @@ function loadSubcats(selId,catId){
 }
 function clearMachForm(){['m-id','m-name','m-model','m-serial','m-install','m-notes'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});document.getElementById('m-cat').value='';document.getElementById('m-subcat').innerHTML='<option value="">Elegir...</option>';document.getElementById('m-status').value='ok';document.getElementById('m-freq').value='';var ic=document.getElementById('m-icon');if(ic)ic.value='⚙️';var ip=document.getElementById('m-icon-preview');if(ip)ip.textContent='⚙️';var ep=document.getElementById('emoji-picker');if(ep)ep.style.display='none';}
 function clearTaskForm(){['t-id','t-name','t-notes'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});document.getElementById('t-cat').value='';document.getElementById('t-subcat').innerHTML='<option value="">Elegir...</option>';document.getElementById('t-status').value='ok';document.getElementById('t-freq').value='';}
-function clearEvForm(){['e-id','e-desc','e-tech','e-next','e-machine-id','e-search'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});document.getElementById('e-type').value='preventivo';document.getElementById('e-status').value='ok';document.getElementById('e-entity-type').value='machine';var es=document.getElementById('e-selected');if(es)es.textContent='';evPhotos=[];renderPhotoPrev();}
+function clearEvForm(){['e-id','e-desc','e-tech','e-next','e-machine-id','e-search'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});document.getElementById('e-type').value='preventivo';document.getElementById('e-status').value='ok';document.getElementById('e-entity-type').value='machine';var es=document.getElementById('e-selected');if(es)es.textContent='';psReset('ev');}
 
 function openEditMachine(machId){
   var m=_machines.find(function(x){return x.id===machId;});if(!m)return;
@@ -1227,7 +1424,7 @@ function openEditEv(evId){
   document.getElementById('e-type').value=ev.type;document.getElementById('e-date').value=ev.date;
   document.getElementById('e-desc').value=ev.description;document.getElementById('e-tech').value=ev.tech||'';
   document.getElementById('e-status').value=ev.new_status||'ok';document.getElementById('e-next').value=ev.next_date||'';
-  evPhotos=(ev.photos||[]).map(function(u){return{url:u};});renderPhotoPrev();
+  psLoad('ev',ev.photos||[]);
   document.getElementById('modal-event').classList.add('on');
 }
 
@@ -1258,59 +1455,6 @@ async function saveTask(){
   if(curPage==='tasks'){renderTasks();if(editId&&curTaskId===editId)openTaskDetail(editId);}
 }
 
-var evPhotos=[];var PH_MAX=6;var PH_BUCKET='am-fotos';
-function compressImg(file){
-  return new Promise(function(res,rej){
-    var img=new Image();var url=URL.createObjectURL(file);
-    img.onload=function(){
-      var max=1600,w=img.naturalWidth,h=img.naturalHeight;
-      if(w>max||h>max){if(w>h){h=Math.round(h*max/w);w=max;}else{w=Math.round(w*max/h);h=max;}}
-      var c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);
-      URL.revokeObjectURL(url);
-      c.toBlob(function(b){b?res(b):rej(new Error('blob'));},'image/jpeg',0.75);
-    };
-    img.onerror=function(){URL.revokeObjectURL(url);rej(new Error('img'));};
-    img.src=url;
-  });
-}
-async function onPhotoPick(files){
-  files=Array.prototype.slice.call(files||[]);
-  if(!files.length)return;
-  var room=PH_MAX-evPhotos.length;
-  if(room<=0){toast('Máximo '+PH_MAX+' fotos','e');return;}
-  if(files.length>room){toast('Se agregan solo '+room+' (máx. '+PH_MAX+')','e');files=files.slice(0,room);}
-  for(var i=0;i<files.length;i++){
-    try{var b=await compressImg(files[i]);evPhotos.push({blob:b,preview:URL.createObjectURL(b)});}
-    catch(e){toast('Una foto no se pudo leer','e');}
-  }
-  renderPhotoPrev();
-}
-function renderPhotoPrev(){
-  var el=document.getElementById('e-photos-prev');if(!el)return;
-  el.innerHTML=evPhotos.map(function(p,i){return '<div class="ph-item"><img src="'+(p.preview||p.url)+'" alt=""><button type="button" class="ph-del" data-i="'+i+'">×</button></div>';}).join('');
-  el.querySelectorAll('.ph-del').forEach(function(btn){btn.addEventListener('click',function(){var i=parseInt(btn.getAttribute('data-i'));var p=evPhotos[i];if(p&&p.preview)URL.revokeObjectURL(p.preview);evPhotos.splice(i,1);renderPhotoPrev();});});
-}
-async function uploadEvPhotos(){
-  var urls=[];
-  for(var i=0;i<evPhotos.length;i++){
-    var p=evPhotos[i];
-    if(p.url){urls.push(p.url);continue;}
-    var path='eventos/'+new Date().toISOString().slice(0,10)+'/'+Date.now()+'_'+Math.random().toString(36).slice(2,8)+'.jpg';
-    var up=await sb.storage.from(PH_BUCKET).upload(path,p.blob,{contentType:'image/jpeg',upsert:false});
-    if(up.error)throw up.error;
-    urls.push(sb.storage.from(PH_BUCKET).getPublicUrl(path).data.publicUrl);
-  }
-  return urls;
-}
-function photoStrip(ev){
-  var ph=ev.photos||[];if(!ph.length)return '';
-  return '<div class="ph-strip">'+ph.map(function(u){return '<img class="ph-thumb" src="'+u+'" data-full="'+u+'" loading="lazy" alt="">';}).join('')+'</div>';
-}
-function openLightbox(src){document.getElementById('lightbox-img').src=src;document.getElementById('lightbox').classList.add('on');}
-function closeLightbox(){document.getElementById('lightbox').classList.remove('on');document.getElementById('lightbox-img').src='';}
-document.addEventListener('click',function(e){var t=e.target.closest&&e.target.closest('.ph-thumb');if(t){e.stopPropagation();e.preventDefault();openLightbox(t.getAttribute('data-full'));}},true);
-document.addEventListener('keydown',function(e){if(e.key==='Escape')closeLightbox();});
-
 async function saveEvent(){
   var entityId=document.getElementById('e-machine-id').value;
   var entityType=document.getElementById('e-entity-type').value||'machine';
@@ -1335,6 +1479,7 @@ async function saveEvent(){
     toast('Registrada ✓','s');
   }
   await loadAll();showLoad(false);clearEvForm();closeM('modal-event');
+  refreshAll();
   if(curPage==='dashboard')renderDash();
   if(curPage==='machines'){if(curMachId)renderDetHist(curMachId,'machine');else renderMachines();}
   if(curPage==='tasks'){if(curTaskId)renderDetHist(curTaskId,'task');else renderTasks();}
@@ -1450,12 +1595,12 @@ async function saveCategories(){
 }
 
 function renderUsersList(){
-  document.getElementById('users-list').innerHTML=_users.map(function(u){return '<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--sand2)"><div style="flex:1"><div style="font-weight:600;font-size:13px">'+u.name+'</div><div style="font-size:11.5px;color:var(--ink3)">'+u.email+' · '+u.role+'</div></div><button class="btn btn-d btn-sm" onclick="toggleUser(\''+u.id+'\','+u.active+')">'+(u.active?'Deshabilitar':'Habilitar')+'</button></div>';}).join('');
+  document.getElementById('users-list').innerHTML=_users.map(function(u){return '<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--sand2)"><div style="flex:1"><div style="font-weight:600;font-size:13px">'+u.name+'</div><div style="font-size:11.5px;color:var(--ink3)">'+esc(u.email)+' · '+(ROLE_LBL[u.role]||u.role)+'</div></div><button class="btn btn-d btn-sm" onclick="toggleUser(\''+u.id+'\','+u.active+')">'+(u.active?'Deshabilitar':'Habilitar')+'</button></div>';}).join('');
 }
 async function toggleUser(id,active){await sb.from('am_users').update({active:!active}).eq('id',id);await loadAll();renderUsersList();}
 async function addUser(){
   var name=document.getElementById('nu-name').value.trim();
-  var email=document.getElementById('nu-email').value.trim();
+  var email=document.getElementById('nu-email').value.trim().toLowerCase();
   var pass=document.getElementById('nu-pass').value;
   var role=document.getElementById('nu-role').value;
   if(!name||!email||!pass){toast('Completá todos los campos','e');return;}
@@ -1481,25 +1626,622 @@ function expRepExcel(){
 }
 function expRepPDF(){var evs=getRepFiltered();makePDF('Reportes — Amsterdam',['Fecha','Equipo','Tipo','Descripción','Técnico'],evs.map(function(ev){var m=_machines.find(function(x){return x.id===ev.machine_id;});var t=_tasks.find(function(x){return x.id===ev.task_id;});var item=m||t;return[fmtD(ev.date),item?item.name:'—',ev.type,ev.description.slice(0,60),ev.tech||'—'];}));}
 
-function toast(msg,type){type=type||'s';var c=document.getElementById('toasts');var t=document.createElement('div');t.className='toast '+type;t.innerHTML=(type==='s'?'✓':'✕')+' '+msg;c.appendChild(t);setTimeout(function(){t.remove();},2800);}
+function toast(msg,type){type=type||'s';var c=document.getElementById('toasts');var t=document.createElement('div');t.className='toast '+type;t.innerHTML=({s:'✓',e:'✕',i:'🔔'}[type]||'')+' '+esc(msg);c.appendChild(t);setTimeout(function(){t.remove();},type==='i'?6000:2800);}
 function showLoad(v){document.getElementById('loading').classList.toggle('off',!v);}
 
 function setupRT(){
-  sb.channel('ams-v2').on('postgres_changes',{event:'*',schema:'public',table:'am_machines'},handleRT).on('postgres_changes',{event:'*',schema:'public',table:'am_tasks'},handleRT).on('postgres_changes',{event:'*',schema:'public',table:'am_events'},handleRT).on('postgres_changes',{event:'*',schema:'public',table:'am_reminders'},handleRT).subscribe();
+  sb.channel('ams-v3').on('postgres_changes',{event:'*',schema:'public',table:'am_orders'},handleRT).on('postgres_changes',{event:'*',schema:'public',table:'am_order_log'},handleRT).on('postgres_changes',{event:'*',schema:'public',table:'am_techs'},handleRT).on('postgres_changes',{event:'*',schema:'public',table:'am_machines'},handleRT).on('postgres_changes',{event:'*',schema:'public',table:'am_tasks'},handleRT).on('postgres_changes',{event:'*',schema:'public',table:'am_events'},handleRT).on('postgres_changes',{event:'*',schema:'public',table:'am_reminders'},handleRT).subscribe();
 }
 var rtTimer=null;
 async function handleRT(){
   clearTimeout(rtTimer);
   rtTimer=setTimeout(async function(){
+    var prev={};_orders.forEach(function(o){prev[o.id]=o.status;});
     await loadAll();
-    if(curPage==='dashboard')renderDash();
-    if(curPage==='machines'){if(curMachId&&document.getElementById('view-detail').classList.contains('on')){if(_machines.find(function(m){return m.id===curMachId;}))renderDetHist(curMachId,'machine');else closeDetail();}else renderMachines();}
-    if(curPage==='tasks'){if(curTaskId&&document.getElementById('view-tasks-detail').classList.contains('on')){if(_tasks.find(function(t){return t.id===curTaskId;}))renderDetHist(curTaskId,'task');else closeTaskDetail();}else renderTasks();}
-    if(curPage==='reports')renderReports();
-    if(curPage==='reminders'){renderReminders();checkReminders();}
-    renderSbSubcats();
+    notifyChanges(prev);
+    refreshAll();
+    if(curOrderId&&document.getElementById('modal-od').classList.contains('on')){renderOrderDetail();loadOrderLog(curOrderId);}
   },400);
 }
+
+// ══════════ FOTOS (genérico) ══════════
+var PS={};var PH_MAX=6;var PH_BUCKET='am-fotos';
+var PS_EL={ev:'e-photos-prev',ob:'o-photos-prev',rs:'r-photos-prev'};
+function psGet(k){if(!PS[k])PS[k]={items:[]};return PS[k];}
+function compressImg(file){
+  return new Promise(function(res,rej){
+    var img=new Image();var url=URL.createObjectURL(file);
+    img.onload=function(){
+      var max=1600,w=img.naturalWidth,h=img.naturalHeight;
+      if(w>max||h>max){if(w>h){h=Math.round(h*max/w);w=max;}else{w=Math.round(w*max/h);h=max;}}
+      var c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);
+      URL.revokeObjectURL(url);
+      c.toBlob(function(b){b?res(b):rej(new Error('blob'));},'image/jpeg',0.75);
+    };
+    img.onerror=function(){URL.revokeObjectURL(url);rej(new Error('img'));};
+    img.src=url;
+  });
+}
+async function psPick(k,files){
+  var s=psGet(k);files=Array.prototype.slice.call(files||[]);
+  if(!files.length)return;
+  var room=PH_MAX-s.items.length;
+  if(room<=0){toast('Máximo '+PH_MAX+' fotos','e');return;}
+  if(files.length>room){toast('Se agregan solo '+room+' (máx. '+PH_MAX+')','e');files=files.slice(0,room);}
+  for(var i=0;i<files.length;i++){
+    try{var b=await compressImg(files[i]);s.items.push({blob:b,preview:URL.createObjectURL(b)});}
+    catch(e){toast('Una foto no se pudo leer','e');}
+  }
+  psRender(k);
+}
+function psRender(k){
+  var s=psGet(k);var el=document.getElementById(PS_EL[k]);if(!el)return;
+  el.innerHTML=s.items.map(function(p,i){return '<div class="ph-item"><img src="'+(p.preview||p.url)+'" alt=""><button type="button" class="ph-del" data-i="'+i+'">×</button></div>';}).join('');
+  el.querySelectorAll('.ph-del').forEach(function(btn){btn.addEventListener('click',function(){var i=parseInt(btn.getAttribute('data-i'));var p=s.items[i];if(p&&p.preview)URL.revokeObjectURL(p.preview);s.items.splice(i,1);psRender(k);});});
+}
+function psReset(k){var s=psGet(k);s.items.forEach(function(p){if(p.preview)URL.revokeObjectURL(p.preview);});s.items=[];psRender(k);}
+function psLoad(k,urls){psReset(k);psGet(k).items=(urls||[]).map(function(u){return{url:u};});psRender(k);}
+async function psUpload(k,folder){
+  var s=psGet(k);var urls=[];
+  for(var i=0;i<s.items.length;i++){
+    var p=s.items[i];
+    if(p.url){urls.push(p.url);continue;}
+    var path=folder+'/'+new Date().toISOString().slice(0,10)+'/'+Date.now()+'_'+Math.random().toString(36).slice(2,8)+'.jpg';
+    var up=await sb.storage.from(PH_BUCKET).upload(path,p.blob,{contentType:'image/jpeg',upsert:false});
+    if(up.error)throw up.error;
+    urls.push(sb.storage.from(PH_BUCKET).getPublicUrl(path).data.publicUrl);
+  }
+  return urls;
+}
+// compatibilidad con el formulario de intervención directa
+function onPhotoPick(files){return psPick('ev',files);}
+function renderPhotoPrev(){psRender('ev');}
+function uploadEvPhotos(){return psUpload('ev','eventos');}
+function photoStripArr(ph){
+  ph=ph||[];if(!ph.length)return '';
+  return '<div class="ph-strip">'+ph.map(function(u){return '<img class="ph-thumb" src="'+u+'" data-full="'+u+'" loading="lazy" alt="">';}).join('')+'</div>';
+}
+function photoStrip(ev){return photoStripArr(ev.photos);}
+function openLightbox(src){document.getElementById('lightbox-img').src=src;document.getElementById('lightbox').classList.add('on');}
+function closeLightbox(){document.getElementById('lightbox').classList.remove('on');document.getElementById('lightbox-img').src='';}
+document.addEventListener('click',function(e){var t=e.target.closest&&e.target.closest('.ph-thumb');if(t){e.stopPropagation();e.preventDefault();openLightbox(t.getAttribute('data-full'));}},true);
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeLightbox();});
+
+// ══════════ ÓRDENES DE TRABAJO ══════════
+var PRI={
+  urgente:{l:'Urgente',d:'Máquina parada o afecta la producción de hoy',ico:'🔴',c:'#c0302a',w:0},
+  alta:{l:'Alta',d:'Funciona, pero con una falla que puede empeorar',ico:'🟠',c:'#d9730d',w:1},
+  normal:{l:'Normal',d:'Hay que hacerlo esta semana',ico:'🔵',c:'#1a5fa0',w:2},
+  baja:{l:'Baja',d:'Mejora o pendiente sin apuro',ico:'⚪',c:'#8c7f74',w:3}
+};
+var OST={
+  nueva:{l:'Sin asignar',c:'#c0302a',bg:'#fef0ef'},
+  asignada:{l:'Asignada',c:'#1a5fa0',bg:'#edf3fc'},
+  en_curso:{l:'En curso',c:'#b06c10',bg:'#fef8ec'},
+  en_espera:{l:'En espera',c:'#6b5b95',bg:'#f1eef8'},
+  resuelta:{l:'Para confirmar',c:'#2e7d52',bg:'#edf7f1'},
+  cerrada:{l:'Cerrada',c:'#8c7f74',bg:'#f2efea'}
+};
+var ROLE_LBL={admin:'Admin',jefe:'Jefe de mantenimiento',encargado:'Encargado'};
+var curOrderId=null,ordFilt='open',ordScope='all',ordQ='',_ordView=[];
+var oSel=null,oPri=null,noteCb=null;
+
+function role(){return curUser?curUser.role:'';}
+function isJefe(){return role()==='jefe';}
+function isEnc(){return role()==='encargado';}
+function canManage(){return isAdmin()||isJefe();}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function todayS(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function addDaysS(n){var d=new Date();d.setDate(d.getDate()+n);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function ago(ts){if(!ts)return'';var d=(Date.now()-new Date(ts).getTime())/60000;if(d<1)return'recién';if(d<60)return'hace '+Math.round(d)+' min';if(d<1440)return'hace '+Math.round(d/60)+' h';var n=Math.round(d/1440);return n===1?'ayer':'hace '+n+' días';}
+function fmtDT(ts){if(!ts)return'—';var d=new Date(ts);return d.getDate()+'/'+(d.getMonth()+1)+' '+d.getHours()+':'+String(d.getMinutes()).padStart(2,'0');}
+function oCode(o){return 'OT-'+String(o.code||0).padStart(3,'0');}
+function oTarget(o){
+  var m=o.machine_id&&_machines.find(function(x){return x.id===o.machine_id;});
+  if(m)return{name:m.name,icon:m.icon||mcEmoji(m.name),type:'machine',id:m.id};
+  var t=o.task_id&&_tasks.find(function(x){return x.id===o.task_id;});
+  if(t)return{name:t.name,icon:'📋',type:'task',id:t.id};
+  return{name:o.place||'Sin ubicación',icon:'📍',type:'place'};
+}
+function priPill(p){var x=PRI[p]||PRI.normal;return '<span class="pri-pill" style="color:'+x.c+';border-color:'+x.c+'40;background:'+x.c+'12">'+x.ico+' '+x.l+'</span>';}
+function stPill(s){var x=OST[s]||OST.nueva;return '<span class="st-pill" style="color:'+x.c+';background:'+x.bg+'">'+x.l+'</span>';}
+function sortOrders(a,b){var pa=(PRI[a.priority]||PRI.normal).w,pb=(PRI[b.priority]||PRI.normal).w;if(pa!==pb)return pa-pb;return new Date(a.created_at)-new Date(b.created_at);}
+function isMine(o){return !!(curUser&&o.requested_by===curUser.id);}
+function canConfirm(o){return o.status==='resuelta'&&(isMine(o)||isAdmin());}
+function autoClose(o){
+  if(o.kind==='preventivo'||!o.requested_by)return true;
+  var u=_users.find(function(x){return x.id===o.requested_by;});
+  return !!(u&&u.role==='jefe');
+}
+function requesterFirst(o){return (o.requested_name||'quien lo pidió').split(' ')[0];}
+
+function orderCard(o){
+  var t=oTarget(o);var p=PRI[o.priority]||PRI.normal;
+  var nph=(o.photos_before||[]).length+(o.photos_after||[]).length;
+  var foot='';
+  if(o.assigned_tech)foot+='<span>👷 '+esc(o.assigned_tech)+'</span>';
+  if(o.due_date&&o.status!=='cerrada'&&o.status!=='resuelta'){var late=o.due_date<todayS();foot+='<span style="'+(late?'color:var(--red);font-weight:700':'')+'">📅 '+fmtD(o.due_date)+(late?' (atrasada)':'')+'</span>';}
+  if(nph)foot+='<span>📷 '+nph+'</span>';
+  return '<div class="oc" data-oid="'+o.id+'" style="--pc:'+p.c+'">'
+    +'<div class="oc-top"><span class="oc-code">'+oCode(o)+'</span>'+priPill(o.priority)+stPill(o.status)+(o.kind==='preventivo'?'<span class="st-pill" style="color:var(--blue);background:var(--blue-bg)">🔧 Preventivo</span>':'')+'</div>'
+    +'<div class="oc-title">'+esc(o.title)+'</div>'
+    +'<div class="oc-sub">'+t.icon+' '+esc(t.name)+' · '+esc(o.requested_name||'—')+' · '+ago(o.created_at)+'</div>'
+    +(foot?'<div class="oc-foot">'+foot+'</div>':'')
+    +'</div>';
+}
+function bindOrderCards(el){if(!el)return;el.querySelectorAll('.oc').forEach(function(c){c.addEventListener('click',function(){openOrder(c.getAttribute('data-oid'));});});}
+
+// ── Página Órdenes ──
+var ORD_CHIPS=[['open','Abiertas'],['urgente','🔴 Urgentes'],['nueva','Sin asignar'],['en_curso','En curso'],['en_espera','En espera'],['resuelta','Para confirmar'],['cerrada','Cerradas'],['all','Todas']];
+function ordMatch(o,f){
+  if(f==='all')return true;
+  if(f==='open')return o.status!=='cerrada';
+  if(f==='urgente')return o.status!=='cerrada'&&o.priority==='urgente';
+  if(f==='en_curso')return o.status==='en_curso'||o.status==='asignada';
+  return o.status===f;
+}
+function goOrders(f){ordFilt=f||'open';goPage('orders');}
+function renderOrders(){
+  var base=_orders.slice();
+  var scopeEl=document.getElementById('ord-scope');
+  if(isEnc()){
+    scopeEl.style.display='';
+    scopeEl.innerHTML=[['mine','Mis pedidos'],['all','De todos']].map(function(s){return '<div class="chip'+(ordScope===s[0]?' on':'')+'" data-sc="'+s[0]+'">'+s[1]+'</div>';}).join('');
+    scopeEl.querySelectorAll('.chip').forEach(function(c){c.addEventListener('click',function(){ordScope=c.getAttribute('data-sc');renderOrders();});});
+    if(ordScope==='mine')base=base.filter(isMine);
+  }else scopeEl.style.display='none';
+  var chipsEl=document.getElementById('ord-chips');
+  chipsEl.innerHTML=ORD_CHIPS.map(function(c){var n=base.filter(function(o){return ordMatch(o,c[0]);}).length;return '<div class="chip'+(ordFilt===c[0]?' on':'')+'" data-f="'+c[0]+'">'+c[1]+(c[0]!=='all'&&c[0]!=='cerrada'?' <b class="chip-n">'+n+'</b>':'')+'</div>';}).join('');
+  chipsEl.querySelectorAll('.chip').forEach(function(c){c.addEventListener('click',function(){ordFilt=c.getAttribute('data-f');renderOrders();});});
+  var list=base.filter(function(o){return ordMatch(o,ordFilt);});
+  if(ordQ){var q=ordQ.toLowerCase();list=list.filter(function(o){var t=oTarget(o);return (o.title+' '+(o.description||'')+' '+t.name+' '+(o.assigned_tech||'')+' '+(o.requested_name||'')+' '+oCode(o)).toLowerCase().indexOf(q)>=0;});}
+  if(ordFilt==='cerrada'||ordFilt==='all')list.sort(function(a,b){return new Date(b.created_at)-new Date(a.created_at);});else list.sort(sortOrders);
+  _ordView=list;
+  var el=document.getElementById('ord-list');var emp=document.getElementById('ord-empty');
+  if(!list.length){el.innerHTML='';emp.style.display='block';return;}
+  emp.style.display='none';
+  el.innerHTML=list.map(orderCard).join('');
+  bindOrderCards(el);
+}
+function expOrdersExcel(){
+  makeXLSX(_ordView.map(function(o){var t=oTarget(o);return{OT:oCode(o),Creada:fmtDT(o.created_at),Equipo_lugar:t.name,Problema:o.title,Detalle:o.description||'',Prioridad:(PRI[o.priority]||{}).l,Tipo:o.kind,Estado:(OST[o.status]||{}).l,Pidio:o.requested_name||'',Asignado:o.assigned_tech||'',Fecha_estimada:o.due_date||'',Trabajo_realizado:o.resolution||'',Repuestos:o.parts||'',Resuelta:o.resolved_at?fmtDT(o.resolved_at):'',Cerrada:o.closed_at?fmtDT(o.closed_at):''};}),'Ordenes_Amsterdam');
+}
+
+// ── Nuevo pedido ──
+function openNewOrder(id,type){
+  resetOrderForm();
+  if(id)selectOTarget(id,type||'machine');
+  document.getElementById('modal-order').classList.add('on');
+  if(!id)setTimeout(function(){var s=document.getElementById('o-search');if(s&&window.innerWidth>=640)s.focus();},150);
+}
+function resetOrderForm(){
+  oSel=null;oPri=null;
+  ['o-search','o-title','o-desc','o-place'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});
+  document.getElementById('o-search-results').classList.remove('on');
+  showOTargetMode('search');renderPriOpts();psReset('ob');
+}
+function showOTargetMode(mode){
+  document.getElementById('o-search-wrap').style.display=mode==='search'?'':'none';
+  document.getElementById('o-place-wrap').style.display=mode==='place'?'':'none';
+  var sel=document.getElementById('o-selected');sel.style.display=mode==='selected'?'':'none';
+}
+function oSearch(q){
+  var res=document.getElementById('o-search-results');
+  if(!q||q.length<2){res.classList.remove('on');return;}
+  var ql=q.toLowerCase();var results=[];
+  _machines.forEach(function(m){if(m.name.toLowerCase().indexOf(ql)>=0){var sc=getSubcat(m.subcategory_id);results.push({id:m.id,name:m.name,icon:m.icon||mcEmoji(m.name),sub:sc?sc.name:'Máquina',type:'machine'});}});
+  _tasks.forEach(function(t){if(t.name.toLowerCase().indexOf(ql)>=0){var sc=getSubcat(t.subcategory_id);results.push({id:t.id,name:t.name,icon:'📋',sub:sc?sc.name:'Tarea general',type:'task'});}});
+  _subcats.forEach(function(s){if(s.name.toLowerCase().indexOf(ql)>=0){_machines.filter(function(m){return m.subcategory_id===s.id;}).forEach(function(m){if(!results.find(function(r){return r.id===m.id;}))results.push({id:m.id,name:m.name,icon:m.icon||mcEmoji(m.name),sub:s.name,type:'machine'});});}});
+  var items=results.slice(0,10);
+  var html=items.map(function(r,i){return '<div class="search-result-item" data-i="'+i+'"><div class="search-result-name">'+r.icon+' '+esc(r.name)+'</div><div class="search-result-sub">'+esc(r.sub)+'</div></div>';}).join('');
+  html+='<div class="search-result-item" data-other="1"><div class="search-result-name">📍 Otro lugar: “'+esc(q)+'”</div><div class="search-result-sub">No está en la lista</div></div>';
+  res.innerHTML=html;
+  res.querySelectorAll('.search-result-item').forEach(function(el){el.addEventListener('click',function(){
+    if(el.getAttribute('data-other')){useOtherPlace(q);return;}
+    var r=items[parseInt(el.getAttribute('data-i'))];selectOTarget(r.id,r.type);
+  });});
+  res.classList.add('on');
+}
+function selectOTarget(id,type){
+  var it=(type==='task'?_tasks:_machines).find(function(x){return x.id===id;});if(!it)return;
+  oSel={id:id,type:type};
+  var sc=getSubcat(it.subcategory_id);
+  document.getElementById('o-selected').innerHTML='<div class="sel-chip"><span style="font-size:20px">'+(type==='task'?'📋':(it.icon||mcEmoji(it.name)))+'</span><div><div>'+esc(it.name)+'</div><div style="font-size:11.5px;font-weight:500;color:var(--ink3)">'+esc(sc?sc.name:'')+'</div></div><button type="button" onclick="clearOTarget()">Cambiar</button></div>';
+  document.getElementById('o-search-results').classList.remove('on');
+  showOTargetMode('selected');
+}
+function useOtherPlace(txt){
+  oSel={type:'place'};showOTargetMode('place');
+  var p=document.getElementById('o-place');if(txt)p.value=txt;p.focus();
+  document.getElementById('o-search-results').classList.remove('on');
+}
+function clearOTarget(){oSel=null;document.getElementById('o-search').value='';showOTargetMode('search');}
+function renderPriOpts(){
+  var el=document.getElementById('o-pri');
+  el.innerHTML=Object.keys(PRI).map(function(k){var p=PRI[k];return '<button type="button" class="pri-opt'+(oPri===k?' on':'')+'" data-p="'+k+'" style="--pc:'+p.c+'"><div class="pri-opt-t">'+p.ico+' '+p.l+'</div><div class="pri-opt-d">'+p.d+'</div></button>';}).join('');
+  el.querySelectorAll('.pri-opt').forEach(function(b){b.addEventListener('click',function(){oPri=b.getAttribute('data-p');renderPriOpts();});});
+}
+async function saveOrder(){
+  var title=document.getElementById('o-title').value.trim();
+  var desc=document.getElementById('o-desc').value.trim();
+  var place=document.getElementById('o-place').value.trim();
+  if(!oSel||(oSel.type==='place'&&!place)){toast('Elegí la máquina o escribí el lugar','e');return;}
+  if(!title){toast('Contá qué pasa','e');document.getElementById('o-title').focus();return;}
+  if(!oPri){toast('Elegí la prioridad','e');return;}
+  showLoad(true);
+  var photos=[];
+  try{photos=await psUpload('ob','ordenes');}catch(err){showLoad(false);toast('No se pudieron subir las fotos','e');console.error(err);return;}
+  var data={title:title,description:desc||null,priority:oPri,kind:'correctivo',status:'nueva',requested_by:curUser.id,requested_name:curUser.name};
+  if(photos.length)data.photos_before=photos;
+  if(oSel.type==='machine')data.machine_id=oSel.id;else if(oSel.type==='task')data.task_id=oSel.id;else data.place=place;
+  var ins=await sb.from('am_orders').insert(data).select().single();
+  if(ins.error||!ins.data){showLoad(false);toast('No se pudo guardar el pedido','e');console.error(ins.error);return;}
+  await olog(ins.data.id,'creó el pedido','Prioridad '+PRI[oPri].l);
+  await logAudit('crear','am_orders',ins.data.id,oCode(ins.data)+' · '+title);
+  if(oSel.type!=='place'&&(oPri==='urgente'||oPri==='alta')){
+    var tbl=oSel.type==='task'?'am_tasks':'am_machines';
+    var it=(oSel.type==='task'?_tasks:_machines).find(function(x){return x.id===oSel.id;});
+    var ns=oPri==='urgente'?'danger':'warn';var rank={ok:0,warn:1,danger:2};
+    if(it&&rank[ns]>rank[it.status||'ok'])await sb.from(tbl).update({status:ns}).eq('id',it.id);
+  }
+  await loadAll();showLoad(false);closeM('modal-order');
+  toast(oCode(ins.data)+' enviada a mantenimiento ✓','s');
+  refreshAll();
+}
+
+// ── Detalle de orden ──
+function openOrder(id){curOrderId=id;renderOrderDetail();document.getElementById('modal-od').classList.add('on');loadOrderLog(id);}
+function renderOrderDetail(){
+  var o=_orders.find(function(x){return x.id===curOrderId;});
+  if(!o){document.getElementById('modal-od').classList.remove('on');return;}
+  var t=oTarget(o);
+  document.getElementById('od-code').textContent=oCode(o);
+  var h='<div class="oc-top">'+priPill(o.priority)+stPill(o.status)+(o.kind==='preventivo'?'<span class="st-pill" style="color:var(--blue);background:var(--blue-bg)">🔧 Preventivo</span>':'')+'</div>';
+  h+='<div class="od-title">'+esc(o.title)+'</div>';
+  var canLink=t.type!=='place'&&isAdmin();
+  h+='<div class="od-target'+(canLink?' link':'')+'" id="od-target">'+t.icon+' '+esc(t.name)+(canLink?' ›':'')+'</div>';
+  if(o.description)h+='<div class="od-desc">'+esc(o.description)+'</div>';
+  if((o.photos_before||[]).length)h+='<div class="fl" style="margin-top:4px">Fotos del problema</div>'+photoStripArr(o.photos_before);
+  h+='<div class="od-meta">'
+    +'<div class="od-mi"><b>Pidió</b><span>'+esc(o.requested_name||'—')+'</span><small>'+fmtDT(o.created_at)+'</small></div>'
+    +'<div class="od-mi"><b>Asignado a</b><span>'+esc(o.assigned_tech||'Sin asignar')+'</span>'+(o.due_date?'<small>Para el '+fmtD(o.due_date)+'</small>':'')+'</div>'
+    +'</div>';
+  if(o.status==='en_espera'&&o.wait_reason)h+='<div class="od-box wait"><div class="od-box-t">⏸ En espera</div>'+esc(o.wait_reason)+'</div>';
+  if(o.resolution){
+    h+='<div class="od-box res"><div class="od-box-t">✅ Trabajo realizado'+(o.resolved_at?' · '+fmtDT(o.resolved_at):'')+'</div>'
+      +'<div style="white-space:pre-wrap">'+esc(o.resolution)+'</div>'
+      +photoStripArr(o.photos_after)
+      +(o.parts?'<div style="margin-top:4px"><b>Repuestos:</b> '+esc(o.parts)+'</div>':'')
+      +'<div style="margin-top:6px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">'+(o.assigned_tech?'<span>👷 '+esc(o.assigned_tech)+'</span>':'')+(o.final_status?bdg(o.final_status):'')+(o.resolved_by_name?'<span style="color:var(--ink3);font-size:12px">Reportó: '+esc(o.resolved_by_name)+'</span>':'')+'</div>'
+      +'</div>';
+  }
+  if(o.status==='resuelta'&&!canConfirm(o))h+='<div class="od-box wait">⏳ Esperando que '+esc(requesterFirst(o))+' confirme que quedó bien.</div>';
+  if(o.status==='cerrada')h+='<div class="od-box closed">🔒 Cerrada '+fmtDT(o.closed_at)+(o.closed_by_name?' · '+esc(o.closed_by_name):'')+'</div>';
+  if(t.type!=='place'){
+    var prevEv=_events.filter(function(e){return (t.type==='machine'?e.machine_id===t.id:e.task_id===t.id)&&e.order_id!==o.id;}).slice(0,3);
+    if(prevEv.length)h+='<div class="fl" style="margin-top:14px">Trabajos anteriores en '+esc(t.name)+'</div>'+prevEv.map(function(e){return '<div class="prev-ev"><div><b>'+fmtD(e.date)+'</b> · '+(e.type==='preventivo'?'Preventivo':'Correctivo')+(e.tech?' · 👷 '+esc(e.tech):'')+'</div><div style="color:var(--ink2)">'+esc(e.description)+'</div>'+photoStripArr(e.photos)+'</div>';}).join('');
+  }
+  h+='<div class="fl" style="margin-top:14px">Historial</div><div class="tl" id="od-log"><div class="tl-i" style="color:var(--ink4)">Cargando…</div></div>';
+  document.getElementById('od-body').innerHTML=h;
+  var tg=document.getElementById('od-target');
+  if(canLink)tg.addEventListener('click',function(){closeM('modal-od');if(t.type==='machine'){goPage('machines');openDetail(t.id);}else{goPage('tasks');openTaskDetail(t.id);}});
+  // acciones
+  var b=[];var st=o.status;
+  if(canManage()&&['nueva','asignada','en_curso','en_espera'].indexOf(st)>=0){
+    b.push(['assign',st==='nueva'?'👷 Asignar':'👷 Reasignar','g']);
+    if(st==='asignada'||st==='en_espera')b.push(['start','▶ Empezar','g']);
+    if(st==='asignada'||st==='en_curso')b.push(['wait','⏸ En espera','g']);
+    b.push(['resolve','✅ Reportar trabajo','p']);
+  }
+  if(canConfirm(o)){b.push(['reject','✕ No quedó bien','d']);b.push(['confirm','✓ Quedó bien','p']);}
+  if(isAdmin())b.push(['delete','🗑','d']);
+  if(!b.length)b.push(['close','Cerrar','g']);
+  var foot=document.getElementById('od-foot');
+  foot.innerHTML=b.map(function(x){return '<button class="btn btn-'+x[2]+(x[0]==='delete'?' btn-icon':'')+'" data-act="'+x[0]+'">'+x[1]+'</button>';}).join('');
+  foot.querySelectorAll('[data-act]').forEach(function(btn){btn.addEventListener('click',function(){odAction(btn.getAttribute('data-act'));});});
+}
+async function loadOrderLog(id){
+  var r=await sb.from('am_order_log').select('*').eq('order_id',id).order('created_at');
+  if(curOrderId!==id)return;
+  var el=document.getElementById('od-log');if(!el)return;
+  var rows=r.data||[];
+  if(!rows.length){el.innerHTML='<div class="tl-i" style="color:var(--ink4)">Sin movimientos.</div>';return;}
+  el.innerHTML=rows.map(function(l){return '<div class="tl-i"><b>'+esc(l.user_name||'Sistema')+'</b> '+esc(l.action)+(l.note?' <span class="tl-note">— '+esc(l.note)+'</span>':'')+'<small>'+fmtDT(l.created_at)+'</small></div>';}).join('');
+}
+async function olog(orderId,action,note){
+  await sb.from('am_order_log').insert({order_id:orderId,user_id:curUser?curUser.id:null,user_name:curUser?curUser.name:'Sistema',action:action,note:note||null});
+}
+async function updOrder(id,upd){
+  var r=await sb.from('am_orders').update(upd).eq('id',id);
+  if(r.error){toast('No se pudo guardar','e');console.error(r.error);return false;}
+  return true;
+}
+async function afterOrderChange(msg){
+  await loadAll();showLoad(false);
+  if(msg)toast(msg,'s');
+  refreshAll();
+  if(document.getElementById('modal-od').classList.contains('on')){renderOrderDetail();loadOrderLog(curOrderId);}
+}
+function odAction(a){
+  var o=_orders.find(function(x){return x.id===curOrderId;});if(!o)return;
+  if(a==='close'){closeM('modal-od');return;}
+  if(a==='assign')return openAssign(o);
+  if(a==='resolve')return openResolve(o);
+  if(a==='start'){showLoad(true);updOrder(o.id,{status:'en_curso',wait_reason:null}).then(function(ok){if(!ok){showLoad(false);return;}olog(o.id,'empezó el trabajo').then(function(){afterOrderChange('En curso');});});return;}
+  if(a==='wait')return openNote('Poner en espera','¿Qué falta? Ej: esperando repuesto, proveedor, que pare la línea…',async function(txt){
+    showLoad(true);if(!(await updOrder(o.id,{status:'en_espera',wait_reason:txt}))){showLoad(false);return;}
+    await olog(o.id,'puso la orden en espera',txt);await afterOrderChange('En espera');
+  });
+  if(a==='reject')return openNote('¿Qué no quedó bien?','Contale a mantenimiento qué falta o qué sigue fallando',async function(txt){
+    showLoad(true);if(!(await updOrder(o.id,{status:'en_curso',resolved_at:null}))){showLoad(false);return;}
+    await olog(o.id,'indicó que no quedó bien',txt);await logAudit('rechazar','am_orders',o.id,oCode(o));
+    await afterOrderChange('Devuelta a mantenimiento');
+  });
+  if(a==='confirm')return confirmOrder(o);
+  if(a==='delete')return delOrder(o);
+}
+
+// ── Asignar ──
+function techOptions(sel){
+  var act=_techs.filter(function(t){return t.active!==false;});
+  var opts='<option value="">Elegir…</option>'+act.map(function(t){return '<option'+(t.name===sel?' selected':'')+'>'+esc(t.name)+'</option>';}).join('');
+  if(sel&&!act.find(function(t){return t.name===sel;}))opts+='<option selected>'+esc(sel)+'</option>';
+  return opts;
+}
+function openAssign(o){
+  document.getElementById('a-tech').innerHTML=techOptions(o.assigned_tech);
+  document.getElementById('a-due').value=o.due_date||'';
+  document.getElementById('a-notechs').style.display=_techs.filter(function(t){return t.active!==false;}).length?'none':'block';
+  document.getElementById('a-ctx').innerHTML='<b>'+oCode(o)+'</b> · '+esc(o.title);
+  document.getElementById('modal-assign').classList.add('on');
+}
+async function saveAssign(){
+  var o=_orders.find(function(x){return x.id===curOrderId;});if(!o)return;
+  var tech=document.getElementById('a-tech').value;var due=document.getElementById('a-due').value||null;
+  if(!tech){toast('Elegí quién lo hace','e');return;}
+  showLoad(true);
+  var upd={assigned_tech:tech,due_date:due};if(o.status==='nueva')upd.status='asignada';
+  if(!(await updOrder(o.id,upd))){showLoad(false);return;}
+  await olog(o.id,(o.assigned_tech&&o.assigned_tech!==tech?'reasignó a ':'asignó a ')+tech,due?'Para el '+fmtD(due):null);
+  closeM('modal-assign');await afterOrderChange('Asignada a '+tech);
+}
+
+// ── Reportar trabajo ──
+function openResolve(o){
+  document.getElementById('r-ctx').innerHTML='<b>'+oCode(o)+'</b> · '+esc(o.title)+'<br>'+oTarget(o).icon+' '+esc(oTarget(o).name);
+  document.getElementById('r-tech').innerHTML=techOptions(o.assigned_tech);
+  document.getElementById('r-text').value='';document.getElementById('r-parts').value='';
+  document.getElementById('r-final').value='ok';
+  var it=o.machine_id?_machines.find(function(x){return x.id===o.machine_id;}):(o.task_id?_tasks.find(function(x){return x.id===o.task_id;}):null);
+  document.getElementById('r-next').value=(it&&it.freq)?addDaysS(it.freq):'';
+  document.getElementById('r-next-wrap').style.display=it?'':'none';
+  document.getElementById('r-final-wrap').style.display=it?'':'none';
+  psReset('rs');
+  document.getElementById('modal-resolve').classList.add('on');
+}
+async function createEventFromOrder(o){
+  if(!o.machine_id&&!o.task_id)return;
+  var ev={type:o.kind==='preventivo'?'preventivo':'correctivo',date:todayS(),description:o.title+(o.resolution?' — '+o.resolution:''),tech:o.assigned_tech||null,new_status:o.final_status||'ok',user_id:curUser?curUser.id:null,photos:o.photos_after||[],order_id:o.id};
+  if(o.machine_id)ev.machine_id=o.machine_id;else ev.task_id=o.task_id;
+  var r=await sb.from('am_events').insert(ev);
+  if(r.error)console.error(r.error);
+}
+async function saveResolve(){
+  var o=_orders.find(function(x){return x.id===curOrderId;});if(!o)return;
+  var tech=document.getElementById('r-tech').value;
+  var txt=document.getElementById('r-text').value.trim();
+  var parts=document.getElementById('r-parts').value.trim();
+  var fin=document.getElementById('r-final').value;
+  var next=document.getElementById('r-next').value||null;
+  if(!tech){toast('Elegí quién lo hizo','e');return;}
+  if(!txt){toast('Contá qué se hizo','e');return;}
+  if(!psGet('rs').items.length){toast('Sacá al menos una foto del trabajo','e');return;}
+  showLoad(true);
+  var photos;
+  try{photos=await psUpload('rs','ordenes');}catch(err){showLoad(false);toast('No se pudieron subir las fotos','e');console.error(err);return;}
+  var hasIt=!!(o.machine_id||o.task_id);
+  var auto=autoClose(o);var now=new Date().toISOString();
+  var upd={status:auto?'cerrada':'resuelta',assigned_tech:tech,resolution:txt,photos_after:photos,parts:parts||null,final_status:hasIt?fin:null,resolved_at:now,resolved_by_name:curUser.name,wait_reason:null};
+  if(auto){upd.closed_at=now;upd.closed_by_name='Cierre automático';}
+  if(!(await updOrder(o.id,upd))){showLoad(false);return;}
+  await olog(o.id,'reportó el trabajo hecho por '+tech,txt);
+  if(hasIt){
+    var tbl=o.machine_id?'am_machines':'am_tasks';
+    var e={status:fin};
+    if(next)e.next_maint=next;else if(o.kind==='preventivo')e.next_maint=null;
+    await sb.from(tbl).update(e).eq('id',o.machine_id||o.task_id);
+  }
+  if(auto){await createEventFromOrder(Object.assign({},o,upd));await olog(o.id,'cerró la orden',o.kind==='preventivo'?'Preventivo: no requiere confirmación':'La pidió mantenimiento');}
+  await logAudit('resolver','am_orders',o.id,oCode(o)+' · '+tech);
+  closeM('modal-resolve');
+  await afterOrderChange(auto?'Orden cerrada ✓':'Listo. Falta que '+requesterFirst(o)+' confirme');
+}
+
+// ── Confirmar / borrar ──
+async function confirmOrder(o){
+  showLoad(true);
+  var now=new Date().toISOString();
+  var upd={status:'cerrada',closed_at:now,closed_by_name:curUser.name};
+  if(!(await updOrder(o.id,upd))){showLoad(false);return;}
+  await createEventFromOrder(Object.assign({},o,upd));
+  await olog(o.id,'confirmó que quedó bien');
+  await logAudit('cerrar','am_orders',o.id,oCode(o));
+  closeM('modal-od');
+  await afterOrderChange(oCode(o)+' cerrada ✓');
+}
+async function delOrder(o){
+  if(!confirm('¿Eliminás '+oCode(o)+'? No se puede deshacer.'))return;
+  showLoad(true);
+  await sb.from('am_orders').delete().eq('id',o.id);
+  await logAudit('eliminar','am_orders',o.id,oCode(o)+' · '+o.title);
+  closeM('modal-od');await afterOrderChange('Orden eliminada');
+}
+
+// ── Nota genérica ──
+function openNote(title,hint,cb){
+  noteCb=cb;
+  document.getElementById('note-title').textContent=title;
+  document.getElementById('note-text').value='';
+  document.getElementById('note-text').placeholder=hint;
+  document.getElementById('modal-note').classList.add('on');
+  setTimeout(function(){document.getElementById('note-text').focus();},100);
+}
+async function saveNote(){
+  var txt=document.getElementById('note-text').value.trim();
+  if(!txt){toast('Escribí un comentario','e');return;}
+  var cb=noteCb;noteCb=null;closeM('modal-note');
+  if(cb)await cb(txt);
+}
+
+// ── Equipo de mantenimiento ──
+function openTechs(){renderTechs();document.getElementById('modal-techs').classList.add('on');}
+function renderTechs(){
+  var el=document.getElementById('techs-list');
+  if(!_techs.length){el.innerHTML='<div class="empty-mini">Todavía no cargaste a nadie.</div>';return;}
+  el.innerHTML=_techs.map(function(t){
+    var n=_orders.filter(function(o){return o.assigned_tech===t.name&&['asignada','en_curso','en_espera'].indexOf(o.status)>=0;}).length;
+    return '<div class="tech-row'+(t.active===false?' off':'')+'"><div style="flex:1"><div style="font-weight:700;font-size:14px">👷 '+esc(t.name)+'</div><div style="font-size:11.5px;color:var(--ink3)">'+(t.active===false?'Inactivo':n+' orden'+(n===1?'':'es')+' en curso')+'</div></div><button class="btn btn-g btn-sm" data-tid="'+t.id+'">'+(t.active===false?'Activar':'Desactivar')+'</button></div>';
+  }).join('');
+  el.querySelectorAll('[data-tid]').forEach(function(b){b.addEventListener('click',async function(){var t=_techs.find(function(x){return x.id===b.getAttribute('data-tid');});if(!t)return;showLoad(true);await sb.from('am_techs').update({active:t.active===false}).eq('id',t.id);await loadAll();showLoad(false);renderTechs();});});
+}
+async function addTech(){
+  var inp=document.getElementById('tech-new');var name=inp.value.trim();
+  if(!name){toast('Escribí el nombre','e');return;}
+  if(_techs.find(function(t){return t.name.toLowerCase()===name.toLowerCase();})){toast('Ya está cargado','e');return;}
+  showLoad(true);await sb.from('am_techs').insert({name:name});await loadAll();showLoad(false);
+  inp.value='';renderTechs();toast(name+' agregado','s');
+  if(document.getElementById('modal-assign').classList.contains('on')){var o=_orders.find(function(x){return x.id===curOrderId;});document.getElementById('a-tech').innerHTML=techOptions(name);document.getElementById('a-notechs').style.display='none';}
+  if(document.getElementById('modal-resolve').classList.contains('on'))document.getElementById('r-tech').innerHTML=techOptions(name);
+}
+
+// ── Preventivos automáticos ──
+async function genPreventives(){
+  if(!canManage())return 0;
+  var lim=addDaysS(2),today=todayS(),n=0;
+  var openPrev={};
+  _orders.forEach(function(o){if(o.kind==='preventivo'&&o.status!=='cerrada')openPrev[o.machine_id||o.task_id]=1;});
+  var todo=[];
+  _machines.forEach(function(m){if(m.next_maint&&m.next_maint<=lim&&!openPrev[m.id])todo.push({machine_id:m.id,next:m.next_maint});});
+  _tasks.forEach(function(t){if(t.next_maint&&t.next_maint<=lim&&!openPrev[t.id])todo.push({task_id:t.id,next:t.next_maint});});
+  for(var i=0;i<todo.length;i++){
+    var x=todo[i];
+    var d={title:'Mantenimiento preventivo',description:'Generado automáticamente. Le toca el '+fmtD(x.next)+'.',kind:'preventivo',priority:x.next<today?'alta':'normal',status:'nueva',requested_name:'Sistema',due_date:x.next};
+    if(x.machine_id)d.machine_id=x.machine_id;else d.task_id=x.task_id;
+    var r=await sb.from('am_orders').insert(d).select().single();
+    if(!r.error&&r.data){n++;await sb.from('am_order_log').insert({order_id:r.data.id,user_name:'Sistema',action:'generó el preventivo programado'});}
+  }
+  return n;
+}
+
+// ── Badges ──
+function pendingCount(){
+  if(isJefe())return _orders.filter(function(o){return o.status==='nueva';}).length;
+  if(isEnc())return _orders.filter(function(o){return o.status==='resuelta'&&isMine(o);}).length;
+  if(isAdmin())return _orders.filter(function(o){return o.status==='nueva'||(o.status==='resuelta'&&isMine(o));}).length;
+  return 0;
+}
+function updateBadges(){
+  var n=pendingCount();
+  ['tab-orders','si-orders','di-orders'].forEach(function(id){
+    var el=document.getElementById(id);if(!el)return;
+    var b=el.querySelector('.nbadge');if(!b){b=document.createElement('span');b.className='nbadge';el.appendChild(b);}
+    b.textContent=n;b.style.display=n?'':'none';
+  });
+}
+
+// ── Inicio por rol ──
+function kpiBox(cls,n,lbl,f){return '<div class="kpi '+cls+'" data-of="'+f+'"><div class="kpi-num">'+n+'</div><div class="kpi-lbl">'+lbl+'</div></div>';}
+function loadByTech(open){
+  var act=_techs.filter(function(t){return t.active!==false;});
+  if(!act.length)return '<div class="empty-mini">Cargá tu equipo desde ☰ → Equipo de mantenimiento.</div>';
+  var rows=act.map(function(t){return{n:t.name,c:open.filter(function(o){return o.assigned_tech===t.name&&['asignada','en_curso','en_espera'].indexOf(o.status)>=0;}).length};}).sort(function(a,b){return b.c-a.c;});
+  var max=Math.max.apply(null,rows.map(function(r){return r.c;}).concat([1]));
+  return '<div class="card"><div class="card-body">'+rows.map(function(r){return '<div class="load-row"><span style="min-width:90px;font-weight:600">👷 '+esc(r.n)+'</span><div class="load-bar"><i style="width:'+Math.round(r.c/max*100)+'%"></i></div><b style="min-width:20px;text-align:right">'+r.c+'</b></div>';}).join('')+'</div></div>';
+}
+function renderRoleDash(){
+  var el=document.getElementById('dash-role');var classic=document.getElementById('dash-classic');
+  if(!el)return;
+  classic.style.display=isAdmin()?'':'none';
+  var open=_orders.filter(function(o){return o.status!=='cerrada';});
+  var h='';
+  if(isEnc()){
+    h+='<button class="big-cta" data-act="new">＋ Nuevo pedido a mantenimiento<small>Elegí la máquina, contá qué pasa y listo</small></button>';
+    var conf=_orders.filter(function(o){return o.status==='resuelta'&&isMine(o);}).sort(sortOrders);
+    if(conf.length)h+='<div class="slbl" style="color:var(--green)">✅ Para confirmar ('+conf.length+')</div><div class="ol">'+conf.map(orderCard).join('')+'</div>';
+    var mine=open.filter(function(o){return isMine(o)&&o.status!=='resuelta';}).sort(sortOrders);
+    h+='<div class="slbl">Mis pedidos en curso</div>'+(mine.length?'<div class="ol">'+mine.map(orderCard).join('')+'</div>':'<div class="empty-mini">No tenés pedidos abiertos 👌</div>');
+    h+='<button class="link-btn" data-act="all">Ver todos los pedidos ›</button>';
+  }else{
+    var sin=open.filter(function(o){return o.status==='nueva';}).sort(sortOrders);
+    var urg=open.filter(function(o){return o.priority==='urgente';});
+    var cur=open.filter(function(o){return o.status==='en_curso'||o.status==='asignada';});
+    var esp=open.filter(function(o){return o.status==='en_espera';});
+    var conf2=open.filter(function(o){return o.status==='resuelta';});
+    h+='<div class="kpi-grid">';
+    if(isJefe())h+=kpiBox('kpi-r',sin.length,'Sin asignar','nueva')+kpiBox('kpi-r',urg.length,'Urgentes','urgente')+kpiBox('kpi-a',cur.length,'En curso','en_curso')+kpiBox('kpi-b',esp.length,'En espera','en_espera');
+    else h+=kpiBox('kpi-b',open.length,'Órdenes abiertas','open')+kpiBox('kpi-r',urg.length,'Urgentes','urgente')+kpiBox('kpi-a',sin.length,'Sin asignar','nueva')+kpiBox('kpi-g',conf2.length,'Para confirmar','resuelta');
+    h+='</div>';
+    if(isJefe()){
+      h+='<div class="slbl">📥 Pedidos sin asignar</div>'+(sin.length?'<div class="ol">'+sin.slice(0,8).map(orderCard).join('')+'</div>':'<div class="empty-mini">Todo asignado 👌</div>');
+      if(sin.length>8)h+='<button class="link-btn" data-of="nueva">Ver los '+sin.length+' ›</button>';
+      var mineConf=_orders.filter(function(o){return o.status==='resuelta'&&isMine(o);});
+      if(mineConf.length)h+='<div class="slbl" style="color:var(--green)">✅ Para confirmar</div><div class="ol">'+mineConf.map(orderCard).join('')+'</div>';
+      h+='<div class="slbl">Carga por persona</div>'+loadByTech(open);
+    }else{
+      var hot=open.filter(function(o){return (o.priority==='urgente'||o.priority==='alta')&&o.status!=='resuelta';}).sort(sortOrders);
+      var myConf=_orders.filter(function(o){return o.status==='resuelta'&&isMine(o);});
+      if(myConf.length)h+='<div class="slbl" style="color:var(--green)">✅ Tus pedidos para confirmar</div><div class="ol">'+myConf.map(orderCard).join('')+'</div>';
+      h+='<div class="slbl">🔥 Urgentes y altas abiertas</div>'+(hot.length?'<div class="ol">'+hot.slice(0,6).map(orderCard).join('')+'</div>':'<div class="empty-mini">Nada urgente 👌</div>');
+      if(hot.length>6)h+='<button class="link-btn" data-of="open">Ver todas ›</button>';
+      var from=Date.now()-30*86400000;
+      var done=_orders.filter(function(o){return o.resolved_at&&new Date(o.resolved_at).getTime()>=from;});
+      var avg=done.length?done.reduce(function(s,o){return s+(new Date(o.resolved_at)-new Date(o.created_at));},0)/done.length/3600000:null;
+      var avgTxt=avg===null?'—':(avg<1?Math.max(1,Math.round(avg*60))+' min':avg<24?Math.round(avg)+' h':(avg/24).toFixed(1)+' días');
+      h+='<div class="stat-row"><div class="stat"><b>'+done.length+'</b><span>resueltas en 30 días</span></div><div class="stat"><b>'+avgTxt+'</b><span>tiempo promedio de resolución</span></div></div>';
+      h+='<div class="slbl">Carga por persona</div>'+loadByTech(open);
+    }
+  }
+  el.innerHTML=h;
+  bindOrderCards(el);
+  el.querySelectorAll('[data-act="new"]').forEach(function(b){b.addEventListener('click',function(){openNewOrder();});});
+  el.querySelectorAll('[data-act="all"]').forEach(function(b){b.addEventListener('click',function(){ordScope='all';goOrders('open');});});
+  el.querySelectorAll('[data-of]').forEach(function(b){b.addEventListener('click',function(){goOrders(b.getAttribute('data-of'));});});
+}
+
+// ── Órdenes abiertas en ficha de máquina/tarea ──
+function renderEntityOrders(id,type,elId){
+  var el=document.getElementById(elId);if(!el)return;
+  var os=_orders.filter(function(o){return o.status!=='cerrada'&&(type==='machine'?o.machine_id===id:o.task_id===id);}).sort(sortOrders);
+  el.innerHTML=os.length?'<div class="slbl">Órdenes abiertas ('+os.length+')</div><div class="ol">'+os.map(orderCard).join('')+'</div>':'';
+  bindOrderCards(el);
+}
+
+// ── Refrescar todo ──
+function refreshAll(){
+  updateBadges();
+  if(curPage==='dashboard')renderDash();
+  if(curPage==='orders')renderOrders();
+  if(curPage==='machines'){if(curMachId&&document.getElementById('view-detail').classList.contains('on')){if(_machines.find(function(m){return m.id===curMachId;}))openDetail(curMachId);else closeDetail();}else renderMachines();}
+  if(curPage==='tasks'){if(curTaskId&&document.getElementById('view-tasks-detail').classList.contains('on')){if(_tasks.find(function(t){return t.id===curTaskId;}))openTaskDetail(curTaskId);else closeTaskDetail();}else renderTasks();}
+  if(curPage==='reports')renderReports();
+  if(curPage==='reminders'){renderReminders();checkReminders();}
+  renderSbSubcats();
+}
+function notifyChanges(prev){
+  if(!curUser)return;
+  _orders.forEach(function(o){
+    var was=prev[o.id];
+    if(!was){
+      if(o.requested_by===curUser.id)return;
+      if(isJefe()&&o.status==='nueva')toast('Nuevo pedido: '+o.title+' ('+(PRI[o.priority]||{}).l+')','i');
+      else if(isAdmin()&&o.priority==='urgente')toast('Urgente: '+o.title,'i');
+      return;
+    }
+    if(was!==o.status&&o.status==='resuelta'&&isMine(o))toast(oCode(o)+' está resuelta. Confirmá si quedó bien','i');
+    if(was==='resuelta'&&o.status==='en_curso'&&canManage())toast(oCode(o)+' volvió: no quedó bien','i');
+  });
+}
+
 
 function showDesktop(){
   var sb=document.getElementById('sidebar');var dh=document.getElementById('desk-hdr');
