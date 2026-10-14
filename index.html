@@ -293,6 +293,20 @@ input[type=color].cswatch{width:28px;height:28px;border-radius:50%;border:2px so
   @keyframes mup{from{opacity:0;transform:translateY(12px) scale(.97)}to{opacity:1;transform:none}}
   .modal-handle{display:none}
 }
+.ph-pick{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;border:2px dashed var(--line,#ddd);border-radius:12px;background:transparent;font:inherit;font-size:14px;font-weight:600;color:var(--ink2);cursor:pointer}
+.ph-pick:active{transform:scale(.98)}
+.ph-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px}
+.ph-grid:empty{display:none}
+.ph-item{position:relative;aspect-ratio:1;border-radius:10px;overflow:hidden;background:#eee}
+.ph-item img{width:100%;height:100%;object-fit:cover;display:block}
+.ph-del{position:absolute;top:4px;right:4px;width:24px;height:24px;border-radius:50%;border:none;background:rgba(0,0,0,.65);color:#fff;font-size:15px;line-height:1;cursor:pointer}
+.ph-strip{display:flex;gap:6px;flex-wrap:wrap;margin:2px 0 8px}
+.ph-thumb{width:64px;height:64px;border-radius:8px;object-fit:cover;cursor:zoom-in;border:1px solid rgba(0,0,0,.08)}
+.ph-count{font-size:11px;color:var(--ink3)}
+#lightbox{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;display:none;align-items:center;justify-content:center;padding:16px}
+#lightbox.on{display:flex}
+#lightbox img{max-width:100%;max-height:100%;border-radius:8px}
+#lightbox button{position:absolute;top:14px;right:14px;width:40px;height:40px;border-radius:50%;border:none;background:rgba(255,255,255,.15);color:#fff;font-size:24px;cursor:pointer}
 </style>
 </head>
 <body>
@@ -569,6 +583,11 @@ input[type=color].cswatch{width:28px;height:28px;border-radius:50%;border:2px so
         <div class="fg"><label class="fl">Fecha *</label><input type="date" class="fi" id="e-date"></div>
       </div>
       <div class="fg"><label class="fl">Descripción *</label><textarea class="ft" id="e-desc" placeholder="¿Qué se hizo o qué falló?"></textarea></div>
+      <div class="fg"><label class="fl">Fotos del trabajo</label>
+        <button type="button" class="ph-pick" onclick="document.getElementById('e-photo-input').click()">📷 Sacar o adjuntar fotos</button>
+        <input type="file" id="e-photo-input" accept="image/*" multiple style="display:none" onchange="onPhotoPick(this.files);this.value=''">
+        <div class="ph-grid" id="e-photos-prev"></div>
+      </div>
       <div class="fg"><label class="fl">Técnico</label><input class="fi" id="e-tech" placeholder="Nombre del técnico"></div>
       <div class="frow">
         <div class="fg"><label class="fl">Nuevo estado</label><select class="fs" id="e-status"><option value="ok">Operativo OK</option><option value="warn">Requiere atención</option><option value="danger">Urgente / En reparación</option></select></div>
@@ -959,7 +978,7 @@ function renderDash(){
       return '<div class="inc-card" '+dattrs+' style="cursor:pointer">'+
         '<div class="inc-top"><div class="inc-name">'+itemIcon+' '+(item?item.name:'—')+'</div><span class="inc-date">'+fmtD(ev.date)+'</span></div>'+
         '<div class="inc-desc">'+ev.description+'</div>'+
-        '<div class="inc-meta"><span class="type-tag '+(ev.type==='preventivo'?'t-prev':'t-corr')+'">'+ev.type+'</span>'+catTag(item?item.subcategory_id:null)+(ev.tech?'<span style="font-size:11px;color:var(--ink3)">👷 '+ev.tech+'</span>':'')+'</div></div>';
+        '<div class="inc-meta"><span class="type-tag '+(ev.type==='preventivo'?'t-prev':'t-corr')+'">'+ev.type+'</span>'+catTag(item?item.subcategory_id:null)+(ev.tech?'<span style="font-size:11px;color:var(--ink3)">👷 '+ev.tech+'</span>':'')+((ev.photos&&ev.photos.length)?'<span class="ph-count">📷 '+ev.photos.length+'</span>':'')+'</div></div>';
     }).join('');
     incEl.querySelectorAll('.inc-card').forEach(function(card){card.addEventListener('click',function(){var mid=card.getAttribute('data-machid');var tid=card.getAttribute('data-taskid');if(mid)openDetail(mid);else if(tid)openTaskDetail(tid);});});
   }
@@ -1076,7 +1095,7 @@ function renderDetHist(id,type){
   el.innerHTML=evs.map(function(ev){
     var canEdit=isAdmin();
     return '<div class="hcard"><div class="hcard-top"><div><span class="type-tag '+(ev.type==='preventivo'?'t-prev':'t-corr')+'">'+ev.type+'</span><span style="font-size:12px;color:var(--ink3);margin-left:8px">'+fmtD(ev.date)+'</span></div>'+bdg(ev.new_status)+'</div>'+
-      '<div class="hcard-desc">'+ev.description+'</div>'+
+      '<div class="hcard-desc">'+ev.description+'</div>'+photoStrip(ev)+
       '<div class="hcard-foot">'+(ev.tech?'<div class="hcard-meta">👷 '+ev.tech+'</div>':'')+(ev.next_date?'<div class="hcard-meta">📅 '+fmtD(ev.next_date)+'</div>':'')+(canEdit?'<button class="btn btn-g btn-sm" style="margin-left:auto" onclick="openEditEv(\''+ev.id+'\')">✏️ Editar</button>':'')+'</div></div>';
   }).join('');
 }
@@ -1170,7 +1189,7 @@ function loadSubcats(selId,catId){
 }
 function clearMachForm(){['m-id','m-name','m-model','m-serial','m-install','m-notes'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});document.getElementById('m-cat').value='';document.getElementById('m-subcat').innerHTML='<option value="">Elegir...</option>';document.getElementById('m-status').value='ok';document.getElementById('m-freq').value='';var ic=document.getElementById('m-icon');if(ic)ic.value='⚙️';var ip=document.getElementById('m-icon-preview');if(ip)ip.textContent='⚙️';var ep=document.getElementById('emoji-picker');if(ep)ep.style.display='none';}
 function clearTaskForm(){['t-id','t-name','t-notes'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});document.getElementById('t-cat').value='';document.getElementById('t-subcat').innerHTML='<option value="">Elegir...</option>';document.getElementById('t-status').value='ok';document.getElementById('t-freq').value='';}
-function clearEvForm(){['e-id','e-desc','e-tech','e-next','e-machine-id','e-search'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});document.getElementById('e-type').value='preventivo';document.getElementById('e-status').value='ok';document.getElementById('e-entity-type').value='machine';var es=document.getElementById('e-selected');if(es)es.textContent='';}
+function clearEvForm(){['e-id','e-desc','e-tech','e-next','e-machine-id','e-search'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});document.getElementById('e-type').value='preventivo';document.getElementById('e-status').value='ok';document.getElementById('e-entity-type').value='machine';var es=document.getElementById('e-selected');if(es)es.textContent='';evPhotos=[];renderPhotoPrev();}
 
 function openEditMachine(machId){
   var m=_machines.find(function(x){return x.id===machId;});if(!m)return;
@@ -1208,6 +1227,7 @@ function openEditEv(evId){
   document.getElementById('e-type').value=ev.type;document.getElementById('e-date').value=ev.date;
   document.getElementById('e-desc').value=ev.description;document.getElementById('e-tech').value=ev.tech||'';
   document.getElementById('e-status').value=ev.new_status||'ok';document.getElementById('e-next').value=ev.next_date||'';
+  evPhotos=(ev.photos||[]).map(function(u){return{url:u};});renderPhotoPrev();
   document.getElementById('modal-event').classList.add('on');
 }
 
@@ -1238,6 +1258,59 @@ async function saveTask(){
   if(curPage==='tasks'){renderTasks();if(editId&&curTaskId===editId)openTaskDetail(editId);}
 }
 
+var evPhotos=[];var PH_MAX=6;var PH_BUCKET='am-fotos';
+function compressImg(file){
+  return new Promise(function(res,rej){
+    var img=new Image();var url=URL.createObjectURL(file);
+    img.onload=function(){
+      var max=1600,w=img.naturalWidth,h=img.naturalHeight;
+      if(w>max||h>max){if(w>h){h=Math.round(h*max/w);w=max;}else{w=Math.round(w*max/h);h=max;}}
+      var c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);
+      URL.revokeObjectURL(url);
+      c.toBlob(function(b){b?res(b):rej(new Error('blob'));},'image/jpeg',0.75);
+    };
+    img.onerror=function(){URL.revokeObjectURL(url);rej(new Error('img'));};
+    img.src=url;
+  });
+}
+async function onPhotoPick(files){
+  files=Array.prototype.slice.call(files||[]);
+  if(!files.length)return;
+  var room=PH_MAX-evPhotos.length;
+  if(room<=0){toast('Máximo '+PH_MAX+' fotos','e');return;}
+  if(files.length>room){toast('Se agregan solo '+room+' (máx. '+PH_MAX+')','e');files=files.slice(0,room);}
+  for(var i=0;i<files.length;i++){
+    try{var b=await compressImg(files[i]);evPhotos.push({blob:b,preview:URL.createObjectURL(b)});}
+    catch(e){toast('Una foto no se pudo leer','e');}
+  }
+  renderPhotoPrev();
+}
+function renderPhotoPrev(){
+  var el=document.getElementById('e-photos-prev');if(!el)return;
+  el.innerHTML=evPhotos.map(function(p,i){return '<div class="ph-item"><img src="'+(p.preview||p.url)+'" alt=""><button type="button" class="ph-del" data-i="'+i+'">×</button></div>';}).join('');
+  el.querySelectorAll('.ph-del').forEach(function(btn){btn.addEventListener('click',function(){var i=parseInt(btn.getAttribute('data-i'));var p=evPhotos[i];if(p&&p.preview)URL.revokeObjectURL(p.preview);evPhotos.splice(i,1);renderPhotoPrev();});});
+}
+async function uploadEvPhotos(){
+  var urls=[];
+  for(var i=0;i<evPhotos.length;i++){
+    var p=evPhotos[i];
+    if(p.url){urls.push(p.url);continue;}
+    var path='eventos/'+new Date().toISOString().slice(0,10)+'/'+Date.now()+'_'+Math.random().toString(36).slice(2,8)+'.jpg';
+    var up=await sb.storage.from(PH_BUCKET).upload(path,p.blob,{contentType:'image/jpeg',upsert:false});
+    if(up.error)throw up.error;
+    urls.push(sb.storage.from(PH_BUCKET).getPublicUrl(path).data.publicUrl);
+  }
+  return urls;
+}
+function photoStrip(ev){
+  var ph=ev.photos||[];if(!ph.length)return '';
+  return '<div class="ph-strip">'+ph.map(function(u){return '<img class="ph-thumb" src="'+u+'" data-full="'+u+'" loading="lazy" alt="">';}).join('')+'</div>';
+}
+function openLightbox(src){document.getElementById('lightbox-img').src=src;document.getElementById('lightbox').classList.add('on');}
+function closeLightbox(){document.getElementById('lightbox').classList.remove('on');document.getElementById('lightbox-img').src='';}
+document.addEventListener('click',function(e){var t=e.target.closest&&e.target.closest('.ph-thumb');if(t){e.stopPropagation();e.preventDefault();openLightbox(t.getAttribute('data-full'));}},true);
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeLightbox();});
+
 async function saveEvent(){
   var entityId=document.getElementById('e-machine-id').value;
   var entityType=document.getElementById('e-entity-type').value||'machine';
@@ -1250,6 +1323,7 @@ async function saveEvent(){
   var evData={type:document.getElementById('e-type').value,date:date,description:desc,tech:document.getElementById('e-tech').value.trim()||null,new_status:newSt,next_date:nextD,user_id:curUser?curUser.id:null};
   if(entityType==='machine')evData.machine_id=entityId;else evData.task_id=entityId;
   showLoad(true);
+  try{var phUrls=await uploadEvPhotos();if(phUrls.length||editId)evData.photos=phUrls;}catch(err){showLoad(false);toast('No se pudieron subir las fotos','e');console.error(err);return;}
   if(editId){await sb.from('am_events').update(evData).eq('id',editId);await logAudit('editar','am_events',editId,'Intervención editada');toast('Actualizada','s');}
   else{
     await sb.from('am_events').insert(evData);
@@ -1329,7 +1403,7 @@ function renderReports(){
   if(!evs.length){list.innerHTML='';emp.style.display='block';destroyCharts();return;}
   emp.style.display='none';
   renderCharts(evs);
-  list.innerHTML=evs.map(function(ev){var m=_machines.find(function(x){return x.id===ev.machine_id;});var t=_tasks.find(function(x){return x.id===ev.task_id;});var item=m||t;return '<div class="hcard"><div class="hcard-top"><div><span class="type-tag '+(ev.type==='preventivo'?'t-prev':'t-corr')+'">'+ev.type+'</span>'+(item?' <strong style="font-size:13px">'+item.name+'</strong>':'')+' '+catTag(item?item.subcategory_id:null)+'</div><span class="hcard-date">'+fmtD(ev.date)+'</span></div><div class="hcard-desc">'+ev.description+'</div><div class="hcard-foot">'+(ev.tech?'<div class="hcard-meta">👷 '+ev.tech+'</div>':'')+(ev.next_date?'<div class="hcard-meta">📅 '+fmtD(ev.next_date)+'</div>':'')+'</div></div>';}).join('');
+  list.innerHTML=evs.map(function(ev){var m=_machines.find(function(x){return x.id===ev.machine_id;});var t=_tasks.find(function(x){return x.id===ev.task_id;});var item=m||t;return '<div class="hcard"><div class="hcard-top"><div><span class="type-tag '+(ev.type==='preventivo'?'t-prev':'t-corr')+'">'+ev.type+'</span>'+(item?' <strong style="font-size:13px">'+item.name+'</strong>':'')+' '+catTag(item?item.subcategory_id:null)+'</div><span class="hcard-date">'+fmtD(ev.date)+'</span></div><div class="hcard-desc">'+ev.description+'</div>'+photoStrip(ev)+'<div class="hcard-foot">'+(ev.tech?'<div class="hcard-meta">👷 '+ev.tech+'</div>':'')+(ev.next_date?'<div class="hcard-meta">📅 '+fmtD(ev.next_date)+'</div>':'')+'</div></div>';}).join('');
 }
 function destroyCharts(){if(chartMachine){chartMachine.destroy();chartMachine=null;}if(chartType){chartType.destroy();chartType=null;}}
 function renderCharts(evs){
@@ -1443,5 +1517,6 @@ async function init(){
 }
 init();
 </script>
+<div id="lightbox" onclick="closeLightbox()"><button type="button" onclick="closeLightbox()">×</button><img id="lightbox-img" alt=""></div>
 </body>
 </html>
