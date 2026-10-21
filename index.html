@@ -368,6 +368,20 @@ input[type=color].cswatch{width:28px;height:28px;border-radius:50%;border:2px so
 .tech-row.off{opacity:.55}
 .prev-ev{background:var(--sand);border-radius:var(--r-sm);padding:9px 11px;margin-bottom:6px;font-size:12.5px;line-height:1.45}
 .prev-ev .ph-strip{margin:6px 0 0}
+.opt{font-weight:500;color:var(--ink4);font-size:11px;margin-left:4px}
+.sec-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.sec-chip{padding:7px 12px;border-radius:20px;border:1.5px solid var(--sand3);background:var(--white);font-family:var(--font);font-size:12.5px;font-weight:600;color:var(--ink2);cursor:pointer}
+.sec-chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.pri-row{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.pri-b{padding:10px 2px;border-radius:var(--r-sm);border:1.5px solid var(--sand3);background:var(--white);font-family:var(--font);font-size:12px;font-weight:700;color:var(--ink2);cursor:pointer;text-align:center;white-space:nowrap}
+.pri-b.on{border-color:var(--pc);color:var(--pc);background:var(--sand);box-shadow:0 0 0 1.5px var(--pc) inset}
+.pri-hint{font-size:11.5px;color:var(--ink3);margin-top:6px}
+.ph-pick.ph-sm{padding:11px 8px;font-size:13px}
+details.more{border:1px solid var(--sand2);border-radius:var(--r-sm);padding:10px 12px;margin-bottom:14px}
+details.more summary{cursor:pointer;font-size:13px;font-weight:700;color:var(--ink2)}
+details.more[open] summary{margin-bottom:12px}
+#modal-order{z-index:510}
+.u-row{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--sand2);flex-wrap:wrap}
 .ctx-box{background:var(--sand);border-radius:var(--r-sm);padding:10px 12px;font-size:13px;color:var(--ink2);margin-bottom:14px;line-height:1.45}
 @media(min-width:640px){.stat-row{grid-template-columns:repeat(2,1fr)}}
 </style>
@@ -391,7 +405,7 @@ input[type=color].cswatch{width:28px;height:28px;border-radius:50%;border:2px so
     <div class="drw-sec-lbl">Menú</div>
     <button class="drw-item on" id="di-dashboard" onclick="goPage('dashboard');closeDrw()"><span class="drw-icon">◈</span>Inicio</button>
     <button class="drw-item" id="di-orders" onclick="goPage('orders');closeDrw()"><span class="drw-icon">🧰</span>Órdenes de trabajo</button>
-    <button class="drw-item admin-only" id="di-machines" onclick="goPage('machines');closeDrw()"><span class="drw-icon">⚙</span>Maquinarias</button>
+    <button class="drw-item" id="di-machines" onclick="goPage('machines');closeDrw()"><span class="drw-icon">⚙</span>Maquinarias</button>
     <button class="drw-item admin-only" id="di-tasks" onclick="goPage('tasks');closeDrw()"><span class="drw-icon">📋</span>Tareas Generales</button>
     <button class="drw-item admin-only" id="di-reports" onclick="goPage('reports');closeDrw()"><span class="drw-icon">📊</span>Reportes</button>
     <button class="drw-item" id="di-reminders" onclick="goPage('reminders');closeDrw()"><span class="drw-icon">🔔</span>Recordatorios</button>
@@ -400,6 +414,7 @@ input[type=color].cswatch{width:28px;height:28px;border-radius:50%;border:2px so
   <div class="drw-sec mgr-only">
     <div class="drw-sec-lbl">Mantenimiento</div>
     <button class="drw-item" onclick="openTechs();closeDrw()"><span class="drw-icon">👷</span>Equipo de mantenimiento</button>
+    <button class="drw-item" onclick="openSectors();closeDrw()"><span class="drw-icon">📍</span>Sectores</button>
   </div>
   <div class="drw-sec admin-only">
     <div class="drw-sec-lbl">Config.</div>
@@ -415,7 +430,7 @@ input[type=color].cswatch{width:28px;height:28px;border-radius:50%;border:2px so
     <button class="sb-item on" id="si-dashboard" onclick="goPage('dashboard')"><span class="sb-icon">◈</span>Inicio</button>
     <button class="sb-item" id="si-orders" onclick="goPage('orders')"><span class="sb-icon">🧰</span>Órdenes de trabajo</button>
   </div>
-  <div class="sb-sec admin-only">
+  <div class="sb-sec">
     <div class="sb-sec-lbl">Maquinarias</div>
     <div id="sb-mach-subs"></div>
     <button class="sb-item" id="si-machines" onclick="goPage('machines')" style="margin-top:4px;font-size:11px;color:var(--ink4)"><span class="sb-icon" style="font-size:11px">⚙</span>Ver todas</button>
@@ -434,6 +449,7 @@ input[type=color].cswatch{width:28px;height:28px;border-radius:50%;border:2px so
   <div class="sb-sec mgr-only">
     <div class="sb-sec-lbl">Mantenimiento</div>
     <button class="sb-item" onclick="openTechs()"><span class="sb-icon">👷</span>Equipo</button>
+    <button class="sb-item" onclick="openSectors()"><span class="sb-icon">📍</span>Sectores</button>
   </div>
   <div class="sb-sec admin-only">
     <div class="sb-sec-lbl">Config.</div>
@@ -497,9 +513,9 @@ input[type=color].cswatch{width:28px;height:28px;border-radius:50%;border:2px so
     <div id="ord-list"></div>
     <div id="ord-empty" class="empty" style="display:none"><div class="empty-ico">🧰</div><p>No hay órdenes acá.</p></div>
   </div>
-  <div id="page-machines" class="page admin-only">
+  <div id="page-machines" class="page">
     <div id="view-list">
-      <div class="pg-hdr"><div class="pg-title">Maquinarias</div><button class="btn btn-p btn-sm admin-only" onclick="openM('modal-machine')">＋ Nueva</button></div>
+      <div class="pg-hdr"><div class="pg-title">Maquinarias</div><button class="btn btn-p btn-sm" onclick="openM('modal-machine')">＋ Agregar máquina</button></div>
       <div class="chips" id="mach-status-chips">
         <div class="chip on" onclick="machF('all',this)">Todas</div>
         <div class="chip" onclick="machF('ok',this)">OK</div>
@@ -515,7 +531,7 @@ input[type=color].cswatch{width:28px;height:28px;border-radius:50%;border:2px so
       <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
         <button class="btn btn-p btn-sm" onclick="openNewOrder(curMachId,'machine')">＋ Pedido</button>
         <button class="btn btn-g btn-sm mgr-only" onclick="openEventFor(curMachId,'machine')">＋ Registrar trabajo directo</button>
-        <button class="btn btn-g btn-sm admin-only" onclick="editCurMachine()">✏️ Editar</button>
+        <button class="btn btn-g btn-sm mgr-only" onclick="editCurMachine()">✏️ Editar</button>
         <button class="btn btn-d btn-sm admin-only" onclick="delCurMachine()">🗑</button>
       </div>
       <div id="det-orders"></div>
@@ -603,9 +619,8 @@ input[type=color].cswatch{width:28px;height:28px;border-radius:50%;border:2px so
 <nav class="bnav">
   <button class="btab on" id="tab-dashboard" onclick="goPage('dashboard')"><div class="btab-icon">◈</div><div>Inicio</div></button>
   <button class="btab" id="tab-orders" onclick="goPage('orders')"><div class="btab-icon">🧰</div><div>Órdenes</div></button>
-  <button class="btab admin-only" id="tab-machines" onclick="goPage('machines')"><div class="btab-icon">⚙</div><div>Máquinas</div></button>
-  <button class="btab admin-only" id="tab-tasks" onclick="goPage('tasks')"><div class="btab-icon">📋</div><div>Tareas</div></button>
-  <button class="btab staff-only" id="tab-reminders" onclick="goPage('reminders')"><div class="btab-icon">🔔</div><div>Avisos</div></button>
+  <button class="btab" id="tab-machines" onclick="goPage('machines')"><div class="btab-icon">⚙</div><div>Máquinas</div></button>
+  <button class="btab" id="tab-more" onclick="openDrw()"><div class="btab-icon">☰</div><div>Más</div></button>
 </nav>
 <button class="fab" id="fab" onclick="onFab()">＋</button>
 <div class="toast-wrap" id="toasts"></div>
@@ -625,15 +640,16 @@ input[type=color].cswatch{width:28px;height:28px;border-radius:50%;border:2px so
         <input type="hidden" id="m-icon" value="⚙️">
       </div>
       <div class="fg"><label class="fl">Nombre *</label><input class="fi" id="m-name" placeholder="Ej: Amasadora N°1"></div>
-      <div class="frow"><div class="fg"><label class="fl">Modelo</label><input class="fi" id="m-model" placeholder="Ej: Diosna SP100"></div><div class="fg"><label class="fl">N° serie</label><input class="fi" id="m-serial"></div></div>
-      <div class="fg"><label class="fl">Categoría *</label><select class="fs" id="m-cat" onchange="loadSubcats('m-subcat',this.value)"><option value="">Elegir...</option></select></div>
-      <div class="fg"><label class="fl">Subcategoría</label><select class="fs" id="m-subcat"><option value="">Elegir...</option></select></div>
-      <div class="frow">
+      <div class="fg"><label class="fl">Tipo / sector</label><select class="fs" id="m-subcat"></select><select id="m-cat" style="display:none"></select></div>
+      <details class="more"><summary>Más datos <span class="opt">opcional</span></summary>
+        <div class="frow"><div class="fg"><label class="fl">Modelo</label><input class="fi" id="m-model" placeholder="Ej: Diosna SP100"></div><div class="fg"><label class="fl">N° serie</label><input class="fi" id="m-serial"></div></div>
+        <div class="frow">
+          <div class="fg"><label class="fl">Preventivo cada (días)</label><input type="number" class="fi" id="m-freq" placeholder="Ej: 30"></div>
+          <div class="fg"><label class="fl">Instalación</label><input type="date" class="fi" id="m-install"></div>
+        </div>
         <div class="fg"><label class="fl">Estado</label><select class="fs" id="m-status"><option value="ok">Operativa OK</option><option value="warn">Requiere atención</option><option value="danger">En reparación</option></select></div>
-        <div class="fg"><label class="fl">Preventivo cada (días)</label><input type="number" class="fi" id="m-freq" placeholder="Ej: 30"></div>
-      </div>
-      <div class="fg"><label class="fl">Instalación</label><input type="date" class="fi" id="m-install"></div>
-      <div class="fg"><label class="fl">Notas</label><textarea class="ft" id="m-notes"></textarea></div>
+        <div class="fg" style="margin-bottom:0"><label class="fl">Notas</label><textarea class="ft" id="m-notes"></textarea></div>
+      </details>
     </div>
     <div class="modal-foot"><button class="btn btn-g" onclick="closeM('modal-machine')">Cancelar</button><button class="btn btn-p" onclick="saveMachine()">Guardar</button></div>
   </div>
@@ -672,14 +688,14 @@ input[type=color].cswatch{width:28px;height:28px;border-radius:50%;border:2px so
         <div class="fg"><label class="fl">Tipo *</label><select class="fs" id="e-type"><option value="preventivo">🔧 Preventivo</option><option value="correctivo">🔴 Correctivo</option></select></div>
         <div class="fg"><label class="fl">Fecha *</label><input type="date" class="fi" id="e-date"></div>
       </div>
-      <div class="fg"><label class="fl">Descripción *</label><textarea class="ft" id="e-desc" placeholder="¿Qué se hizo o qué falló?"></textarea></div>
+      <div class="fg"><label class="fl">¿Qué se hizo?</label><textarea class="ft" id="e-desc" placeholder="Ej: Cambio de resistencia"></textarea></div>
       <div class="fg"><label class="fl">Fotos del trabajo</label>
         <button type="button" class="ph-pick" onclick="document.getElementById('e-photo-input').click()">📷 Sacar o adjuntar fotos</button>
         <input type="file" id="e-photo-input" accept="image/*" multiple style="display:none" onchange="onPhotoPick(this.files);this.value=''">
         <div class="ph-grid" id="e-photos-prev"></div>
       </div>
       <div class="fg"><label class="fl">Técnico</label><input class="fi" id="e-tech" placeholder="Nombre del técnico"></div>
-      <div class="frow">
+      <div class="frow" style="display:none">
         <div class="fg"><label class="fl">Nuevo estado</label><select class="fs" id="e-status"><option value="ok">Operativo OK</option><option value="warn">Requiere atención</option><option value="danger">Urgente / En reparación</option></select></div>
         <div class="fg"><label class="fl">Próximo mantenimiento</label><input type="date" class="fi" id="e-next"></div>
       </div>
@@ -721,6 +737,7 @@ input[type=color].cswatch{width:28px;height:28px;border-radius:50%;border:2px so
         <div class="fg"><label class="fl">Usuario (para entrar)</label><input class="fi" id="nu-email" type="text" autocapitalize="none" placeholder="Ej: sergio"></div>
         <div class="fg"><label class="fl">Contraseña</label><input class="fi" id="nu-pass" placeholder="Contraseña inicial"></div>
         <div class="fg"><label class="fl">Rol</label><select class="fs" id="nu-role"><option value="encargado">Encargado (hace pedidos)</option><option value="jefe">Jefe de mantenimiento</option><option value="admin">Admin</option></select></div>
+        <label style="display:flex;align-items:center;gap:8px;font-size:13px;margin-bottom:14px"><input type="checkbox" id="nu-assign"> Puede asignar responsables (solo encargados)</label>
         <button class="btn btn-p btn-sm" onclick="addUser()">Crear usuario</button>
       </div>
     </div>
@@ -729,30 +746,26 @@ input[type=color].cswatch{width:28px;height:28px;border-radius:50%;border:2px so
 </div>
 <div class="modal-ov" id="modal-order">
   <div class="modal"><div class="modal-handle"></div>
-    <div class="modal-hdr"><div class="modal-title">Nuevo pedido</div><button class="modal-x" onclick="closeM('modal-order')">×</button></div>
+    <div class="modal-hdr"><div class="modal-title" id="mo-title">Nuevo pedido</div><button class="modal-x" onclick="closeM('modal-order')">×</button></div>
     <div class="modal-body">
-      <div class="fg"><label class="fl">1 · ¿Dónde? *</label>
+      <div class="fg"><label class="fl">¿Qué pasa?</label><textarea class="ft" id="o-text" style="min-height:72px" placeholder="Ej: La amasadora 2 hace ruido y se frena"></textarea></div>
+      <div class="fg"><label class="fl">¿Dónde? <span class="opt">opcional</span></label>
+        <div class="sec-chips" id="o-sectors"></div>
         <div id="o-search-wrap">
-          <div class="search-box"><span class="search-icon">🔍</span><input class="search-input" id="o-search" placeholder="Buscá la máquina o el sector…" oninput="oSearch(this.value)" autocomplete="off"></div>
+          <div class="search-box"><span class="search-icon">⚙</span><input class="search-input" id="o-search" placeholder="Máquina (opcional): escribí el nombre…" oninput="oSearch(this.value)" autocomplete="off"></div>
           <div class="search-results" id="o-search-results"></div>
-          <button type="button" class="link-btn" style="margin:0;font-size:12px" onclick="useOtherPlace()">📍 No está en la lista, escribir el lugar</button>
         </div>
         <div id="o-selected" style="display:none"></div>
-        <div id="o-place-wrap" style="display:none">
-          <input class="fi" id="o-place" placeholder="Ej: baño del vestuario, depósito, patio…">
-          <button type="button" class="link-btn" style="margin:4px 0 0;font-size:12px" onclick="clearOTarget()">← Buscar en la lista</button>
-        </div>
       </div>
-      <div class="fg"><label class="fl">2 · ¿Qué pasa? *</label><input class="fi" id="o-title" maxlength="140" placeholder="Ej: La amasadora hace ruido y se frena"></div>
-      <div class="fg"><label class="fl">Más detalle (opcional)</label><textarea class="ft" id="o-desc" style="min-height:60px" placeholder="Desde cuándo, qué se probó, etc."></textarea></div>
-      <div class="fg"><label class="fl">3 · Prioridad *</label><div class="pri-opts" id="o-pri"></div></div>
-      <div class="fg"><label class="fl">Foto del problema (opcional)</label>
-        <button type="button" class="ph-pick" onclick="document.getElementById('o-photo-input').click()">📷 Sacar o adjuntar foto</button>
-        <input type="file" id="o-photo-input" accept="image/*" multiple style="display:none" onchange="psPick('ob',this.files);this.value=''">
-        <div class="ph-grid" id="o-photos-prev"></div>
+      <div class="fg"><label class="fl">Prioridad</label><div class="pri-row" id="o-pri"></div><div class="pri-hint" id="o-pri-hint"></div></div>
+      <div class="frow">
+        <div class="fg"><label class="fl">¿Para cuándo? <span class="opt">opcional</span></label><input type="date" class="fi" id="o-due"></div>
+        <div class="fg"><label class="fl">Foto <span class="opt">opcional</span></label><button type="button" class="ph-pick ph-sm" onclick="document.getElementById('o-photo-input').click()">📷 Agregar</button><input type="file" id="o-photo-input" accept="image/*" multiple style="display:none" onchange="psPick('ob',this.files);this.value=''"></div>
       </div>
+      <div class="ph-grid" id="o-photos-prev" style="margin:-6px 0 14px"></div>
+      <div class="fg" id="o-assign-wrap"><label class="fl">Responsable <span class="opt">opcional</span></label><select class="fs" id="o-tech"></select></div>
     </div>
-    <div class="modal-foot"><button class="btn btn-g" onclick="closeM('modal-order')">Cancelar</button><button class="btn btn-p" onclick="saveOrder()">Enviar pedido</button></div>
+    <div class="modal-foot"><button class="btn btn-g" onclick="closeM('modal-order')">Cancelar</button><button class="btn btn-p" id="mo-save" onclick="saveOrder()">Enviar pedido</button></div>
   </div>
 </div>
 <div class="modal-ov" id="modal-od">
@@ -776,23 +789,18 @@ input[type=color].cswatch{width:28px;height:28px;border-radius:50%;border:2px so
 </div>
 <div class="modal-ov" id="modal-resolve">
   <div class="modal"><div class="modal-handle"></div>
-    <div class="modal-hdr"><div class="modal-title">Reportar trabajo</div><button class="modal-x" onclick="closeM('modal-resolve')">×</button></div>
+    <div class="modal-hdr"><div class="modal-title">Trabajo terminado</div><button class="modal-x" onclick="closeM('modal-resolve')">×</button></div>
     <div class="modal-body">
       <div class="ctx-box" id="r-ctx"></div>
-      <div class="fg"><label class="fl">¿Quién lo hizo? *</label><select class="fs" id="r-tech"></select></div>
-      <div class="fg"><label class="fl">¿Qué se hizo? *</label><textarea class="ft" id="r-text" placeholder="Ej: Se cambió la correa y se ajustó el tensor"></textarea></div>
-      <div class="fg"><label class="fl">Fotos del trabajo terminado *</label>
+      <div class="fg"><label class="fl">¿Quién lo hizo?</label><select class="fs" id="r-tech"></select></div>
+      <div class="fg"><label class="fl">¿Qué se hizo? <span class="opt">opcional</span></label><textarea class="ft" id="r-text" placeholder="Ej: Se cambió la correa y se ajustó el tensor"></textarea></div>
+      <div class="fg"><label class="fl">Fotos <span class="opt">opcional</span></label>
         <button type="button" class="ph-pick" onclick="document.getElementById('r-photo-input').click()">📷 Sacar o adjuntar fotos</button>
         <input type="file" id="r-photo-input" accept="image/*" multiple style="display:none" onchange="psPick('rs',this.files);this.value=''">
         <div class="ph-grid" id="r-photos-prev"></div>
       </div>
-      <div class="fg"><label class="fl">Repuestos / materiales usados</label><input class="fi" id="r-parts" placeholder="Ej: correa A-42, 2 rulemanes"></div>
-      <div class="frow">
-        <div class="fg" id="r-final-wrap"><label class="fl">¿Cómo quedó?</label><select class="fs" id="r-final"><option value="ok">✅ Funcionando bien</option><option value="warn">⚠️ Funciona, hay que seguirla</option><option value="danger">🔴 Sigue con problemas</option></select></div>
-        <div class="fg" id="r-next-wrap"><label class="fl">Próximo preventivo</label><input type="date" class="fi" id="r-next"></div>
-      </div>
     </div>
-    <div class="modal-foot"><button class="btn btn-g" onclick="closeM('modal-resolve')">Cancelar</button><button class="btn btn-p" onclick="saveResolve()">Guardar</button></div>
+    <div class="modal-foot"><button class="btn btn-g" onclick="closeM('modal-resolve')">Cancelar</button><button class="btn btn-p" onclick="saveResolve()">✅ Listo</button></div>
   </div>
 </div>
 <div class="modal-ov" id="modal-note">
@@ -800,6 +808,17 @@ input[type=color].cswatch{width:28px;height:28px;border-radius:50%;border:2px so
     <div class="modal-hdr"><div class="modal-title" id="note-title">Comentario</div><button class="modal-x" onclick="closeM('modal-note')">×</button></div>
     <div class="modal-body"><div class="fg"><textarea class="ft" id="note-text"></textarea></div></div>
     <div class="modal-foot"><button class="btn btn-g" onclick="closeM('modal-note')">Cancelar</button><button class="btn btn-p" onclick="saveNote()">Guardar</button></div>
+  </div>
+</div>
+<div class="modal-ov" id="modal-sectors">
+  <div class="modal"><div class="modal-handle"></div>
+    <div class="modal-hdr"><div class="modal-title">Sectores de la empresa</div><button class="modal-x" onclick="closeM('modal-sectors')">×</button></div>
+    <div class="modal-body">
+      <p style="font-size:13px;color:var(--ink3);margin-bottom:12px">Aparecen como botones al hacer un pedido, para indicar dónde es (baños, zona hornos, desmolde…).</p>
+      <div id="sectors-list"></div>
+      <div style="display:flex;gap:8px;margin-top:14px"><input class="fi" id="sector-new" placeholder="Ej: Desmolde" onkeydown="if(event.key==='Enter')addSector()"><button class="btn btn-p" onclick="addSector()">Agregar</button></div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-g" onclick="closeM('modal-sectors')">Listo</button></div>
   </div>
 </div>
 <div class="modal-ov" id="modal-techs">
@@ -835,17 +854,18 @@ async function loadAll(){
       sb.from('am_tasks').select('*').order('created_at'),
       sb.from('am_events').select('*').order('date',{ascending:false}),
       sb.from('am_reminders').select('*').order('due_date'),
-      sb.from('am_users').select('id,name,email,role,active').order('created_at'),
+      sb.from('am_users').select('*').order('created_at'),
       sb.from('am_audit').select('*').order('created_at',{ascending:false}).limit(100),
       sb.from('am_orders').select('*').order('created_at',{ascending:false}),
-      sb.from('am_techs').select('*').order('name')
+      sb.from('am_techs').select('*').order('name'),
+      sb.from('am_sectors').select('*').order('sort')
     ]);
     var res=await Promise.race([q,t]);
     _cats=res[0].data||[];_subcats=res[1].data||[];
     _machines=res[2].data||[];_tasks=res[3].data||[];
     _events=res[4].data||[];_reminders=res[5].data||[];
-    _users=res[6].data||[];_audit=res[7].data||[];
-    _orders=res[8].data||[];_techs=res[9].data||[];
+    _users=(res[6].data||[]).map(function(u){delete u.password;return u;});_audit=res[7].data||[];
+    _orders=res[8].data||[];_techs=res[9].data||[];_sectors=(res[10]&&res[10].data)||[];
     return true;
   }catch(e){
     var ld=document.getElementById('loading');
@@ -863,7 +883,7 @@ async function doLogin(){
   var res=await sb.from('am_users').select('*').ilike('email',email).eq('password',pass).eq('active',true).single();
   showLoad(false);
   if(res.error||!res.data){document.getElementById('login-err').classList.add('on');return;}
-  curUser=res.data;saveSession(curUser);startApp();
+  curUser=res.data;delete curUser.password;saveSession(curUser);startApp();
 }
 document.getElementById('login-pass').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
 
@@ -882,8 +902,9 @@ async function startApp(){
   showLoad(false);
   if(!ok)return;
   var fresh=_users.find(function(u){return u.id===curUser.id;});
-  if(!fresh||fresh.active===false){doLogout();return;}
-  curUser.role=fresh.role;curUser.name=fresh.name;saveSession(curUser);
+  if(_users.length&&(!fresh||fresh.active===false)){doLogout();return;}
+  if(fresh){curUser.role=fresh.role;curUser.name=fresh.name;curUser.can_assign=!!fresh.can_assign;}
+  delete curUser.password;saveSession(curUser);
   ordScope=isEnc()?'mine':'all';ordFilt='open';
   if(canManage()){var nPrev=await genPreventives();if(nPrev){await loadAll();}}
   applyRole();setUserLabels();renderGreeting();goPage('dashboard');renderSbSubcats();checkReminders();updateBadges();setupRT();
@@ -932,7 +953,7 @@ function openDrw(){document.getElementById('drw').classList.add('on');document.g
 function closeDrw(){document.getElementById('drw').classList.remove('on');document.getElementById('drw-overlay').classList.remove('on');}
 
 function goPage(page){
-  if(!isAdmin()&&['machines','tasks','reports','audit'].indexOf(page)>=0)page='dashboard';
+  if(!isAdmin()&&['tasks','reports','audit'].indexOf(page)>=0)page='dashboard';
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('on');});
   var pg=document.getElementById('page-'+page);if(pg)pg.classList.add('on');
   document.querySelectorAll('.btab').forEach(function(t){t.classList.remove('on');});
@@ -957,7 +978,7 @@ function goPage(page){
 
 function updateDeskActions(page){
   var el=document.getElementById('desk-actions');if(!el)return;
-  if((page==='machines'||page==='tasks')&&isAdmin())el.innerHTML='<button class="btn btn-p btn-sm" onclick="openM(\'modal-'+(page==='machines'?'machine':'task')+'\')">＋ Nueva</button>';
+  if(page==='machines'||(page==='tasks'&&isAdmin()))el.innerHTML='<button class="btn btn-p btn-sm" onclick="openM(\'modal-'+(page==='machines'?'machine':'task')+'\')">＋ Nueva</button>';
   else if(page==='reminders')el.innerHTML='<button class="btn btn-p btn-sm" onclick="openM(\'modal-reminder\')">＋ Recordatorio</button>';
   else el.innerHTML='';
 }
@@ -1356,7 +1377,7 @@ function openEventFor(id,type){
 }
 
 function openM(id){
-  if(id==='modal-machine'){fillCatSelect('m-cat','machines');document.getElementById('m-subcat').innerHTML='<option value="">Elegir...</option>';}
+  if(id==='modal-machine'){fillSubGrouped('m-subcat');}
   if(id==='modal-task'){fillCatSelect('t-cat','tasks');document.getElementById('t-subcat').innerHTML='<option value="">Elegir...</option>';}
   if(id==='modal-event'){document.getElementById('e-date').value=new Date().toISOString().slice(0,10);document.getElementById('e-search').value='';var esel=document.getElementById('e-selected');if(esel)esel.textContent='';document.getElementById('e-machine-id').value='';}
   if(id==='modal-reminder')document.getElementById('r-date').value=new Date().toISOString().slice(0,10);
@@ -1390,9 +1411,9 @@ function clearEvForm(){['e-id','e-desc','e-tech','e-next','e-machine-id','e-sear
 
 function openEditMachine(machId){
   var m=_machines.find(function(x){return x.id===machId;});if(!m)return;
-  editMachId=machId;fillCatSelect('m-cat','machines');
+  editMachId=machId;fillSubGrouped('m-subcat');
   var sc=getSubcat(m.subcategory_id);
-  if(sc){document.getElementById('m-cat').value=sc.category_id;loadSubcats('m-subcat',sc.category_id);setTimeout(function(){document.getElementById('m-subcat').value=m.subcategory_id||'';},80);}
+  document.getElementById('m-subcat').value=m.subcategory_id||'';
   document.getElementById('mm-title').textContent='Editar máquina';
   document.getElementById('m-id').value=machId;
   document.getElementById('m-name').value=m.name||'';document.getElementById('m-model').value=m.model||'';
@@ -1630,7 +1651,7 @@ function toast(msg,type){type=type||'s';var c=document.getElementById('toasts');
 function showLoad(v){document.getElementById('loading').classList.toggle('off',!v);}
 
 function setupRT(){
-  sb.channel('ams-v3').on('postgres_changes',{event:'*',schema:'public',table:'am_orders'},handleRT).on('postgres_changes',{event:'*',schema:'public',table:'am_order_log'},handleRT).on('postgres_changes',{event:'*',schema:'public',table:'am_techs'},handleRT).on('postgres_changes',{event:'*',schema:'public',table:'am_machines'},handleRT).on('postgres_changes',{event:'*',schema:'public',table:'am_tasks'},handleRT).on('postgres_changes',{event:'*',schema:'public',table:'am_events'},handleRT).on('postgres_changes',{event:'*',schema:'public',table:'am_reminders'},handleRT).subscribe();
+  sb.channel('ams-v3').on('postgres_changes',{event:'*',schema:'public',table:'am_orders'},handleRT).on('postgres_changes',{event:'*',schema:'public',table:'am_order_log'},handleRT).on('postgres_changes',{event:'*',schema:'public',table:'am_techs'},handleRT).on('postgres_changes',{event:'*',schema:'public',table:'am_sectors'},handleRT).on('postgres_changes',{event:'*',schema:'public',table:'am_machines'},handleRT).on('postgres_changes',{event:'*',schema:'public',table:'am_tasks'},handleRT).on('postgres_changes',{event:'*',schema:'public',table:'am_events'},handleRT).on('postgres_changes',{event:'*',schema:'public',table:'am_reminders'},handleRT).subscribe();
 }
 var rtTimer=null;
 async function handleRT(){
@@ -2241,6 +2262,447 @@ function notifyChanges(prev){
     if(was==='resuelta'&&o.status==='en_curso'&&canManage())toast(oCode(o)+' volvió: no quedó bien','i');
   });
 }
+
+
+// ══════════ v3: más simple · sectores · edición · Maxi asigna ══════════
+var _sectors=[];
+var oSec=null,eoId=null;
+function canAssign(){return isAdmin()||isJefe()||!!(curUser&&curUser.can_assign);}
+function canEditOrder(o){return isAdmin()||(o.status!=='cerrada'&&(isMine(o)||canAssign()));}
+function sectorName(id){var s=id&&_sectors.find(function(x){return x.id===id;});return s?s.name:'';}
+function oTarget(o){
+  var sec=sectorName(o.sector_id);
+  var m=o.machine_id&&_machines.find(function(x){return x.id===o.machine_id;});
+  if(m)return{name:m.name,icon:m.icon||mcEmoji(m.name),type:'machine',id:m.id,sector:sec};
+  var t=o.task_id&&_tasks.find(function(x){return x.id===o.task_id;});
+  if(t)return{name:t.name,icon:'📋',type:'task',id:t.id,sector:sec};
+  if(sec)return{name:sec,icon:'📍',type:'place',sector:''};
+  return{name:o.place||'Sin ubicación',icon:'📍',type:'place',sector:''};
+}
+function oWhere(o){var t=oTarget(o);return t.icon+' '+esc(t.name)+(t.sector?' · 📍 '+esc(t.sector):'');}
+function oWhereTxt(o){var t=oTarget(o);return t.name+(t.sector?' · '+t.sector:'');}
+
+function orderCard(o){
+  var p=PRI[o.priority]||PRI.normal;
+  var nph=(o.photos_before||[]).length+(o.photos_after||[]).length;
+  var foot='';
+  foot+='<span>👷 '+(o.assigned_tech?esc(o.assigned_tech):'<i style="color:var(--ink4);font-style:normal">Sin responsable</i>')+'</span>';
+  if(o.due_date&&o.status!=='cerrada'&&o.status!=='resuelta'){var late=o.due_date<todayS();foot+='<span style="'+(late?'color:var(--red);font-weight:700':'')+'">📅 '+fmtD(o.due_date)+(late?' (atrasada)':'')+'</span>';}
+  if(nph)foot+='<span>📷 '+nph+'</span>';
+  return '<div class="oc" data-oid="'+o.id+'" style="--pc:'+p.c+'">'
+    +'<div class="oc-top"><span class="oc-code">'+oCode(o)+'</span>'+priPill(o.priority)+stPill(o.status)+(o.kind==='preventivo'?'<span class="st-pill" style="color:var(--blue);background:var(--blue-bg)">🔧 Preventivo</span>':'')+'</div>'
+    +'<div class="oc-title">'+esc(o.title)+'</div>'
+    +'<div class="oc-sub">'+oWhere(o)+' · '+esc((o.requested_name||'—').split(' ')[0])+' · '+ago(o.created_at)+'</div>'
+    +'<div class="oc-foot">'+foot+'</div>'
+    +'</div>';
+}
+
+// ── Página Órdenes (menos filtros) ──
+ORD_CHIPS=[['open','Abiertas'],['urgente','🔴 Urgentes'],['nueva','Sin responsable'],['en_curso','En curso'],['resuelta','Para confirmar'],['cerrada','Cerradas']];
+function ordMatch(o,f){
+  if(f==='all')return true;
+  if(f==='open')return o.status!=='cerrada';
+  if(f==='urgente')return o.status!=='cerrada'&&o.priority==='urgente';
+  if(f==='en_curso')return o.status==='en_curso'||o.status==='asignada'||o.status==='en_espera';
+  return o.status===f;
+}
+function renderOrders(){
+  var base=_orders.slice();
+  var scopeEl=document.getElementById('ord-scope');
+  if(isEnc()){
+    scopeEl.style.display='';
+    scopeEl.innerHTML=[['mine','Mis pedidos'],['all','De todos']].map(function(s){return '<div class="chip'+(ordScope===s[0]?' on':'')+'" data-sc="'+s[0]+'">'+s[1]+'</div>';}).join('');
+    scopeEl.querySelectorAll('.chip').forEach(function(c){c.addEventListener('click',function(){ordScope=c.getAttribute('data-sc');renderOrders();});});
+    if(ordScope==='mine')base=base.filter(isMine);
+  }else scopeEl.style.display='none';
+  var chipsEl=document.getElementById('ord-chips');
+  chipsEl.innerHTML=ORD_CHIPS.map(function(c){var n=base.filter(function(o){return ordMatch(o,c[0]);}).length;return '<div class="chip'+(ordFilt===c[0]?' on':'')+'" data-f="'+c[0]+'">'+c[1]+(c[0]!=='cerrada'?' <b class="chip-n">'+n+'</b>':'')+'</div>';}).join('');
+  chipsEl.querySelectorAll('.chip').forEach(function(c){c.addEventListener('click',function(){ordFilt=c.getAttribute('data-f');renderOrders();});});
+  var list=base.filter(function(o){return ordMatch(o,ordFilt);});
+  if(ordQ){var q=ordQ.toLowerCase();list=list.filter(function(o){return (o.title+' '+(o.description||'')+' '+oWhereTxt(o)+' '+(o.assigned_tech||'')+' '+(o.requested_name||'')+' '+oCode(o)).toLowerCase().indexOf(q)>=0;});}
+  if(ordFilt==='cerrada'||ordFilt==='all')list.sort(function(a,b){return new Date(b.created_at)-new Date(a.created_at);});else list.sort(sortOrders);
+  _ordView=list;
+  var el=document.getElementById('ord-list');var emp=document.getElementById('ord-empty');
+  if(!list.length){el.innerHTML='';emp.style.display='block';return;}
+  emp.style.display='none';
+  el.innerHTML=list.map(orderCard).join('');
+  bindOrderCards(el);
+}
+function expOrdersExcel(){
+  makeXLSX(_ordView.map(function(o){var t=oTarget(o);return{OT:oCode(o),Creada:fmtDT(o.created_at),Maquina_lugar:t.name,Sector:t.sector||(t.type==='place'?t.name:''),Problema:o.title,Detalle:o.description||'',Prioridad:(PRI[o.priority]||{}).l,Tipo:o.kind,Estado:(OST[o.status]||{}).l,Pidio:o.requested_name||'',Responsable:o.assigned_tech||'',Para_cuando:o.due_date||'',Trabajo_realizado:o.resolution||'',Resuelta:o.resolved_at?fmtDT(o.resolved_at):'',Cerrada:o.closed_at?fmtDT(o.closed_at):''};}),'Ordenes_Amsterdam');
+}
+
+// ── Pedido nuevo / edición (un solo formulario corto) ──
+function openNewOrder(id,type){
+  resetOrderForm();
+  if(id)selectOTarget(id,type||'machine');
+  document.getElementById('modal-order').classList.add('on');
+  setTimeout(function(){var s=document.getElementById('o-text');if(s&&window.innerWidth>=640)s.focus();},150);
+}
+function resetOrderForm(){
+  eoId=null;oSel=null;oSec=null;oPri='normal';
+  ['o-search','o-text','o-due'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});
+  document.getElementById('o-search-results').classList.remove('on');
+  document.getElementById('mo-title').textContent='Nuevo pedido';
+  document.getElementById('mo-save').textContent='Enviar pedido';
+  document.getElementById('o-assign-wrap').style.display=canAssign()?'':'none';
+  document.getElementById('o-tech').innerHTML=techOptions('').replace('Elegir…','Sin asignar por ahora');
+  showOTargetMode('search');renderSecChips();renderPriOpts();psReset('ob');
+}
+function showOTargetMode(mode){
+  document.getElementById('o-search-wrap').style.display=mode==='search'?'':'none';
+  var sel=document.getElementById('o-selected');sel.style.display=mode==='selected'?'':'none';
+}
+function renderSecChips(){
+  var el=document.getElementById('o-sectors');if(!el)return;
+  var act=_sectors.filter(function(s){return s.active!==false;}).sort(function(a,b){return (a.sort||0)-(b.sort||0)||a.name.localeCompare(b.name);});
+  if(!act.length){el.style.display='none';return;}
+  el.style.display='';
+  el.innerHTML=act.map(function(s){return '<button type="button" class="sec-chip'+(oSec===s.id?' on':'')+'" data-sid="'+s.id+'">'+esc(s.name)+'</button>';}).join('');
+  el.querySelectorAll('.sec-chip').forEach(function(b){b.addEventListener('click',function(){var id=b.getAttribute('data-sid');oSec=oSec===id?null:id;renderSecChips();});});
+}
+function oSearch(q){
+  var res=document.getElementById('o-search-results');
+  if(!q||q.length<2){res.classList.remove('on');return;}
+  var ql=q.toLowerCase();var results=[];
+  _machines.forEach(function(m){if(m.name.toLowerCase().indexOf(ql)>=0){var sc=getSubcat(m.subcategory_id);results.push({id:m.id,name:m.name,icon:m.icon||mcEmoji(m.name),sub:sc?sc.name:'Máquina',type:'machine'});}});
+  _subcats.forEach(function(s){if(s.name.toLowerCase().indexOf(ql)>=0){_machines.filter(function(m){return m.subcategory_id===s.id;}).forEach(function(m){if(!results.find(function(r){return r.id===m.id;}))results.push({id:m.id,name:m.name,icon:m.icon||mcEmoji(m.name),sub:s.name,type:'machine'});});}});
+  _tasks.forEach(function(t){if(t.name.toLowerCase().indexOf(ql)>=0){var sc=getSubcat(t.subcategory_id);results.push({id:t.id,name:t.name,icon:'📋',sub:sc?sc.name:'Tarea general',type:'task'});}});
+  var items=results.slice(0,8);
+  res.innerHTML=items.length?items.map(function(r,i){return '<div class="search-result-item" data-i="'+i+'"><div class="search-result-name">'+r.icon+' '+esc(r.name)+'</div><div class="search-result-sub">'+esc(r.sub)+'</div></div>';}).join(''):'<div style="padding:12px 14px;font-size:13px;color:var(--ink3)">No está cargada. Podés dejarlo así y elegir el sector.</div>';
+  res.querySelectorAll('.search-result-item').forEach(function(el){el.addEventListener('click',function(){var r=items[parseInt(el.getAttribute('data-i'))];selectOTarget(r.id,r.type);});});
+  res.classList.add('on');
+}
+function selectOTarget(id,type){
+  var it=(type==='task'?_tasks:_machines).find(function(x){return x.id===id;});if(!it)return;
+  oSel={id:id,type:type};
+  var sc=getSubcat(it.subcategory_id);
+  document.getElementById('o-selected').innerHTML='<div class="sel-chip"><span style="font-size:20px">'+(type==='task'?'📋':(it.icon||mcEmoji(it.name)))+'</span><div><div>'+esc(it.name)+'</div><div style="font-size:11.5px;font-weight:500;color:var(--ink3)">'+esc(sc?sc.name:'')+'</div></div><button type="button" onclick="clearOTarget()">✕ Quitar</button></div>';
+  document.getElementById('o-search-results').classList.remove('on');
+  showOTargetMode('selected');
+}
+function clearOTarget(){oSel=null;document.getElementById('o-search').value='';showOTargetMode('search');}
+function renderPriOpts(){
+  var el=document.getElementById('o-pri');
+  el.innerHTML=Object.keys(PRI).map(function(k){var p=PRI[k];return '<button type="button" class="pri-b'+(oPri===k?' on':'')+'" data-p="'+k+'" style="--pc:'+p.c+'">'+p.ico+' '+p.l+'</button>';}).join('');
+  el.querySelectorAll('.pri-b').forEach(function(b){b.addEventListener('click',function(){oPri=b.getAttribute('data-p');renderPriOpts();});});
+  var h=document.getElementById('o-pri-hint');if(h)h.textContent=(PRI[oPri]||PRI.normal).d;
+}
+function openEditOrder(o){
+  resetOrderForm();
+  eoId=o.id;
+  document.getElementById('mo-title').textContent='Editar '+oCode(o);
+  document.getElementById('mo-save').textContent='Guardar cambios';
+  document.getElementById('o-text').value=o.title+(o.description?'\n'+o.description:'');
+  if(o.machine_id)selectOTarget(o.machine_id,'machine');else if(o.task_id)selectOTarget(o.task_id,'task');
+  oSec=o.sector_id||null;renderSecChips();
+  oPri=o.priority||'normal';renderPriOpts();
+  document.getElementById('o-due').value=o.due_date||'';
+  document.getElementById('o-tech').innerHTML=techOptions(o.assigned_tech||'').replace('Elegir…','Sin asignar por ahora');
+  psLoad('ob',o.photos_before||[]);
+  document.getElementById('modal-order').classList.add('on');
+}
+function splitText(txt){
+  txt=(txt||'').trim();if(!txt)return{title:'',desc:null};
+  var lines=txt.split('\n');var first=lines.shift().trim();var rest=lines.join('\n').trim();
+  if(first.length>120){rest=(first.slice(120)+(rest?'\n'+rest:'')).trim();first=first.slice(0,120)+'…';}
+  return{title:first,desc:rest||null};
+}
+async function saveOrder(){
+  var tx=splitText(document.getElementById('o-text').value);
+  var due=document.getElementById('o-due').value||null;
+  var tech=canAssign()?document.getElementById('o-tech').value:'';
+  var hasPh=psGet('ob').items.length>0;
+  if(!tx.title&&!hasPh&&!oSel&&!oSec){toast('Contá qué pasa o sacá una foto','e');document.getElementById('o-text').focus();return;}
+  var title=tx.title;
+  if(!title){var where=oSel?((oSel.type==='task'?_tasks:_machines).find(function(x){return x.id===oSel.id;})||{}).name:sectorName(oSec);title='Revisar'+(where?' '+where:'')+(hasPh?' (ver foto)':'');}
+  showLoad(true);
+  var photos=[];
+  try{photos=await psUpload('ob','ordenes');}catch(err){showLoad(false);toast('No se pudieron subir las fotos','e');console.error(err);return;}
+  var data={title:title,description:tx.desc,priority:oPri||'normal',due_date:due,machine_id:null,task_id:null,photos_before:photos};
+  if(oSel){if(oSel.type==='machine')data.machine_id=oSel.id;else data.task_id=oSel.id;}
+  if(_sectors.length)data.sector_id=oSec||null;
+  var o=eoId?_orders.find(function(x){return x.id===eoId;}):null;
+  if(o){
+    if(canAssign()&&(tech||'')!==(o.assigned_tech||'')){
+      data.assigned_tech=tech||null;
+      if(tech&&o.status==='nueva')data.status='asignada';
+      if(!tech&&o.status==='asignada')data.status='nueva';
+    }
+    if(!(await updOrder(o.id,data))){showLoad(false);return;}
+    await olog(o.id,'editó la orden',data.assigned_tech!==undefined?('Responsable: '+(tech||'sin asignar')):null);
+    await logAudit('editar','am_orders',o.id,oCode(o));
+    await loadAll();showLoad(false);closeM('modal-order');toast('Cambios guardados ✓','s');
+    refreshAll();
+    if(document.getElementById('modal-od').classList.contains('on')){renderOrderDetail();loadOrderLog(o.id);}
+    return;
+  }
+  data.kind='correctivo';data.status=tech?'asignada':'nueva';data.requested_by=curUser.id;data.requested_name=curUser.name;
+  if(tech)data.assigned_tech=tech;
+  var ins=await sb.from('am_orders').insert(data).select().single();
+  if(ins.error||!ins.data){showLoad(false);toast('No se pudo guardar el pedido','e');console.error(ins.error);return;}
+  await olog(ins.data.id,'creó el pedido','Prioridad '+PRI[data.priority].l+(tech?' · Responsable: '+tech:''));
+  await logAudit('crear','am_orders',ins.data.id,oCode(ins.data)+' · '+title);
+  if(oSel&&(data.priority==='urgente'||data.priority==='alta')){
+    var tbl=oSel.type==='task'?'am_tasks':'am_machines';
+    var it=(oSel.type==='task'?_tasks:_machines).find(function(x){return x.id===oSel.id;});
+    var ns=data.priority==='urgente'?'danger':'warn';var rank={ok:0,warn:1,danger:2};
+    if(it&&rank[ns]>rank[it.status||'ok'])await sb.from(tbl).update({status:ns}).eq('id',it.id);
+  }
+  await loadAll();showLoad(false);closeM('modal-order');
+  toast(oCode(ins.data)+' enviada ✓','s');
+  refreshAll();
+}
+
+// ── Detalle de orden ──
+function renderOrderDetail(){
+  var o=_orders.find(function(x){return x.id===curOrderId;});
+  if(!o){document.getElementById('modal-od').classList.remove('on');return;}
+  var t=oTarget(o);
+  document.getElementById('od-code').textContent=oCode(o);
+  var h='<div class="oc-top">'+priPill(o.priority)+stPill(o.status)+(o.kind==='preventivo'?'<span class="st-pill" style="color:var(--blue);background:var(--blue-bg)">🔧 Preventivo</span>':'')+'</div>';
+  h+='<div class="od-title">'+esc(o.title)+'</div>';
+  var canLink=t.type==='machine'||(t.type==='task'&&isAdmin());
+  h+='<div class="od-target'+(canLink?' link':'')+'" id="od-target">'+oWhere(o)+(canLink?' ›':'')+'</div>';
+  if(o.description)h+='<div class="od-desc">'+esc(o.description)+'</div>';
+  if((o.photos_before||[]).length)h+=photoStripArr(o.photos_before);
+  h+='<div class="od-meta">'
+    +'<div class="od-mi"><b>Pidió</b><span>'+esc(o.requested_name||'—')+'</span><small>'+fmtDT(o.created_at)+'</small></div>'
+    +'<div class="od-mi"><b>Responsable</b><span>'+esc(o.assigned_tech||'Sin asignar')+'</span>'+(o.due_date?'<small>Para el '+fmtD(o.due_date)+'</small>':'')+'</div>'
+    +'</div>';
+  if(o.status==='en_espera'&&o.wait_reason)h+='<div class="od-box wait"><div class="od-box-t">⏸ En espera</div>'+esc(o.wait_reason)+'</div>';
+  if(o.resolved_at||o.resolution){
+    h+='<div class="od-box res"><div class="od-box-t">✅ Trabajo terminado'+(o.resolved_at?' · '+fmtDT(o.resolved_at):'')+'</div>'
+      +(o.resolution?'<div style="white-space:pre-wrap">'+esc(o.resolution)+'</div>':'')
+      +photoStripArr(o.photos_after)
+      +(o.parts?'<div style="margin-top:4px"><b>Repuestos:</b> '+esc(o.parts)+'</div>':'')
+      +'<div style="margin-top:6px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">'+(o.assigned_tech?'<span>👷 '+esc(o.assigned_tech)+'</span>':'')+(o.resolved_by_name?'<span style="color:var(--ink3);font-size:12px">Reportó: '+esc(o.resolved_by_name)+'</span>':'')+'</div>'
+      +'</div>';
+  }
+  if(o.status==='resuelta'&&!canConfirm(o))h+='<div class="od-box wait">⏳ Esperando que '+esc(requesterFirst(o))+' confirme que quedó bien.</div>';
+  if(o.status==='cerrada')h+='<div class="od-box closed">🔒 Cerrada '+fmtDT(o.closed_at)+(o.closed_by_name?' · '+esc(o.closed_by_name):'')+'</div>';
+  if(t.type!=='place'){
+    var prevEv=_events.filter(function(e){return (t.type==='machine'?e.machine_id===t.id:e.task_id===t.id)&&e.order_id!==o.id;}).slice(0,3);
+    if(prevEv.length)h+='<div class="fl" style="margin-top:14px">Trabajos anteriores en '+esc(t.name)+'</div>'+prevEv.map(function(e){return '<div class="prev-ev"><div><b>'+fmtD(e.date)+'</b> · '+(e.type==='preventivo'?'Preventivo':'Correctivo')+(e.tech?' · 👷 '+esc(e.tech):'')+'</div><div style="color:var(--ink2)">'+esc(e.description)+'</div>'+photoStripArr(e.photos)+'</div>';}).join('');
+  }
+  h+='<div class="fl" style="margin-top:14px">Historial</div><div class="tl" id="od-log"><div class="tl-i" style="color:var(--ink4)">Cargando…</div></div>';
+  document.getElementById('od-body').innerHTML=h;
+  if(canLink)document.getElementById('od-target').addEventListener('click',function(){closeM('modal-od');if(t.type==='machine'){goPage('machines');openDetail(t.id);}else{goPage('tasks');openTaskDetail(t.id);}});
+  var b=[];var st=o.status;var open=['nueva','asignada','en_curso','en_espera'].indexOf(st)>=0;
+  if(open&&canManage())b.push(['resolve','✅ Terminado','p']);
+  if(open&&canAssign())b.push(['assign',o.assigned_tech?'👷 Cambiar responsable':'👷 Asignar',canManage()?'g':'p']);
+  if(open&&canManage())b.push(st==='en_espera'?['resume','▶ Retomar','g']:['wait','⏸ En espera','g']);
+  if(canConfirm(o)){b.push(['reject','✕ No quedó bien','d']);b.push(['confirm','✓ Quedó bien','p']);}
+  if(canEditOrder(o))b.push(['edit','✏️ Editar','g']);
+  if(isAdmin())b.push(['delete','🗑','d']);
+  if(!b.length)b.push(['close','Cerrar','g']);
+  var foot=document.getElementById('od-foot');
+  foot.innerHTML=b.map(function(x){return '<button class="btn btn-'+x[2]+(x[0]==='delete'?' btn-icon':'')+'" data-act="'+x[0]+'">'+x[1]+'</button>';}).join('');
+  foot.querySelectorAll('[data-act]').forEach(function(btn){btn.addEventListener('click',function(){odAction(btn.getAttribute('data-act'));});});
+}
+function odAction(a){
+  var o=_orders.find(function(x){return x.id===curOrderId;});if(!o)return;
+  if(a==='close'){closeM('modal-od');return;}
+  if(a==='edit')return openEditOrder(o);
+  if(a==='assign')return openAssign(o);
+  if(a==='resolve')return openResolve(o);
+  if(a==='resume'){showLoad(true);updOrder(o.id,{status:o.assigned_tech?'en_curso':'nueva',wait_reason:null}).then(function(ok){if(!ok){showLoad(false);return;}olog(o.id,'retomó la orden').then(function(){afterOrderChange('Retomada');});});return;}
+  if(a==='wait')return openNote('Poner en espera','¿Qué falta? Ej: esperando repuesto, proveedor…',async function(txt){
+    showLoad(true);if(!(await updOrder(o.id,{status:'en_espera',wait_reason:txt}))){showLoad(false);return;}
+    await olog(o.id,'puso la orden en espera',txt);await afterOrderChange('En espera');
+  });
+  if(a==='reject')return openNote('¿Qué no quedó bien?','Contale a mantenimiento qué falta o qué sigue fallando',async function(txt){
+    showLoad(true);if(!(await updOrder(o.id,{status:'en_curso',resolved_at:null}))){showLoad(false);return;}
+    await olog(o.id,'indicó que no quedó bien',txt);await logAudit('rechazar','am_orders',o.id,oCode(o));
+    await afterOrderChange('Devuelta a mantenimiento');
+  });
+  if(a==='confirm')return confirmOrder(o);
+  if(a==='delete')return delOrder(o);
+}
+
+// ── Asignar (Maxi, jefe, admin) ──
+async function saveAssign(){
+  var o=_orders.find(function(x){return x.id===curOrderId;});if(!o)return;
+  var tech=document.getElementById('a-tech').value;var due=document.getElementById('a-due').value||null;
+  if(!tech){toast('Elegí el responsable','e');return;}
+  showLoad(true);
+  var upd={assigned_tech:tech,due_date:due};if(o.status==='nueva')upd.status='asignada';
+  if(!(await updOrder(o.id,upd))){showLoad(false);return;}
+  await olog(o.id,(o.assigned_tech&&o.assigned_tech!==tech?'cambió el responsable a ':'asignó a ')+tech,due?'Para el '+fmtD(due):null);
+  closeM('modal-assign');await afterOrderChange('Responsable: '+tech);
+}
+
+// ── Terminado (todo opcional) ──
+function openResolve(o){
+  document.getElementById('r-ctx').innerHTML='<b>'+oCode(o)+'</b> · '+esc(o.title)+'<br>'+oWhere(o);
+  document.getElementById('r-tech').innerHTML=techOptions(o.assigned_tech).replace('Elegir…','—');
+  document.getElementById('r-text').value='';
+  psReset('rs');
+  document.getElementById('modal-resolve').classList.add('on');
+}
+async function saveResolve(){
+  var o=_orders.find(function(x){return x.id===curOrderId;});if(!o)return;
+  var tech=document.getElementById('r-tech').value||o.assigned_tech||null;
+  var txt=document.getElementById('r-text').value.trim();
+  showLoad(true);
+  var photos;
+  try{photos=await psUpload('rs','ordenes');}catch(err){showLoad(false);toast('No se pudieron subir las fotos','e');console.error(err);return;}
+  var hasIt=!!(o.machine_id||o.task_id);
+  var auto=autoClose(o);var now=new Date().toISOString();
+  var upd={status:auto?'cerrada':'resuelta',assigned_tech:tech,resolution:txt||null,photos_after:photos,final_status:hasIt?'ok':null,resolved_at:now,resolved_by_name:curUser.name,wait_reason:null};
+  if(auto){upd.closed_at=now;upd.closed_by_name='Cierre automático';}
+  if(!(await updOrder(o.id,upd))){showLoad(false);return;}
+  await olog(o.id,'marcó el trabajo como terminado'+(tech?' ('+tech+')':''),txt||null);
+  if(hasIt){
+    var it=o.machine_id?_machines.find(function(x){return x.id===o.machine_id;}):_tasks.find(function(x){return x.id===o.task_id;});
+    var e={status:'ok'};
+    if(o.kind==='preventivo')e.next_maint=(it&&it.freq)?addDaysS(it.freq):null;
+    await sb.from(o.machine_id?'am_machines':'am_tasks').update(e).eq('id',o.machine_id||o.task_id);
+  }
+  if(auto){await createEventFromOrder(Object.assign({},o,upd));await olog(o.id,'cerró la orden',o.kind==='preventivo'?'Preventivo: no requiere confirmación':'La pidió mantenimiento');}
+  await logAudit('resolver','am_orders',o.id,oCode(o)+(tech?' · '+tech:''));
+  closeM('modal-resolve');
+  await afterOrderChange(auto?'Orden cerrada ✓':'Listo. Falta que '+requesterFirst(o)+' confirme');
+}
+async function createEventFromOrder(o){
+  if(!o.machine_id&&!o.task_id)return;
+  var ev={type:o.kind==='preventivo'?'preventivo':'correctivo',date:todayS(),description:o.title+(o.resolution?' — '+o.resolution:''),tech:o.assigned_tech||null,new_status:o.final_status||'ok',user_id:curUser?curUser.id:null,photos:o.photos_after||[],order_id:o.id};
+  if(o.machine_id)ev.machine_id=o.machine_id;else ev.task_id=o.task_id;
+  var r=await sb.from('am_events').insert(ev);
+  if(r.error)console.error(r.error);
+}
+
+// ── Sectores ──
+function openSectors(){renderSectors();document.getElementById('modal-sectors').classList.add('on');}
+function renderSectors(){
+  var el=document.getElementById('sectors-list');
+  var list=_sectors.slice().sort(function(a,b){return (a.sort||0)-(b.sort||0)||a.name.localeCompare(b.name);});
+  if(!list.length){el.innerHTML='<div class="empty-mini">No hay sectores. Corré el SQL de sectores o agregalos acá.</div>';return;}
+  el.innerHTML=list.map(function(s){return '<div class="tech-row'+(s.active===false?' off':'')+'"><div style="flex:1;font-weight:700;font-size:14px">📍 '+esc(s.name)+'</div><button class="btn btn-g btn-sm" data-sid="'+s.id+'">'+(s.active===false?'Activar':'Quitar')+'</button></div>';}).join('');
+  el.querySelectorAll('[data-sid]').forEach(function(b){b.addEventListener('click',async function(){var s=_sectors.find(function(x){return x.id===b.getAttribute('data-sid');});if(!s)return;showLoad(true);await sb.from('am_sectors').update({active:s.active===false}).eq('id',s.id);await loadAll();showLoad(false);renderSectors();renderSecChips();});});
+}
+async function addSector(){
+  var inp=document.getElementById('sector-new');var name=inp.value.trim();
+  if(!name){toast('Escribí el nombre','e');return;}
+  if(_sectors.find(function(s){return s.name.toLowerCase()===name.toLowerCase();})){toast('Ya existe','e');return;}
+  showLoad(true);
+  var r=await sb.from('am_sectors').insert({name:name,sort:_sectors.length+1});
+  await loadAll();showLoad(false);
+  if(r.error){toast('No se pudo agregar (¿corriste el SQL de sectores?)','e');return;}
+  inp.value='';renderSectors();renderSecChips();toast(name+' agregado','s');
+}
+
+// ── Usuarios (con permiso de asignar) ──
+function renderUsersList(){
+  var el=document.getElementById('users-list');
+  el.innerHTML=_users.map(function(u){
+    var extra=u.role==='encargado'?'<button class="btn btn-g btn-sm" data-ua="'+u.id+'">'+(u.can_assign?'✓ Asigna':'No asigna')+'</button>':'';
+    return '<div class="u-row"><div style="flex:1;min-width:0"><div style="font-weight:600;font-size:13px">'+esc(u.name)+'</div><div style="font-size:11.5px;color:var(--ink3)">'+esc(u.email)+' · '+(ROLE_LBL[u.role]||u.role)+(u.role==='encargado'&&u.can_assign?' · puede asignar':'')+'</div></div>'+extra+'<button class="btn btn-d btn-sm" data-ut="'+u.id+'">'+(u.active?'Deshabilitar':'Habilitar')+'</button></div>';
+  }).join('');
+  el.querySelectorAll('[data-ua]').forEach(function(b){b.addEventListener('click',async function(){var u=_users.find(function(x){return x.id===b.getAttribute('data-ua');});showLoad(true);var r=await sb.from('am_users').update({can_assign:!u.can_assign}).eq('id',u.id);await loadAll();showLoad(false);if(r.error)toast('Corré el SQL de sectores y permisos','e');renderUsersList();});});
+  el.querySelectorAll('[data-ut]').forEach(function(b){b.addEventListener('click',async function(){var u=_users.find(function(x){return x.id===b.getAttribute('data-ut');});await sb.from('am_users').update({active:!u.active}).eq('id',u.id);await loadAll();renderUsersList();});});
+}
+async function addUser(){
+  var name=document.getElementById('nu-name').value.trim();
+  var email=document.getElementById('nu-email').value.trim().toLowerCase();
+  var pass=document.getElementById('nu-pass').value;
+  var role=document.getElementById('nu-role').value;
+  var ca=document.getElementById('nu-assign');
+  if(!name||!email||!pass){toast('Completá nombre, usuario y contraseña','e');return;}
+  var data={name:name,email:email,password:pass,role:role};
+  if(role==='encargado'&&ca&&ca.checked)data.can_assign=true;
+  showLoad(true);var r=await sb.from('am_users').insert(data);await loadAll();showLoad(false);
+  if(r.error){toast('No se pudo crear (¿usuario repetido?)','e');return;}
+  document.getElementById('nu-name').value='';document.getElementById('nu-email').value='';document.getElementById('nu-pass').value='';if(ca)ca.checked=false;
+  renderUsersList();toast('Usuario creado','s');
+}
+
+// ── Máquinas: select de sector agrupado ──
+function fillSubGrouped(selId){
+  var sel=document.getElementById(selId);
+  var html='<option value="">Sin clasificar</option>';
+  _cats.filter(function(c){return c.type==='machines';}).forEach(function(c){
+    var subs=_subcats.filter(function(s){return s.category_id===c.id;});
+    if(!subs.length)return;
+    html+='<optgroup label="'+esc(c.name)+'">'+subs.map(function(s){return '<option value="'+s.id+'">'+esc(s.name)+'</option>';}).join('')+'</optgroup>';
+  });
+  sel.innerHTML=html;
+}
+
+// ── Inicio por rol ──
+function pendingCount(){
+  if(isJefe())return _orders.filter(function(o){return o.status==='nueva';}).length;
+  if(isEnc())return _orders.filter(function(o){return (o.status==='resuelta'&&isMine(o))||(canAssign()&&o.status==='nueva');}).length;
+  if(isAdmin())return _orders.filter(function(o){return o.status==='nueva'||(o.status==='resuelta'&&isMine(o));}).length;
+  return 0;
+}
+function renderRoleDash(){
+  var el=document.getElementById('dash-role');var classic=document.getElementById('dash-classic');
+  if(!el)return;
+  classic.style.display=isAdmin()?'':'none';
+  var open=_orders.filter(function(o){return o.status!=='cerrada';});
+  var sin=open.filter(function(o){return o.status==='nueva';}).sort(sortOrders);
+  var h='';
+  if(isEnc()){
+    h+='<button class="big-cta" data-act="new">＋ Nuevo pedido<small>Contá qué pasa y listo</small></button>';
+    var conf=_orders.filter(function(o){return o.status==='resuelta'&&isMine(o);}).sort(sortOrders);
+    if(conf.length)h+='<div class="slbl" style="color:var(--green)">✅ Para confirmar ('+conf.length+')</div><div class="ol">'+conf.map(orderCard).join('')+'</div>';
+    if(canAssign())h+='<div class="slbl">📥 Sin responsable ('+sin.length+')</div>'+(sin.length?'<div class="ol">'+sin.slice(0,6).map(orderCard).join('')+'</div>':'<div class="empty-mini">Todo tiene responsable 👌</div>');
+    var mine=open.filter(function(o){return isMine(o)&&o.status!=='resuelta';}).sort(sortOrders);
+    h+='<div class="slbl">Mis pedidos en curso</div>'+(mine.length?'<div class="ol">'+mine.map(orderCard).join('')+'</div>':'<div class="empty-mini">No tenés pedidos abiertos 👌</div>');
+    h+='<button class="link-btn" data-act="all">Ver todas las órdenes ›</button>';
+  }else{
+    var urg=open.filter(function(o){return o.priority==='urgente';});
+    var cur=open.filter(function(o){return o.status==='en_curso'||o.status==='asignada'||o.status==='en_espera';});
+    var conf2=open.filter(function(o){return o.status==='resuelta';});
+    h+='<div class="kpi-grid">';
+    if(isJefe())h+=kpiBox('kpi-r',sin.length,'Sin responsable','nueva')+kpiBox('kpi-r',urg.length,'Urgentes','urgente')+kpiBox('kpi-a',cur.length,'En curso','en_curso')+kpiBox('kpi-g',conf2.length,'Para confirmar','resuelta');
+    else h+=kpiBox('kpi-b',open.length,'Órdenes abiertas','open')+kpiBox('kpi-r',urg.length,'Urgentes','urgente')+kpiBox('kpi-a',sin.length,'Sin responsable','nueva')+kpiBox('kpi-g',conf2.length,'Para confirmar','resuelta');
+    h+='</div>';
+    if(isJefe()){
+      h+='<div class="slbl">📥 Sin responsable</div>'+(sin.length?'<div class="ol">'+sin.slice(0,8).map(orderCard).join('')+'</div>':'<div class="empty-mini">Todo asignado 👌</div>');
+      if(sin.length>8)h+='<button class="link-btn" data-of="nueva">Ver las '+sin.length+' ›</button>';
+      var cur2=cur.sort(sortOrders);
+      if(cur2.length)h+='<div class="slbl">🔧 En curso</div><div class="ol">'+cur2.slice(0,6).map(orderCard).join('')+'</div>';
+      var mineConf=_orders.filter(function(o){return o.status==='resuelta'&&isMine(o);});
+      if(mineConf.length)h+='<div class="slbl" style="color:var(--green)">✅ Para confirmar</div><div class="ol">'+mineConf.map(orderCard).join('')+'</div>';
+      h+='<div class="slbl">Carga por persona</div>'+loadByTech(open);
+    }else{
+      var hot=open.filter(function(o){return (o.priority==='urgente'||o.priority==='alta')&&o.status!=='resuelta';}).sort(sortOrders);
+      var myConf=_orders.filter(function(o){return o.status==='resuelta'&&isMine(o);});
+      if(myConf.length)h+='<div class="slbl" style="color:var(--green)">✅ Tus pedidos para confirmar</div><div class="ol">'+myConf.map(orderCard).join('')+'</div>';
+      h+='<div class="slbl">🔥 Urgentes y altas abiertas</div>'+(hot.length?'<div class="ol">'+hot.slice(0,6).map(orderCard).join('')+'</div>':'<div class="empty-mini">Nada urgente 👌</div>');
+      if(hot.length>6)h+='<button class="link-btn" data-of="open">Ver todas ›</button>';
+      var from=Date.now()-30*86400000;
+      var done=_orders.filter(function(o){return o.resolved_at&&new Date(o.resolved_at).getTime()>=from;});
+      var avg=done.length?done.reduce(function(s,o){return s+(new Date(o.resolved_at)-new Date(o.created_at));},0)/done.length/3600000:null;
+      var avgTxt=avg===null?'—':(avg<1?Math.max(1,Math.round(avg*60))+' min':avg<24?Math.round(avg)+' h':(avg/24).toFixed(1)+' días');
+      h+='<div class="stat-row"><div class="stat"><b>'+done.length+'</b><span>resueltas en 30 días</span></div><div class="stat"><b>'+avgTxt+'</b><span>tiempo promedio de resolución</span></div></div>';
+      h+='<div class="slbl">Carga por persona</div>'+loadByTech(open);
+    }
+  }
+  el.innerHTML=h;
+  bindOrderCards(el);
+  el.querySelectorAll('[data-act="new"]').forEach(function(b){b.addEventListener('click',function(){openNewOrder();});});
+  el.querySelectorAll('[data-act="all"]').forEach(function(b){b.addEventListener('click',function(){ordScope='all';goOrders('open');});});
+  el.querySelectorAll('[data-of]').forEach(function(b){b.addEventListener('click',function(){goOrders(b.getAttribute('data-of'));});});
+}
+function notifyChanges(prev){
+  if(!curUser)return;
+  _orders.forEach(function(o){
+    var was=prev[o.id];
+    if(!was){
+      if(o.requested_by===curUser.id)return;
+      if((isJefe()||(isEnc()&&canAssign()))&&o.status==='nueva')toast('Nuevo pedido: '+o.title+' ('+(PRI[o.priority]||{}).l+')','i');
+      else if(isAdmin()&&o.priority==='urgente')toast('Urgente: '+o.title,'i');
+      return;
+    }
+    if(was!==o.status&&o.status==='resuelta'&&isMine(o))toast(oCode(o)+' está terminada. Confirmá si quedó bien','i');
+    if(was==='resuelta'&&o.status==='en_curso'&&canManage())toast(oCode(o)+' volvió: no quedó bien','i');
+  });
+}
+OST.nueva.l='Nueva';
+function toast(msg,type){type=type||'s';msg=String(msg).replace(/\s*✓\s*$/,'');var c=document.getElementById('toasts');var t=document.createElement('div');t.className='toast '+type;t.innerHTML=({s:'✓',e:'✕',i:'🔔'}[type]||'')+' '+esc(msg);c.appendChild(t);setTimeout(function(){t.remove();},type==='i'?6000:2800);}
 
 
 function showDesktop(){
