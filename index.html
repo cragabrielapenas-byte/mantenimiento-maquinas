@@ -387,6 +387,9 @@ details.more[open] summary{margin-bottom:12px}
 #ord-secs .chip{background:var(--sand)}
 #ord-secs .chip.on{background:var(--rust);border-color:var(--rust);color:#fff}
 .drw .sb-sub-item{font-size:13px;padding:7px 10px}
+.ord-filters{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.ord-filters .fs{padding:9px 10px;font-size:13px;background:var(--white)}
+@media(min-width:640px){.ord-filters{max-width:560px}}
 .u-row{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--sand2);flex-wrap:wrap}
 .ctx-box{background:var(--sand);border-radius:var(--r-sm);padding:10px 12px;font-size:13px;color:var(--ink2);margin-bottom:14px;line-height:1.45}
 @media(min-width:640px){.stat-row{grid-template-columns:repeat(2,1fr)}}
@@ -412,7 +415,6 @@ details.more[open] summary{margin-bottom:12px}
     <button class="drw-item on" id="di-dashboard" onclick="goPage('dashboard');closeDrw()"><span class="drw-icon">◈</span>Inicio</button>
     <button class="drw-item" id="di-orders" onclick="goPage('orders');closeDrw()"><span class="drw-icon">🧰</span>Órdenes de trabajo</button>
     <button class="drw-item" id="di-machines" onclick="goPage('machines');closeDrw()"><span class="drw-icon">⚙</span>Maquinarias</button>
-    <div id="drw-sectors-wrap" style="margin:6px 0 4px"><div class="drw-sec-lbl" style="margin-top:6px">Sectores</div><div id="drw-sectors" class="sb-indent"></div></div>
     <button class="drw-item admin-only" id="di-tasks" onclick="goPage('tasks');closeDrw()"><span class="drw-icon">📋</span>Tareas Generales</button>
     <button class="drw-item admin-only" id="di-reports" onclick="goPage('reports');closeDrw()"><span class="drw-icon">📊</span>Reportes</button>
     <button class="drw-item" id="di-reminders" onclick="goPage('reminders');closeDrw()"><span class="drw-icon">🔔</span>Recordatorios</button>
@@ -436,19 +438,8 @@ details.more[open] summary{margin-bottom:12px}
     <div class="sb-sec-lbl">Menú</div>
     <button class="sb-item on" id="si-dashboard" onclick="goPage('dashboard')"><span class="sb-icon">◈</span>Inicio</button>
     <button class="sb-item" id="si-orders" onclick="goPage('orders')"><span class="sb-icon">🧰</span>Órdenes de trabajo</button>
-  </div>
-  <div class="sb-sec">
     <button class="sb-item" id="si-machines" onclick="goPage('machines')"><span class="sb-icon">⚙</span>Maquinarias<span id="si-mach-count" style="margin-left:auto;font-size:10px;color:var(--ink4)"></span></button>
-    <div id="sb-mach-subs" class="sb-indent"></div>
-  </div>
-  <div class="sb-sec" id="sb-sectors-wrap">
-    <div class="sb-sec-lbl">Sectores</div>
-    <div id="sb-sectors"></div>
-  </div>
-  <div class="sb-sec admin-only">
-    <div class="sb-sec-lbl">Tareas Generales</div>
-    <div id="sb-task-subs"></div>
-    <button class="sb-item" id="si-tasks" onclick="goPage('tasks')" style="margin-top:4px;font-size:11px;color:var(--ink4)"><span class="sb-icon" style="font-size:11px">📋</span>Ver todas</button>
+    <button class="sb-item admin-only" id="si-tasks" onclick="goPage('tasks')"><span class="sb-icon">📋</span>Tareas Generales</button>
   </div>
   <div class="sb-sec">
     <div class="sb-sec-lbl">Más</div>
@@ -518,7 +509,8 @@ details.more[open] summary{margin-bottom:12px}
   <div id="page-orders" class="page">
     <div class="pg-hdr"><div class="pg-title" id="ord-title">Órdenes de trabajo</div><div style="display:flex;gap:6px"><button class="btn btn-g btn-sm admin-only" onclick="expOrdersExcel()">⬇ Excel</button><button class="btn btn-p btn-sm" onclick="openNewOrder()">＋ Pedido</button></div></div>
     <div class="chips" id="ord-scope"></div>
-    <div class="chips" id="ord-secs"></div>
+    <div class="ord-filters"><select class="fs" id="ord-sec" onchange="ordSector=this.value||null;renderOrders()"></select><select class="fs" id="ord-cat" onchange="ordCat=this.value||null;renderOrders()"></select></div>
+    <button class="link-btn" id="ord-clear" style="display:none;margin:-4px 0 6px;padding:0" onclick="clearOrdFilters()">✕ Quitar filtros</button>
     <div class="chips" id="ord-chips"></div>
     <div class="search-box"><span class="search-icon">🔍</span><input class="search-input" id="ord-q" placeholder="Buscar máquina, problema, persona…" oninput="ordQ=this.value;renderOrders()"></div>
     <div id="ord-list"></div>
@@ -2821,6 +2813,64 @@ async function delOrder(o){
   await logAudit('eliminar','am_orders',o.id,oCode(o)+' · '+o.title);
   closeM('modal-od');await afterOrderChange(oCode(o)+' eliminada');
 }
+
+
+// ══════════ v5: menú limpio · filtros en desplegables ══════════
+var ordCat=null;
+function renderSbSectors(){var mc=document.getElementById('si-mach-count');if(mc)mc.textContent=_machines.length;}
+function orderCatMatch(o,v){
+  if(!v)return true;
+  var m=o.machine_id&&_machines.find(function(x){return x.id===o.machine_id;});
+  if(!m)return false;
+  var p=v.split(':');
+  if(p[0]==='sub')return m.subcategory_id===p[1];
+  var sc=getSubcat(m.subcategory_id);return !!(sc&&sc.category_id===p[1]);
+}
+function renderOrders(){
+  var base=_orders.slice();
+  var scopeEl=document.getElementById('ord-scope');
+  if(isEnc()){
+    scopeEl.style.display='';
+    scopeEl.innerHTML=[['mine','Mis pedidos'],['all','De todos']].map(function(s){return '<div class="chip'+(ordScope===s[0]?' on':'')+'" data-sc="'+s[0]+'">'+s[1]+'</div>';}).join('');
+    scopeEl.querySelectorAll('.chip').forEach(function(c){c.addEventListener('click',function(){ordScope=c.getAttribute('data-sc');renderOrders();});});
+    if(ordScope==='mine')base=base.filter(isMine);
+  }else scopeEl.style.display='none';
+  var cntBase=base.filter(function(o){return ordMatch(o,ordFilt);});
+  // desplegable sector
+  var secSel=document.getElementById('ord-sec');
+  var secs=activeSectors();
+  secSel.style.display=secs.length?'':'none';
+  secSel.innerHTML='<option value="">📍 Todos los sectores</option>'+secs.map(function(s){var n=cntBase.filter(function(o){return o.sector_id===s.id&&orderCatMatch(o,ordCat);}).length;return '<option value="'+s.id+'">'+esc(s.name)+(n?' ('+n+')':'')+'</option>';}).join('');
+  secSel.value=ordSector||'';
+  // desplegable categoría de máquina
+  var catSel=document.getElementById('ord-cat');
+  var h='<option value="">⚙ Todas las máquinas</option>';
+  _cats.filter(function(c){return c.type==='machines';}).forEach(function(c){
+    var subs=_subcats.filter(function(s){return s.category_id===c.id;});
+    var nc=cntBase.filter(function(o){return (!ordSector||o.sector_id===ordSector)&&orderCatMatch(o,'cat:'+c.id);}).length;
+    h+='<optgroup label="'+esc(c.name)+'"><option value="cat:'+c.id+'">Todo '+esc(c.name)+(nc?' ('+nc+')':'')+'</option>'+subs.map(function(s){var n=cntBase.filter(function(o){return (!ordSector||o.sector_id===ordSector)&&orderCatMatch(o,'sub:'+s.id);}).length;return '<option value="sub:'+s.id+'">'+esc(s.name)+(n?' ('+n+')':'')+'</option>';}).join('')+'</optgroup>';
+  });
+  catSel.innerHTML=h;catSel.value=ordCat||'';
+  var clr=document.getElementById('ord-clear');if(clr)clr.style.display=(ordSector||ordCat)?'':'none';
+  if(ordSector)base=base.filter(function(o){return o.sector_id===ordSector;});
+  if(ordCat)base=base.filter(function(o){return orderCatMatch(o,ordCat);});
+  // botones de estado
+  var chipsEl=document.getElementById('ord-chips');
+  chipsEl.innerHTML=ORD_CHIPS.map(function(c){var n=base.filter(function(o){return ordMatch(o,c[0]);}).length;return '<div class="chip'+(ordFilt===c[0]?' on':'')+'" data-f="'+c[0]+'">'+c[1]+(c[0]!=='cerrada'&&c[0]!=='all'?' <b class="chip-n">'+n+'</b>':'')+'</div>';}).join('');
+  chipsEl.querySelectorAll('.chip').forEach(function(c){c.addEventListener('click',function(){ordFilt=c.getAttribute('data-f');renderOrders();});});
+  var t=document.getElementById('ord-title');if(t)t.textContent='Órdenes de trabajo';
+  var list=base.filter(function(o){return ordMatch(o,ordFilt);});
+  if(ordQ){var q=ordQ.toLowerCase();list=list.filter(function(o){return (o.title+' '+(o.description||'')+' '+oWhereTxt(o)+' '+(o.assigned_tech||'')+' '+(o.requested_name||'')+' '+oCode(o)).toLowerCase().indexOf(q)>=0;});}
+  if(ordFilt==='cerrada'||ordFilt==='all')list.sort(function(a,b){var ca=a.status==='cerrada'?1:0,cb=b.status==='cerrada'?1:0;if(ca!==cb)return ca-cb;return ca?new Date(b.created_at)-new Date(a.created_at):sortOrders(a,b);});else list.sort(sortOrders);
+  _ordView=list;
+  var el=document.getElementById('ord-list');var emp=document.getElementById('ord-empty');
+  if(!list.length){el.innerHTML='';emp.style.display='block';return;}
+  emp.style.display='none';
+  el.innerHTML=list.map(orderCard).join('');
+  bindOrderCards(el);
+}
+function clearOrdFilters(){ordSector=null;ordCat=null;renderOrders();}
+function goOrders(f,sec){ordFilt=f||'open';ordSector=sec||null;ordCat=null;goPage('orders');}
 
 
 function showDesktop(){
