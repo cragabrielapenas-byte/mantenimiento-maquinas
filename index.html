@@ -381,6 +381,12 @@ details.more{border:1px solid var(--sand2);border-radius:var(--r-sm);padding:10p
 details.more summary{cursor:pointer;font-size:13px;font-weight:700;color:var(--ink2)}
 details.more[open] summary{margin-bottom:12px}
 #modal-order{z-index:510}
+.sub-lbl{font-size:11px;font-weight:700;color:var(--ink3);margin:2px 0 6px}
+#o-mach{margin-bottom:4px}
+.sb-indent{padding-left:6px}
+#ord-secs .chip{background:var(--sand)}
+#ord-secs .chip.on{background:var(--rust);border-color:var(--rust);color:#fff}
+.drw .sb-sub-item{font-size:13px;padding:7px 10px}
 .u-row{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--sand2);flex-wrap:wrap}
 .ctx-box{background:var(--sand);border-radius:var(--r-sm);padding:10px 12px;font-size:13px;color:var(--ink2);margin-bottom:14px;line-height:1.45}
 @media(min-width:640px){.stat-row{grid-template-columns:repeat(2,1fr)}}
@@ -406,6 +412,7 @@ details.more[open] summary{margin-bottom:12px}
     <button class="drw-item on" id="di-dashboard" onclick="goPage('dashboard');closeDrw()"><span class="drw-icon">◈</span>Inicio</button>
     <button class="drw-item" id="di-orders" onclick="goPage('orders');closeDrw()"><span class="drw-icon">🧰</span>Órdenes de trabajo</button>
     <button class="drw-item" id="di-machines" onclick="goPage('machines');closeDrw()"><span class="drw-icon">⚙</span>Maquinarias</button>
+    <div id="drw-sectors-wrap" style="margin:6px 0 4px"><div class="drw-sec-lbl" style="margin-top:6px">Sectores</div><div id="drw-sectors" class="sb-indent"></div></div>
     <button class="drw-item admin-only" id="di-tasks" onclick="goPage('tasks');closeDrw()"><span class="drw-icon">📋</span>Tareas Generales</button>
     <button class="drw-item admin-only" id="di-reports" onclick="goPage('reports');closeDrw()"><span class="drw-icon">📊</span>Reportes</button>
     <button class="drw-item" id="di-reminders" onclick="goPage('reminders');closeDrw()"><span class="drw-icon">🔔</span>Recordatorios</button>
@@ -431,9 +438,12 @@ details.more[open] summary{margin-bottom:12px}
     <button class="sb-item" id="si-orders" onclick="goPage('orders')"><span class="sb-icon">🧰</span>Órdenes de trabajo</button>
   </div>
   <div class="sb-sec">
-    <div class="sb-sec-lbl">Maquinarias</div>
-    <div id="sb-mach-subs"></div>
-    <button class="sb-item" id="si-machines" onclick="goPage('machines')" style="margin-top:4px;font-size:11px;color:var(--ink4)"><span class="sb-icon" style="font-size:11px">⚙</span>Ver todas</button>
+    <button class="sb-item" id="si-machines" onclick="goPage('machines')"><span class="sb-icon">⚙</span>Maquinarias<span id="si-mach-count" style="margin-left:auto;font-size:10px;color:var(--ink4)"></span></button>
+    <div id="sb-mach-subs" class="sb-indent"></div>
+  </div>
+  <div class="sb-sec" id="sb-sectors-wrap">
+    <div class="sb-sec-lbl">Sectores</div>
+    <div id="sb-sectors"></div>
   </div>
   <div class="sb-sec admin-only">
     <div class="sb-sec-lbl">Tareas Generales</div>
@@ -506,8 +516,9 @@ details.more[open] summary{margin-bottom:12px}
     </div>
   </div>
   <div id="page-orders" class="page">
-    <div class="pg-hdr"><div class="pg-title">Órdenes de trabajo</div><div style="display:flex;gap:6px"><button class="btn btn-g btn-sm admin-only" onclick="expOrdersExcel()">⬇ Excel</button><button class="btn btn-p btn-sm" onclick="openNewOrder()">＋ Pedido</button></div></div>
+    <div class="pg-hdr"><div class="pg-title" id="ord-title">Órdenes de trabajo</div><div style="display:flex;gap:6px"><button class="btn btn-g btn-sm admin-only" onclick="expOrdersExcel()">⬇ Excel</button><button class="btn btn-p btn-sm" onclick="openNewOrder()">＋ Pedido</button></div></div>
     <div class="chips" id="ord-scope"></div>
+    <div class="chips" id="ord-secs"></div>
     <div class="chips" id="ord-chips"></div>
     <div class="search-box"><span class="search-icon">🔍</span><input class="search-input" id="ord-q" placeholder="Buscar máquina, problema, persona…" oninput="ordQ=this.value;renderOrders()"></div>
     <div id="ord-list"></div>
@@ -750,11 +761,10 @@ details.more[open] summary{margin-bottom:12px}
     <div class="modal-body">
       <div class="fg"><label class="fl">¿Qué pasa?</label><textarea class="ft" id="o-text" style="min-height:72px" placeholder="Ej: La amasadora 2 hace ruido y se frena"></textarea></div>
       <div class="fg"><label class="fl">¿Dónde? <span class="opt">opcional</span></label>
-        <div class="sec-chips" id="o-sectors"></div>
-        <div id="o-search-wrap">
-          <div class="search-box"><span class="search-icon">⚙</span><input class="search-input" id="o-search" placeholder="Máquina (opcional): escribí el nombre…" oninput="oSearch(this.value)" autocomplete="off"></div>
-          <div class="search-results" id="o-search-results"></div>
-        </div>
+        <div class="sub-lbl">📍 Sector</div><div class="sec-chips" id="o-sectors"></div>
+        <div class="sub-lbl">⚙ Máquina</div>
+        <select class="fs" id="o-mach" onchange="onMachSel(this.value)"></select>
+        <div id="o-search-wrap" style="display:none"><input id="o-search"><div id="o-search-results"></div></div>
         <div id="o-selected" style="display:none"></div>
       </div>
       <div class="fg"><label class="fl">Prioridad</label><div class="pri-row" id="o-pri"></div><div class="pri-hint" id="o-pri-hint"></div></div>
@@ -907,7 +917,7 @@ async function startApp(){
   delete curUser.password;saveSession(curUser);
   ordScope=isEnc()?'mine':'all';ordFilt='open';
   if(canManage()){var nPrev=await genPreventives();if(nPrev){await loadAll();}}
-  applyRole();setUserLabels();renderGreeting();goPage('dashboard');renderSbSubcats();checkReminders();updateBadges();setupRT();
+  applyRole();setUserLabels();renderGreeting();goPage('dashboard');renderSbSubcats();renderSbSectors();checkReminders();updateBadges();setupRT();
 }
 
 function applyRole(){
@@ -969,6 +979,7 @@ function goPage(page){
   updateDeskActions(page);
   if(page==='dashboard')renderDash();
   if(page==='orders')renderOrders();
+  if(typeof renderSbSectors==='function')renderSbSectors();
   if(page==='machines'){closeDetail();renderMachines();}
   if(page==='tasks'){closeTaskDetail();renderTasks();}
   if(page==='reports')renderReports();
@@ -2298,7 +2309,7 @@ function orderCard(o){
 }
 
 // ── Página Órdenes (menos filtros) ──
-ORD_CHIPS=[['open','Abiertas'],['urgente','🔴 Urgentes'],['nueva','Sin responsable'],['en_curso','En curso'],['resuelta','Para confirmar'],['cerrada','Cerradas']];
+ORD_CHIPS=[['open','Abiertas'],['urgente','🔴 Urgentes'],['nueva','Sin responsable'],['en_curso','En curso'],['resuelta','Para confirmar'],['cerrada','Cerradas'],['all','Todas']];
 function ordMatch(o,f){
   if(f==='all')return true;
   if(f==='open')return o.status!=='cerrada';
@@ -2494,7 +2505,7 @@ function renderOrderDetail(){
   if(open&&canManage())b.push(st==='en_espera'?['resume','▶ Retomar','g']:['wait','⏸ En espera','g']);
   if(canConfirm(o)){b.push(['reject','✕ No quedó bien','d']);b.push(['confirm','✓ Quedó bien','p']);}
   if(canEditOrder(o))b.push(['edit','✏️ Editar','g']);
-  if(isAdmin())b.push(['delete','🗑','d']);
+  if(canDeleteOrder(o))b.push(['delete','🗑 Eliminar','d']);
   if(!b.length)b.push(['close','Cerrar','g']);
   var foot=document.getElementById('od-foot');
   foot.innerHTML=b.map(function(x){return '<button class="btn btn-'+x[2]+(x[0]==='delete'?' btn-icon':'')+'" data-act="'+x[0]+'">'+x[1]+'</button>';}).join('');
@@ -2703,6 +2714,113 @@ function notifyChanges(prev){
 }
 OST.nueva.l='Nueva';
 function toast(msg,type){type=type||'s';msg=String(msg).replace(/\s*✓\s*$/,'');var c=document.getElementById('toasts');var t=document.createElement('div');t.className='toast '+type;t.innerHTML=({s:'✓',e:'✕',i:'🔔'}[type]||'')+' '+esc(msg);c.appendChild(t);setTimeout(function(){t.remove();},type==='i'?6000:2800);}
+
+
+// ══════════ v4: máquina en desplegable · sectores como filtro · eliminar ══════════
+var ordSector=null;
+function canDeleteOrder(o){return isAdmin()||isJefe()||(isMine(o)&&o.status!=='cerrada');}
+function activeSectors(){return _sectors.filter(function(s){return s.active!==false;}).sort(function(a,b){return (a.sort||0)-(b.sort||0)||a.name.localeCompare(b.name);});}
+
+// ── Desplegable de máquinas en el pedido ──
+function fillMachSelect(){
+  var sel=document.getElementById('o-mach');if(!sel)return;
+  var html='<option value="">— Ninguna / no corresponde —</option>';
+  var used={};
+  _cats.filter(function(c){return c.type==='machines';}).forEach(function(c){
+    _subcats.filter(function(s){return s.category_id===c.id;}).forEach(function(s){
+      var ms=_machines.filter(function(m){return m.subcategory_id===s.id;}).sort(function(a,b){return a.name.localeCompare(b.name);});
+      if(!ms.length)return;
+      html+='<optgroup label="'+esc(c.name+' · '+s.name)+'">'+ms.map(function(m){used[m.id]=1;return '<option value="machine:'+m.id+'">'+esc((m.icon||mcEmoji(m.name))+' '+m.name)+'</option>';}).join('')+'</optgroup>';
+    });
+  });
+  var rest=_machines.filter(function(m){return !used[m.id];});
+  if(rest.length)html+='<optgroup label="Otras máquinas">'+rest.map(function(m){return '<option value="machine:'+m.id+'">'+esc((m.icon||mcEmoji(m.name))+' '+m.name)+'</option>';}).join('')+'</optgroup>';
+  if(_tasks.length)html+='<optgroup label="Tareas generales">'+_tasks.map(function(t){return '<option value="task:'+t.id+'">📋 '+esc(t.name)+'</option>';}).join('')+'</optgroup>';
+  sel.innerHTML=html;
+}
+function onMachSel(v){if(!v){oSel=null;return;}var p=v.split(':');oSel={type:p[0],id:p[1]};}
+function selectOTarget(id,type){oSel={id:id,type:type};var sel=document.getElementById('o-mach');if(sel)sel.value=type+':'+id;}
+function clearOTarget(){oSel=null;var sel=document.getElementById('o-mach');if(sel)sel.value='';}
+function showOTargetMode(){}
+function resetOrderForm(){
+  eoId=null;oSel=null;oSec=null;oPri='normal';
+  ['o-text','o-due'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});
+  document.getElementById('mo-title').textContent='Nuevo pedido';
+  document.getElementById('mo-save').textContent='Enviar pedido';
+  document.getElementById('o-assign-wrap').style.display=canAssign()?'':'none';
+  document.getElementById('o-tech').innerHTML=techOptions('').replace('Elegir…','Sin asignar por ahora');
+  fillMachSelect();renderSecChips();renderPriOpts();psReset('ob');
+}
+
+// ── Órdenes: filtro por sector ──
+function goOrders(f,sec){ordFilt=f||'open';ordSector=sec||null;goPage('orders');}
+function goOrdersSector(id){ordFilt='all';ordSector=id;ordScope='all';goPage('orders');closeDrw();}
+function renderOrders(){
+  var base=_orders.slice();
+  var scopeEl=document.getElementById('ord-scope');
+  if(isEnc()){
+    scopeEl.style.display='';
+    scopeEl.innerHTML=[['mine','Mis pedidos'],['all','De todos']].map(function(s){return '<div class="chip'+(ordScope===s[0]?' on':'')+'" data-sc="'+s[0]+'">'+s[1]+'</div>';}).join('');
+    scopeEl.querySelectorAll('.chip').forEach(function(c){c.addEventListener('click',function(){ordScope=c.getAttribute('data-sc');renderOrders();});});
+    if(ordScope==='mine')base=base.filter(isMine);
+  }else scopeEl.style.display='none';
+  // sectores
+  var secs=activeSectors();var secEl=document.getElementById('ord-secs');
+  if(secs.length){
+    secEl.style.display='';
+    var cnt=function(id){return base.filter(function(o){return o.sector_id===id&&ordMatch(o,ordFilt);}).length;};
+    secEl.innerHTML='<div class="chip'+(!ordSector?' on':'')+'" data-sec="">📍 Todos los sectores</div>'+secs.map(function(s){var n=cnt(s.id);return '<div class="chip'+(ordSector===s.id?' on':'')+'" data-sec="'+s.id+'">'+esc(s.name)+(n?' <b class="chip-n">'+n+'</b>':'')+'</div>';}).join('');
+    secEl.querySelectorAll('.chip').forEach(function(c){c.addEventListener('click',function(){ordSector=c.getAttribute('data-sec')||null;renderOrders();});});
+    var on=secEl.querySelector('.chip.on');if(on&&ordSector)on.scrollIntoView({block:'nearest',inline:'center'});
+  }else secEl.style.display='none';
+  if(ordSector)base=base.filter(function(o){return o.sector_id===ordSector;});
+  var chipsEl=document.getElementById('ord-chips');
+  chipsEl.innerHTML=ORD_CHIPS.map(function(c){var n=base.filter(function(o){return ordMatch(o,c[0]);}).length;return '<div class="chip'+(ordFilt===c[0]?' on':'')+'" data-f="'+c[0]+'">'+c[1]+(c[0]!=='cerrada'&&c[0]!=='all'?' <b class="chip-n">'+n+'</b>':'')+'</div>';}).join('');
+  chipsEl.querySelectorAll('.chip').forEach(function(c){c.addEventListener('click',function(){ordFilt=c.getAttribute('data-f');renderOrders();});});
+  var t=document.getElementById('ord-title');if(t)t.textContent=ordSector?('📍 '+sectorName(ordSector)):'Órdenes de trabajo';
+  var list=base.filter(function(o){return ordMatch(o,ordFilt);});
+  if(ordQ){var q=ordQ.toLowerCase();list=list.filter(function(o){return (o.title+' '+(o.description||'')+' '+oWhereTxt(o)+' '+(o.assigned_tech||'')+' '+(o.requested_name||'')+' '+oCode(o)).toLowerCase().indexOf(q)>=0;});}
+  if(ordFilt==='cerrada'||ordFilt==='all')list.sort(function(a,b){var ca=a.status==='cerrada'?1:0,cb=b.status==='cerrada'?1:0;if(ca!==cb)return ca-cb;return ca?new Date(b.created_at)-new Date(a.created_at):sortOrders(a,b);});else list.sort(sortOrders);
+  _ordView=list;
+  var el=document.getElementById('ord-list');var emp=document.getElementById('ord-empty');
+  if(!list.length){el.innerHTML='';emp.style.display='block';return;}
+  emp.style.display='none';
+  el.innerHTML=list.map(orderCard).join('');
+  bindOrderCards(el);
+}
+
+// ── Menú lateral: sectores ──
+function renderSbSectors(){
+  var secs=activeSectors();
+  var html=secs.map(function(s){var n=_orders.filter(function(o){return o.sector_id===s.id&&o.status!=='cerrada';}).length;return '<button class="sb-sub-item'+(curPage==='orders'&&ordSector===s.id?' on':'')+'" data-sec="'+s.id+'"><span style="font-size:11px">📍</span>'+esc(s.name)+'<span style="margin-left:auto;font-size:10px;'+(n?'color:var(--rust);font-weight:800':'color:var(--ink4)')+'">'+n+'</span></button>';}).join('');
+  ['sb-sectors','drw-sectors'].forEach(function(id){
+    var el=document.getElementById(id);if(!el)return;
+    var wrap=document.getElementById(id+'-wrap');if(wrap)wrap.style.display=secs.length?'':'none';
+    el.innerHTML=html;
+    el.querySelectorAll('[data-sec]').forEach(function(b){b.addEventListener('click',function(){goOrdersSector(b.getAttribute('data-sec'));});});
+  });
+  var mc=document.getElementById('si-mach-count');if(mc)mc.textContent=_machines.length;
+}
+function refreshAll(){
+  updateBadges();
+  if(curPage==='dashboard')renderDash();
+  if(curPage==='orders')renderOrders();
+  if(curPage==='machines'){if(curMachId&&document.getElementById('view-detail').classList.contains('on')){if(_machines.find(function(m){return m.id===curMachId;}))openDetail(curMachId);else closeDetail();}else renderMachines();}
+  if(curPage==='tasks'){if(curTaskId&&document.getElementById('view-tasks-detail').classList.contains('on')){if(_tasks.find(function(t){return t.id===curTaskId;}))openTaskDetail(curTaskId);else closeTaskDetail();}else renderTasks();}
+  if(curPage==='reports')renderReports();
+  if(curPage==='reminders'){renderReminders();checkReminders();}
+  renderSbSubcats();renderSbSectors();
+}
+
+// ── Eliminar orden ──
+async function delOrder(o){
+  if(!confirm('¿Eliminar '+oCode(o)+' – '+o.title+'?\nNo se puede deshacer.'))return;
+  showLoad(true);
+  var r=await sb.from('am_orders').delete().eq('id',o.id);
+  if(r&&r.error){showLoad(false);toast('No se pudo eliminar','e');console.error(r.error);return;}
+  await logAudit('eliminar','am_orders',o.id,oCode(o)+' · '+o.title);
+  closeM('modal-od');await afterOrderChange(oCode(o)+' eliminada');
+}
 
 
 function showDesktop(){
