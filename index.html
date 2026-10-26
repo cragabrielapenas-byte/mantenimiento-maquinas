@@ -451,6 +451,28 @@ details.more[open] summary{margin-bottom:12px}
 .u-row{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--sand2);flex-wrap:wrap}
 .ctx-box{background:var(--sand);border-radius:var(--r-sm);padding:10px 12px;font-size:13px;color:var(--ink2);margin-bottom:14px;line-height:1.45}
 @media(min-width:640px){.stat-row{grid-template-columns:repeat(2,1fr)}}
+
+/* ══ v7: modo Operario ══ */
+body.op-mode #sidebar,body.op-mode .bnav,body.op-mode .fab,body.op-mode .hbg,body.op-mode .drw,body.op-mode .drw-overlay,body.op-mode #desk-hdr,body.op-mode #dash-greeting,body.op-mode #alert-bar,body.op-mode #rem-banner,body.op-mode #dash-classic{display:none !important}
+body.op-mode .page{max-width:820px;margin:0 auto;width:100%;padding-bottom:32px}
+.op-top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 20px;background:var(--white);border:1px solid var(--sand2);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:18px}
+.op-hi{font-family:var(--serif);font-size:24px;font-weight:600;color:var(--ink)}
+.op-sub{font-size:15px;color:var(--ink3);margin-top:4px}
+.op-out{background:var(--sand);border:1px solid var(--sand3);border-radius:10px;padding:10px 16px;font:inherit;font-size:14px;font-weight:600;color:var(--ink2);cursor:pointer}
+.op-card{background:var(--white);border:1px solid var(--sand2);border-left:6px solid var(--pc);border-radius:var(--r);box-shadow:var(--sh);padding:16px 18px;margin-bottom:12px;cursor:pointer}
+.op-card .oc-top{margin-bottom:8px}
+.op-t{font-size:18px;font-weight:700;color:var(--ink);line-height:1.3}
+.op-w{font-size:14px;color:var(--ink3);margin-top:4px}
+.op-meta{display:flex;flex-wrap:wrap;gap:12px;font-size:13px;color:var(--ink3);margin-top:8px}
+.op-wait{margin-top:8px;font-size:13.5px;color:#6b5b95;background:rgba(107,91,149,.08);border-radius:8px;padding:8px 10px}
+.op-btns{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+.op-btn{flex:1;min-width:140px;padding:14px 12px;border-radius:12px;font:inherit;font-size:16px;font-weight:700;cursor:pointer;border:none}
+.op-btn.p{background:var(--rust);color:#fff}
+.op-btn.g{background:var(--sand);color:var(--ink2);border:1px solid var(--sand3)}
+.op-empty{text-align:center;padding:36px 16px;font-size:17px;font-weight:600;color:var(--ink2);background:var(--white);border:1px dashed var(--sand3);border-radius:var(--r)}
+.op-empty small{display:block;font-weight:500;font-size:14px;color:var(--ink3);margin-top:6px}
+.op-done{opacity:.75}
+body.op-mode #od-foot .btn{padding:12px 16px;font-size:15px}
 </style>
 </head>
 <body>
@@ -797,7 +819,8 @@ details.more[open] summary{margin-bottom:12px}
         <div class="fg"><label class="fl">Nombre</label><input class="fi" id="nu-name" placeholder="Nombre completo"></div>
         <div class="fg"><label class="fl">Usuario (para entrar)</label><input class="fi" id="nu-email" type="text" autocapitalize="none" placeholder="Ej: sergio"></div>
         <div class="fg"><label class="fl">Contraseña</label><input class="fi" id="nu-pass" placeholder="Contraseña inicial"></div>
-        <div class="fg"><label class="fl">Rol</label><select class="fs" id="nu-role"><option value="encargado">Encargado (hace pedidos)</option><option value="jefe">Jefe de mantenimiento</option><option value="admin">Admin</option></select></div>
+        <div class="fg"><label class="fl">Rol</label><select class="fs" id="nu-role"><option value="encargado">Encargado (hace pedidos)</option><option value="jefe">Jefe de mantenimiento</option><option value="admin">Admin</option><option value="operario">Operario (solo ve sus tareas)</option></select></div>
+        <div class="fg" id="nu-op-wrap" style="display:none"><label class="fl">¿Quién es del equipo de mantenimiento?</label><select class="fs" id="nu-op-tech"></select><div style="font-size:11.5px;color:var(--ink3);margin-top:4px">El nombre tiene que ser igual al que usás para asignar tareas. Si no está, escribilo arriba y se agrega solo al equipo.</div></div>
         <label style="display:flex;align-items:center;gap:8px;font-size:13px;margin-bottom:14px"><input type="checkbox" id="nu-assign"> Puede asignar responsables (solo encargados)</label>
         <button class="btn btn-p btn-sm" onclick="addUser()">Crear usuario</button>
       </div>
@@ -861,6 +884,18 @@ details.more[open] summary{margin-bottom:12px}
       </div>
     </div>
     <div class="modal-foot"><button class="btn btn-g" onclick="closeM('modal-resolve')">Cancelar</button><button class="btn btn-p" onclick="saveResolve()">✅ Listo</button></div>
+  </div>
+</div>
+<div class="modal-ov" id="modal-opph">
+  <div class="modal"><div class="modal-handle"></div>
+    <div class="modal-hdr"><div class="modal-title">Agregar fotos</div><button class="modal-x" onclick="closeM('modal-opph')">×</button></div>
+    <div class="modal-body">
+      <div class="ctx-box" id="opph-ctx"></div>
+      <button type="button" class="ph-pick" onclick="document.getElementById('opph-input').click()">📷 Sacar o adjuntar fotos</button>
+      <input type="file" id="opph-input" accept="image/*" multiple style="display:none" onchange="psPick('op',this.files);this.value=''">
+      <div class="ph-grid" id="op-photos-prev"></div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-g" onclick="closeM('modal-opph')">Cancelar</button><button class="btn btn-p" onclick="saveOpPhotos()">Guardar fotos</button></div>
   </div>
 </div>
 <div class="modal-ov" id="modal-note">
@@ -3077,6 +3112,165 @@ function showDesktop(){
 }
 window.addEventListener('resize',showDesktop);
 
+// ══════════ v7: rol OPERARIO (Carlos, Rubén) — solo ven sus tareas asignadas ══════════
+ROLE_LBL.operario='Operario';
+PH_MAX=12;
+PS_EL.op='op-photos-prev';
+function isOp(){return role()==='operario';}
+function normN(s){return String(s||'').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');}
+function isAssignedToMe(o){return !!(curUser&&o&&o.assigned_tech&&normN(o.assigned_tech)===normN(curUser.name));}
+var OP_OPEN=['nueva','asignada','en_curso','en_espera'];
+
+// Datos: el operario solo recibe sus órdenes
+var _v7LoadAll=loadAll;
+loadAll=async function(){
+  var ok=await _v7LoadAll();
+  if(ok&&isOp()){_orders=_orders.filter(isAssignedToMe);_audit=[];_reminders=[];}
+  return ok;
+};
+var _v7ApplyRole=applyRole;
+applyRole=function(){_v7ApplyRole();document.body.classList.toggle('op-mode',isOp());};
+var _v7Logout=doLogout;
+doLogout=function(){document.body.classList.remove('op-mode');_v7Logout();};
+var _v7GoPage=goPage;
+goPage=function(page){if(isOp())page='dashboard';return _v7GoPage(page);};
+var _v7Pending=pendingCount;
+pendingCount=function(){return isOp()?0:_v7Pending();};
+
+// Inicio del operario
+var _v7RoleDash=renderRoleDash;
+renderRoleDash=function(){if(!isOp())return _v7RoleDash();renderOpHome();};
+function opNext(o){
+  if(o.status==='asignada'||o.status==='nueva')return [['start','▶ Empezar','p']];
+  if(o.status==='en_curso')return [['resolve','✅ Terminado','p']];
+  if(o.status==='en_espera')return [['resume','▶ Retomar','p']];
+  return [];
+}
+function opCard(o){
+  var p=PRI[o.priority]||PRI.normal;var open=OP_OPEN.indexOf(o.status)>=0;
+  var nph=(o.photos_before||[]).length+(o.photos_after||[]).length;
+  var late=o.due_date&&open&&o.due_date<todayS();
+  var meta='';
+  if(o.due_date&&open)meta+='<span style="'+(late?'color:var(--red);font-weight:700':'')+'">📅 '+(late?'Atrasada · ':'Para el ')+fmtD(o.due_date)+'</span>';
+  if(nph)meta+='<span>📷 '+nph+'</span>';
+  meta+='<span>'+ago(o.created_at)+'</span>';
+  var btns=open?opNext(o):[];
+  return '<div class="op-card'+(open?'':' op-done')+'" data-oid="'+o.id+'" style="--pc:'+p.c+'">'
+    +'<div class="oc-top"><span class="oc-code">'+oCode(o)+'</span>'+priPill(o.priority)+stPill(o.status)+(o.kind==='preventivo'?'<span class="st-pill" style="color:var(--blue);background:var(--blue-bg)">🔧 Preventivo</span>':'')+'</div>'
+    +'<div class="op-t">'+esc(o.title)+'</div>'
+    +'<div class="op-w">'+oWhere(o)+'</div>'
+    +(o.status==='en_espera'&&o.wait_reason?'<div class="op-wait">⏸ '+esc(o.wait_reason)+'</div>':'')
+    +'<div class="op-meta">'+meta+'</div>'
+    +(btns.length?'<div class="op-btns">'+btns.map(function(b){return '<button class="op-btn '+b[2]+'" data-qa="'+b[0]+'">'+b[1]+'</button>';}).join('')+'</div>':'')
+    +'</div>';
+}
+function renderOpHome(){
+  var el=document.getElementById('dash-role');if(!el||!curUser)return;
+  var act=_orders.filter(function(o){return OP_OPEN.indexOf(o.status)>=0;}).sort(sortOrders);
+  var from=Date.now()-7*86400000;
+  var done=_orders.filter(function(o){return (o.status==='resuelta'||o.status==='cerrada')&&new Date(o.resolved_at||o.closed_at||o.created_at).getTime()>=from;})
+    .sort(function(a,b){return new Date(b.resolved_at||b.created_at)-new Date(a.resolved_at||a.created_at);});
+  var first=esc((curUser.name||'').split(' ')[0]);
+  var h='<div class="op-top"><div><div class="op-hi">Hola, '+first+' 👋</div><div class="op-sub">'+(act.length?'Tenés <b>'+act.length+'</b> tarea'+(act.length>1?'s':'')+' para hacer':'No tenés tareas pendientes')+'</div></div><button class="op-out" data-act="out">Salir</button></div>';
+  h+='<div class="slbl">🔧 Para hacer</div>'+(act.length?act.map(opCard).join(''):'<div class="op-empty">👌 No tenés tareas asignadas<small>Cuando te asignen una, aparece acá.</small></div>');
+  if(done.length)h+='<div class="slbl" style="margin-top:22px">✅ Terminadas esta semana</div>'+done.map(opCard).join('');
+  el.innerHTML=h;
+  el.querySelectorAll('.op-card').forEach(function(c){c.addEventListener('click',function(){openOrder(c.getAttribute('data-oid'));});});
+  el.querySelectorAll('[data-qa]').forEach(function(b){b.addEventListener('click',function(e){e.stopPropagation();curOrderId=b.closest('.op-card').getAttribute('data-oid');odAction(b.getAttribute('data-qa'));});});
+  el.querySelectorAll('[data-act="out"]').forEach(function(b){b.addEventListener('click',function(){if(confirm('¿Cerrar sesión?'))doLogout();});});
+}
+
+// Detalle de la orden: solo acciones del operario
+var _v7OrderDetail=renderOrderDetail;
+renderOrderDetail=function(){
+  _v7OrderDetail();
+  if(!isOp())return;
+  var o=_orders.find(function(x){return x.id===curOrderId;});if(!o)return;
+  var tg=document.getElementById('od-target');
+  if(tg){var n=tg.cloneNode(false);n.className='od-target';n.innerHTML=oWhere(o);tg.parentNode.replaceChild(n,tg);}
+  var st=o.status;var open=OP_OPEN.indexOf(st)>=0;var b=opNext(o).slice();
+  if(st==='asignada'||st==='nueva')b.push(['resolve','✅ Terminado','g']);
+  if(st==='asignada'||st==='en_curso')b.push(['wait','⏸ En espera','g']);
+  if(open)b.push(['photos','📷 Fotos','g']);
+  b.push(['note','💬 Comentario','g']);
+  b.push(['close','Cerrar','g']);
+  var foot=document.getElementById('od-foot');
+  foot.innerHTML=b.map(function(x){return '<button class="btn btn-'+x[2]+'" data-act="'+x[0]+'">'+x[1]+'</button>';}).join('');
+  foot.querySelectorAll('[data-act]').forEach(function(btn){btn.addEventListener('click',function(){odAction(btn.getAttribute('data-act'));});});
+};
+var OP_ACTS=['start','resolve','wait','resume','photos','note','close'];
+var _v7OdAction=odAction;
+odAction=function(a){
+  var o=_orders.find(function(x){return x.id===curOrderId;});if(!o)return;
+  if(isOp()&&(OP_ACTS.indexOf(a)<0||(a!=='close'&&!isAssignedToMe(o))))return;
+  if(a==='start'){showLoad(true);updOrder(o.id,{status:'en_curso',wait_reason:null}).then(function(ok){if(!ok){showLoad(false);return;}olog(o.id,'empezó el trabajo').then(function(){afterOrderChange('En curso');});});return;}
+  if(a==='note')return openNote('Comentario','Ej: falta un repuesto, quedó andando pero hace ruido…',async function(txt){showLoad(true);await olog(o.id,'dejó un comentario',txt);await afterOrderChange('Comentario guardado');});
+  if(a==='photos')return openOpPhotos(o);
+  return _v7OdAction(a);
+};
+
+// Terminado: el operario no elige quién lo hizo; se conservan fotos ya cargadas
+var _v7OpenResolve=openResolve;
+openResolve=function(o){
+  _v7OpenResolve(o);
+  var w=document.getElementById('r-tech').closest('.fg');if(w)w.style.display=isOp()?'none':'';
+  if((o.photos_after||[]).length)psLoad('rs',o.photos_after);
+};
+
+// Sumar fotos en cualquier momento
+function openOpPhotos(o){
+  curOrderId=o.id;
+  document.getElementById('opph-ctx').innerHTML='<b>'+oCode(o)+'</b> · '+esc(o.title);
+  psReset('op');
+  document.getElementById('modal-opph').classList.add('on');
+}
+async function saveOpPhotos(){
+  var o=_orders.find(function(x){return x.id===curOrderId;});if(!o)return;
+  if(!psGet('op').items.length){toast('Agregá al menos una foto','e');return;}
+  showLoad(true);
+  var urls;
+  try{urls=await psUpload('op','ordenes');}catch(err){showLoad(false);toast('No se pudieron subir las fotos','e');console.error(err);return;}
+  if(!(await updOrder(o.id,{photos_after:(o.photos_after||[]).concat(urls)}))){showLoad(false);return;}
+  await olog(o.id,'agregó '+urls.length+' foto'+(urls.length>1?'s':''));
+  psReset('op');closeM('modal-opph');
+  await afterOrderChange('Fotos guardadas');
+}
+
+// Avisos en tiempo real para el operario
+var _v7Notify=notifyChanges;
+notifyChanges=function(prev){
+  if(!isOp())return _v7Notify(prev);
+  _orders.forEach(function(o){
+    var was=prev[o.id];
+    if(!was&&OP_OPEN.indexOf(o.status)>=0)toast('Nueva tarea: '+o.title,'i');
+    else if(was==='resuelta'&&o.status==='en_curso')toast(oCode(o)+' volvió: no quedó bien','i');
+  });
+};
+
+// Alta de usuarios: operario vinculado al equipo de mantenimiento
+function v7FillOpTech(){
+  var sel=document.getElementById('nu-op-tech');if(!sel)return;
+  var act=_techs.filter(function(t){return t.active!==false;});
+  sel.innerHTML='<option value="">Elegir…</option>'+act.map(function(t){return '<option>'+esc(t.name)+'</option>';}).join('');
+}
+(function(){
+  var r=document.getElementById('nu-role');var w=document.getElementById('nu-op-wrap');var sel=document.getElementById('nu-op-tech');
+  if(!r||!w)return;
+  r.addEventListener('change',function(){var on=r.value==='operario';w.style.display=on?'':'none';if(on)v7FillOpTech();});
+  if(sel)sel.addEventListener('change',function(){if(sel.value)document.getElementById('nu-name').value=sel.value;});
+})();
+var _v7AddUser=addUser;
+addUser=async function(){
+  var role=document.getElementById('nu-role').value;
+  var name=document.getElementById('nu-name').value.trim();
+  var before=_users.length;
+  await _v7AddUser();
+  if(role==='operario'&&name&&_users.length>before&&!_techs.find(function(t){return normN(t.name)===normN(name);})){
+    await sb.from('am_techs').insert({name:name});await loadAll();
+  }
+  if(role==='operario'){var w=document.getElementById('nu-op-wrap');if(w)w.style.display=document.getElementById('nu-role').value==='operario'?'':'none';}
+};
+
 async function init(){
   showDesktop();
   var saved=loadSession();
@@ -3084,6 +3278,7 @@ async function init(){
   else{showLoad(false);}
 }
 init();
+
 </script>
 <div id="lightbox" onclick="closeLightbox()"><button type="button" onclick="closeLightbox()">×</button><img id="lightbox-img" alt=""></div>
 </body>
