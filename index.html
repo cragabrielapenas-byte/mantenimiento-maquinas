@@ -473,6 +473,16 @@ body.op-mode .page{max-width:820px;margin:0 auto;width:100%;padding-bottom:32px}
 .op-empty small{display:block;font-weight:500;font-size:14px;color:var(--ink3);margin-top:6px}
 .op-done{opacity:.75}
 body.op-mode #od-foot .btn{padding:12px 16px;font-size:15px}
+
+/* v9: devoluciones */
+.od-box.ret{background:#fff4e5;border:1.5px solid #f0b45a;color:#6b3e00}
+.od-box.ret .od-box-t{color:#9a5800}
+.op-ret{margin-top:10px;font-size:14px;color:#6b3e00;background:#fff4e5;border:1.5px solid #f0b45a;border-radius:10px;padding:10px 12px;line-height:1.4}
+.op-ret b{display:block;font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:#9a5800;margin-bottom:2px}
+.bc-ret{font-size:11px;background:#fff4e5;color:#8a4f00;border:1px solid #f0c98a;border-radius:6px;padding:4px 7px;margin-bottom:7px}
+.ret-opts{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+.ret-opt{text-align:left;padding:12px 14px;border-radius:10px;border:1.5px solid var(--sand3);background:var(--white);font:inherit;font-size:14px;font-weight:600;color:var(--ink2);cursor:pointer}
+.ret-opt.on{border-color:var(--rust);background:var(--rust-bg);color:var(--rust)}
 </style>
 </head>
 <body>
@@ -831,7 +841,7 @@ body.op-mode #od-foot .btn{padding:12px 16px;font-size:15px}
     <div class="modal-body">
       <div class="fg"><label class="fl">¿Qué pasa?</label><textarea class="ft" id="o-text" style="min-height:72px" placeholder="Ej: La amasadora 2 hace ruido y se frena"></textarea></div>
       <div class="fg"><label class="fl">¿Dónde? <span class="opt">opcional</span></label>
-        <div class="sub-lbl">📍 Sector</div><div class="sec-chips" id="o-sectors"></div>
+        <div class="sub-lbl">📍 Sector</div><div class="sec-chips" id="o-sectors"></div><input class="fi" id="o-sec-other" style="display:none;margin:-4px 0 12px" placeholder="¿Qué sector o lugar? Ej: Depósito de harina">
         <div class="sub-lbl">⚙ Máquina</div>
         <select class="fs" id="o-mach" onchange="onMachSel(this.value)"></select>
         <div id="o-search-wrap" style="display:none"><input id="o-search"><div id="o-search-results"></div></div>
@@ -893,6 +903,18 @@ body.op-mode #od-foot .btn{padding:12px 16px;font-size:15px}
       <div class="ph-grid" id="op-photos-prev"></div>
     </div>
     <div class="modal-foot"><button class="btn btn-g" onclick="closeM('modal-opph')">Cancelar</button><button class="btn btn-p" onclick="saveOpPhotos()">Guardar fotos</button></div>
+  </div>
+</div>
+<div class="modal-ov" id="modal-return">
+  <div class="modal"><div class="modal-handle"></div>
+    <div class="modal-hdr"><div class="modal-title">Devolver la tarea</div><button class="modal-x" onclick="closeM('modal-return')">×</button></div>
+    <div class="modal-body">
+      <div class="ctx-box" id="ret-ctx"></div>
+      <label class="fl">¿Por qué vuelve?</label>
+      <div class="ret-opts" id="ret-opts"></div>
+      <div class="fg"><label class="fl">Contale qué hay que hacer</label><textarea class="ft" id="ret-text" placeholder="Ej: sigue goteando del lado izquierdo / falta pintar la baranda de abajo"></textarea></div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-g" onclick="closeM('modal-return')">Cancelar</button><button class="btn btn-p" onclick="saveReturn()">↩ Devolver</button></div>
   </div>
 </div>
 <div class="modal-ov" id="modal-note">
@@ -2514,7 +2536,7 @@ async function saveOrder(){
   try{photos=await psUpload('ob','ordenes');}catch(err){showLoad(false);toast('No se pudieron subir las fotos','e');console.error(err);return;}
   var data={title:title,description:tx.desc,priority:oPri||'normal',due_date:due,machine_id:null,task_id:null,photos_before:photos};
   if(oSel){if(oSel.type==='machine')data.machine_id=oSel.id;else data.task_id=oSel.id;}
-  if(_sectors.length)data.sector_id=oSec||null;
+  if(oSec==='__otro'){data.sector_id=null;data.place=v9OtherPlace();}else{if(_sectors.length)data.sector_id=oSec||null;if(oSec)data.place=null;}
   var o=eoId?_orders.find(function(x){return x.id===eoId;}):null;
   if(o){
     if(canAssign()&&(tech||'')!==(o.assigned_tech||'')){
@@ -3378,7 +3400,6 @@ renderOrderDetail=function(){
   var st=o.status;var open=OP_OPEN.indexOf(st)>=0;var work=open&&canWork(o)&&!!o.assigned_tech;var b=[];
   if(work){
     b=b.concat(opNext(o));
-    if(st==='asignada')b.push(['resolve','✅ Terminado','g']);
     if(st==='asignada'||st==='en_curso')b.push(['wait','⏸ En espera','g']);
   }
   if(open&&canAssign())b.push(['assign',o.assigned_tech?'👷 Cambiar responsable':'👷 Asignar',b.length?'g':'p']);
@@ -3404,6 +3425,126 @@ openResolve=function(o){
   _v7OpenResolve(o);
   var w=document.getElementById('r-tech').closest('.fg');if(w)w.style.display=canManage()?'':'none';
   if((o.photos_after||[]).length)psLoad('rs',o.photos_after);
+};
+
+// ══════════ v9: devoluciones visibles · sector "Otro" ══════════
+var RET_TYPES={mal:'❌ No quedó bien',agregar:'➕ Hay que agregar algo',modificar:'✏️ Hay que modificar algo'};
+var retType='mal';
+// Si la base todavía no tiene las columnas nuevas, se guarda igual sin ellas
+var _v9UpdOrder=updOrder;
+updOrder=async function(id,upd){
+  if(upd&&(upd.status==='resuelta'||upd.status==='cerrada')&&!('return_reason' in upd)){upd=Object.assign({},upd,{return_reason:null,return_type:null});}
+  var r=await sb.from('am_orders').update(upd).eq('id',id);
+  if(r.error&&(r.error.code==='PGRST204'||r.error.code==='42703')){
+    var u2={};Object.keys(upd).forEach(function(k){if(k.indexOf('return')!==0)u2[k]=upd[k];});
+    r=await sb.from('am_orders').update(u2).eq('id',id);
+  }
+  if(r.error){toast('No se pudo guardar','e');console.error(r.error);return false;}
+  return true;
+};
+function retBoxHtml(o,cls){
+  if(!o.return_reason&&!o.return_type)return '';
+  var t=RET_TYPES[o.return_type]||'↩ Devuelta';
+  var who=o.returned_by_name?' · '+esc(o.returned_by_name):'';
+  if(cls==='op')return '<div class="op-ret"><b>↩ Volvió'+who+' — '+esc(t.replace(/^\S+\s/,''))+'</b>'+esc(o.return_reason||'')+'</div>';
+  if(cls==='bc')return '<div class="bc-ret">↩ '+esc(t.replace(/^\S+\s/,''))+(o.return_reason?': '+esc(o.return_reason.length>70?o.return_reason.slice(0,70)+'…':o.return_reason):'')+'</div>';
+  return '<div class="od-box ret"><div class="od-box-t">↩ Devuelta'+who+(o.returned_at?' · '+fmtDT(o.returned_at):'')+' — '+esc(t)+'</div><div style="white-space:pre-wrap;font-size:14px">'+esc(o.return_reason||'')+'</div></div>';
+}
+function openReturn(o){
+  curOrderId=o.id;retType='mal';
+  document.getElementById('ret-ctx').innerHTML='<b>'+oCode(o)+'</b> · '+esc(o.title)+(o.assigned_tech?'<br>Vuelve a: 👷 '+esc(o.assigned_tech):'');
+  document.getElementById('ret-text').value='';
+  renderRetOpts();
+  document.getElementById('modal-return').classList.add('on');
+}
+function renderRetOpts(){
+  var el=document.getElementById('ret-opts');
+  el.innerHTML=Object.keys(RET_TYPES).map(function(k){return '<button type="button" class="ret-opt'+(retType===k?' on':'')+'" data-rt="'+k+'">'+RET_TYPES[k]+'</button>';}).join('');
+  el.querySelectorAll('[data-rt]').forEach(function(b){b.addEventListener('click',function(){retType=b.getAttribute('data-rt');renderRetOpts();});});
+}
+async function saveReturn(){
+  var o=_orders.find(function(x){return x.id===curOrderId;});if(!o)return;
+  var txt=document.getElementById('ret-text').value.trim();
+  if(!txt){toast('Contale qué hay que hacer','e');document.getElementById('ret-text').focus();return;}
+  showLoad(true);
+  var upd={status:o.assigned_tech?'asignada':'nueva',resolved_at:null,wait_reason:null,return_type:retType,return_reason:txt,returned_by_name:curUser.name,returned_at:new Date().toISOString()};
+  if(!(await updOrder(o.id,upd))){showLoad(false);return;}
+  await olog(o.id,'devolvió la tarea: '+RET_TYPES[retType].replace(/^\S+\s/,'').toLowerCase(),txt);
+  await logAudit('devolver','am_orders',o.id,oCode(o));
+  closeM('modal-return');
+  await afterOrderChange('Devuelta a '+(o.assigned_tech||'Pendientes'));
+}
+var _v9OdAction=odAction;
+odAction=function(a){
+  var o=_orders.find(function(x){return x.id===curOrderId;});if(!o)return;
+  if(a==='reject'){if(!canConfirm(o))return denyMove();return openReturn(o);}
+  return _v9OdAction(a);
+};
+// Mostrar la devolución bien arriba en el detalle, en la tarjeta del operario y en el tablero
+var _v9OrderDetail=renderOrderDetail;
+renderOrderDetail=function(){
+  _v9OrderDetail();
+  var o=_orders.find(function(x){return x.id===curOrderId;});if(!o)return;
+  var foot=document.getElementById('od-foot');
+  foot.querySelectorAll('[data-act="reject"]').forEach(function(b){b.textContent='↩ Devolver';});
+  if(OP_OPEN.indexOf(o.status)<0)return;
+  var box=retBoxHtml(o,'od');if(!box)return;
+  var t=document.querySelector('#od-body .od-title');if(t)t.insertAdjacentHTML('afterend',box);
+};
+var _v9OpCard=opCard;
+opCard=function(o){
+  var h=_v9OpCard(o);
+  if(OP_OPEN.indexOf(o.status)<0)return h;
+  var box=retBoxHtml(o,'op');if(!box)return h;
+  return h.replace('<div class="op-meta">',box+'<div class="op-meta">');
+};
+var _v9BoardCard=boardCard;
+boardCard=function(o,drag){
+  var h=_v9BoardCard(o,drag);
+  if(OP_OPEN.indexOf(o.status)<0)return h;
+  var box=retBoxHtml(o,'bc');if(!box)return h;
+  return h.replace('<div class="bc-f">',box+'<div class="bc-f">');
+};
+// Avisos: devuelta → vuelve a Asignadas
+notifyChanges=function(prev){
+  if(!curUser)return;
+  _orders.forEach(function(o){
+    var was=prev[o.id];
+    if(!was){
+      if(o.requested_by===curUser.id)return;
+      if(isOp()){if(OP_OPEN.indexOf(o.status)>=0)toast('Nueva tarea: '+o.title,'i');return;}
+      if(canAssign()&&o.status==='nueva')toast('Nuevo pedido: '+o.title+' ('+(PRI[o.priority]||{}).l+')','i');
+      else if(isAdmin()&&o.priority==='urgente')toast('Urgente: '+o.title,'i');
+      return;
+    }
+    if(was==='resuelta'&&(o.status==='asignada'||o.status==='nueva')&&(isAssignedToMe(o)||canManage()))toast(oCode(o)+' volvió: '+((RET_TYPES[o.return_type]||'').replace(/^\S+\s/,'')||'revisar'),'i');
+    if(was!==o.status&&o.status==='resuelta'&&isMine(o))toast(oCode(o)+' está terminada. Confirmá si quedó bien','i');
+    if(!isOp()&&was==='nueva'&&o.status==='asignada'&&isAssignedToMe(o))toast('Te asignaron: '+o.title,'i');
+  });
+};
+
+// Sector "Otro" con texto libre
+function v9OtherPlace(){var e=document.getElementById('o-sec-other');return e?e.value.trim()||null:null;}
+var _v9SecChips=renderSecChips;
+renderSecChips=function(){
+  _v9SecChips();
+  var el=document.getElementById('o-sectors');var inp=document.getElementById('o-sec-other');if(!el||!inp)return;
+  el.style.display='';
+  el.insertAdjacentHTML('beforeend','<button type="button" class="sec-chip'+(oSec==='__otro'?' on':'')+'" data-otro="1">＋ Otro</button>');
+  el.querySelector('[data-otro]').addEventListener('click',function(){oSec=oSec==='__otro'?null:'__otro';renderSecChips();if(oSec==='__otro')inp.focus();});
+  inp.style.display=oSec==='__otro'?'':'none';
+};
+var _v9ResetForm=resetOrderForm;
+resetOrderForm=function(){var e=document.getElementById('o-sec-other');if(e)e.value='';_v9ResetForm();};
+var _v9EditOrder=openEditOrder;
+openEditOrder=function(o){
+  _v9EditOrder(o);
+  if(!o.sector_id&&o.place&&!o.machine_id&&!o.task_id){oSec='__otro';document.getElementById('o-sec-other').value=o.place;renderSecChips();}
+};
+var _v9SaveOrder=saveOrder;
+saveOrder=function(){
+  if(oSec==='__otro'&&!v9OtherPlace()){toast('Escribí qué sector o lugar es','e');document.getElementById('o-sec-other').focus();return;}
+  return _v9SaveOrder();
 };
 
 async function init(){
