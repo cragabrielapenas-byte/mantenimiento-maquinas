@@ -2690,10 +2690,33 @@ function renderUsersList(){
   var el=document.getElementById('users-list');
   el.innerHTML=_users.map(function(u){
     var extra=u.role==='encargado'?'<button class="btn btn-g btn-sm" data-ua="'+u.id+'">'+(u.can_assign?'✓ Asigna':'No asigna')+'</button>':'';
-    return '<div class="u-row"><div style="flex:1;min-width:0"><div style="font-weight:600;font-size:13px">'+esc(u.name)+'</div><div style="font-size:11.5px;color:var(--ink3)">'+esc(u.email)+' · '+(ROLE_LBL[u.role]||u.role)+(u.role==='encargado'&&u.can_assign?' · puede asignar':'')+'</div></div>'+extra+'<button class="btn btn-d btn-sm" data-ut="'+u.id+'">'+(u.active?'Deshabilitar':'Habilitar')+'</button></div>';
+    var me=curUser&&u.id===curUser.id;
+    return '<div class="u-row"'+(u.active===false?' style="opacity:.55"':'')+'><div style="flex:1;min-width:0"><div style="font-weight:600;font-size:13px">'+esc(u.name)+(me?' <span style="font-weight:500;color:var(--ink3)">(vos)</span>':'')+'</div><div style="font-size:11.5px;color:var(--ink3)">'+esc(u.email)+' · '+(ROLE_LBL[u.role]||u.role)+(u.role==='encargado'&&u.can_assign?' · puede asignar':'')+(u.active===false?' · deshabilitado':'')+'</div></div>'+extra
+      +(me?'':'<button class="btn btn-d btn-sm" data-ut="'+u.id+'">'+(u.active?'Deshabilitar':'Habilitar')+'</button><button class="btn btn-d btn-sm btn-icon" title="Eliminar usuario" data-ud="'+u.id+'">🗑</button>')+'</div>';
   }).join('');
   el.querySelectorAll('[data-ua]').forEach(function(b){b.addEventListener('click',async function(){var u=_users.find(function(x){return x.id===b.getAttribute('data-ua');});showLoad(true);var r=await sb.from('am_users').update({can_assign:!u.can_assign}).eq('id',u.id);await loadAll();showLoad(false);if(r.error)toast('Corré el SQL de sectores y permisos','e');renderUsersList();});});
   el.querySelectorAll('[data-ut]').forEach(function(b){b.addEventListener('click',async function(){var u=_users.find(function(x){return x.id===b.getAttribute('data-ut');});await sb.from('am_users').update({active:!u.active}).eq('id',u.id);await loadAll();renderUsersList();});});
+  el.querySelectorAll('[data-ud]').forEach(function(b){b.addEventListener('click',function(){var u=_users.find(function(x){return x.id===b.getAttribute('data-ud');});if(u)delUser(u);});});
+}
+async function delUser(u){
+  if(curUser&&u.id===curUser.id){toast('No podés eliminar tu propio usuario','e');return;}
+  if(u.role==='admin'&&_users.filter(function(x){return x.role==='admin'&&x.active!==false;}).length<=1){toast('Tiene que quedar al menos un admin','e');return;}
+  var open=_orders.filter(function(o){return o.assigned_tech===u.name&&o.status!=='cerrada'&&o.status!=='resuelta';}).length;
+  if(!confirm('¿Eliminar a '+u.name+'?\n\nYa no va a poder entrar. Su historial queda guardado con su nombre.'+(open?'\n\nOjo: tiene '+open+' tarea'+(open>1?'s':'')+' abierta'+(open>1?'s':'')+' asignada'+(open>1?'s':'')+'. Reasignalas después.':'')))return;
+  showLoad(true);
+  var r=await sb.from('am_users').delete().eq('id',u.id);
+  if(r.error&&r.error.code==='23503'){
+    // tiene registros vinculados: se desvinculan (los nombres quedan guardados) y se reintenta
+    await sb.from('am_orders').update({requested_by:null}).eq('requested_by',u.id);
+    await sb.from('am_order_log').update({user_id:null}).eq('user_id',u.id);
+    await sb.from('am_events').update({user_id:null}).eq('user_id',u.id);
+    await sb.from('am_audit').update({user_id:null}).eq('user_id',u.id);
+    r=await sb.from('am_users').delete().eq('id',u.id);
+  }
+  await loadAll();showLoad(false);
+  if(r.error){console.error(r.error);toast('No se pudo eliminar. Deshabilitalo por ahora y avisame: '+(r.error.message||''),'e');renderUsersList();return;}
+  await logAudit('eliminar','am_users',u.id,u.name);
+  renderUsersList();toast(u.name+' eliminado','s');
 }
 async function addUser(){
   var name=document.getElementById('nu-name').value.trim();
@@ -2702,13 +2725,22 @@ async function addUser(){
   var role=document.getElementById('nu-role').value;
   var ca=document.getElementById('nu-assign');
   if(!name||!email||!pass){toast('Completá nombre, usuario y contraseña','e');return;}
-  var data={name:name,email:email,password:pass,role:role};
+  if(_users.find(function(u){return String(u.email||'').toLowerCase()===email;})){toast('Ya existe el usuario "'+email+'"','e');return;}
+  if(_users.find(function(u){return normN(u.name)===normN(name);})){toast('Ya hay alguien llamado '+name+'. Usá otro nombre (ej: con apellido)','e');return;}
+  var data={name:name,email:email,password:pass,role:role,active:true};
   if(role==='encargado'&&ca&&ca.checked)data.can_assign=true;
   showLoad(true);var r=await sb.from('am_users').insert(data);await loadAll();showLoad(false);
-  if(r.error){toast('No se pudo crear (¿usuario repetido?)','e');return;}
+  if(r.error){
+    console.error(r.error);
+    if(r.error.code==='23514')toast('La base todavía no acepta el rol "'+(ROLE_LBL[role]||role)+'". Hay que correr el SQL de roles en Supabase','e');
+    else if(r.error.code==='23505')toast('Ese usuario ya existe','e');
+    else toast('No se pudo crear: '+(r.error.message||'error desconocido'),'e');
+    return;
+  }
   document.getElementById('nu-name').value='';document.getElementById('nu-email').value='';document.getElementById('nu-pass').value='';if(ca)ca.checked=false;
   renderUsersList();toast('Usuario creado','s');
 }
+(function(){var r=document.getElementById('nu-role'),ca=document.getElementById('nu-assign');if(!r||!ca)return;var lb=ca.closest('label');function upd(){if(lb)lb.style.display=r.value==='encargado'?'':'none';if(r.value!=='encargado')ca.checked=false;}r.addEventListener('change',upd);upd();})();
 
 // ── Máquinas: select de sector agrupado ──
 function fillSubGrouped(selId){
