@@ -502,7 +502,6 @@ body.op-mode #od-foot .btn{padding:12px 16px;font-size:15px}
   </div>
   <div class="drw-sec mgr-only">
     <div class="drw-sec-lbl">Mantenimiento</div>
-    <button class="drw-item" onclick="openTechs();closeDrw()"><span class="drw-icon">👷</span>Equipo de mantenimiento</button>
     <button class="drw-item" onclick="openSectors();closeDrw()"><span class="drw-icon">📍</span>Sectores</button>
   </div>
   <div class="drw-sec admin-only">
@@ -529,7 +528,6 @@ body.op-mode #od-foot .btn{padding:12px 16px;font-size:15px}
   </div>
   <div class="sb-sec mgr-only">
     <div class="sb-sec-lbl">Mantenimiento</div>
-    <button class="sb-item" onclick="openTechs()"><span class="sb-icon">👷</span>Equipo</button>
     <button class="sb-item" onclick="openSectors()"><span class="sb-icon">📍</span>Sectores</button>
   </div>
   <div class="sb-sec admin-only">
@@ -820,7 +818,6 @@ body.op-mode #od-foot .btn{padding:12px 16px;font-size:15px}
         <div class="fg"><label class="fl">Usuario (para entrar)</label><input class="fi" id="nu-email" type="text" autocapitalize="none" placeholder="Ej: sergio"></div>
         <div class="fg"><label class="fl">Contraseña</label><input class="fi" id="nu-pass" placeholder="Contraseña inicial"></div>
         <div class="fg"><label class="fl">Rol</label><select class="fs" id="nu-role"><option value="encargado">Encargado (hace pedidos)</option><option value="jefe">Jefe de mantenimiento</option><option value="admin">Admin</option><option value="operario">Operario (solo ve sus tareas)</option></select></div>
-        <div class="fg" id="nu-op-wrap" style="display:none"><label class="fl">¿Quién es del equipo de mantenimiento?</label><select class="fs" id="nu-op-tech"></select><div style="font-size:11.5px;color:var(--ink3);margin-top:4px">El nombre tiene que ser igual al que usás para asignar tareas. Si no está, escribilo arriba y se agrega solo al equipo.</div></div>
         <label style="display:flex;align-items:center;gap:8px;font-size:13px;margin-bottom:14px"><input type="checkbox" id="nu-assign"> Puede asignar responsables (solo encargados)</label>
         <button class="btn btn-p btn-sm" onclick="addUser()">Crear usuario</button>
       </div>
@@ -864,7 +861,7 @@ body.op-mode #od-foot .btn{padding:12px 16px;font-size:15px}
     <div class="modal-body">
       <div class="ctx-box" id="a-ctx"></div>
       <div class="fg"><label class="fl">¿Quién lo hace? *</label><select class="fs" id="a-tech"></select></div>
-      <div id="a-notechs" class="empty-mini" style="display:none">Todavía no cargaste a tu equipo.<br><button type="button" class="link-btn" style="margin:4px 0 0" onclick="openTechs()">＋ Cargar equipo</button></div>
+      <div id="a-notechs" class="empty-mini" style="display:none">No hay usuarios activos para asignar. Crealos desde ☰ → Usuarios.</div>
       <div class="fg"><label class="fl">¿Para cuándo? (opcional)</label><input type="date" class="fi" id="a-due"></div>
     </div>
     <div class="modal-foot"><button class="btn btn-g" onclick="closeM('modal-assign')">Cancelar</button><button class="btn btn-p" onclick="saveAssign()">Asignar</button></div>
@@ -3125,6 +3122,7 @@ var OP_OPEN=['nueva','asignada','en_curso','en_espera'];
 var _v7LoadAll=loadAll;
 loadAll=async function(){
   var ok=await _v7LoadAll();
+  if(ok){_techs=_users.filter(function(u){return u.active!==false&&u.name;}).map(function(u){return{id:u.id,name:u.name,active:true,role:u.role};}).sort(function(a,b){return a.name.localeCompare(b.name,'es');});}
   if(ok&&isOp()){_orders=_orders.filter(isAssignedToMe);_audit=[];_reminders=[];}
   return ok;
 };
@@ -3247,28 +3245,13 @@ notifyChanges=function(prev){
   });
 };
 
-// Alta de usuarios: operario vinculado al equipo de mantenimiento
-function v7FillOpTech(){
-  var sel=document.getElementById('nu-op-tech');if(!sel)return;
-  var act=_techs.filter(function(t){return t.active!==false;});
-  sel.innerHTML='<option value="">Elegir…</option>'+act.map(function(t){return '<option>'+esc(t.name)+'</option>';}).join('');
-}
-(function(){
-  var r=document.getElementById('nu-role');var w=document.getElementById('nu-op-wrap');var sel=document.getElementById('nu-op-tech');
-  if(!r||!w)return;
-  r.addEventListener('change',function(){var on=r.value==='operario';w.style.display=on?'':'none';if(on)v7FillOpTech();});
-  if(sel)sel.addEventListener('change',function(){if(sel.value)document.getElementById('nu-name').value=sel.value;});
-})();
-var _v7AddUser=addUser;
-addUser=async function(){
-  var role=document.getElementById('nu-role').value;
-  var name=document.getElementById('nu-name').value.trim();
-  var before=_users.length;
-  await _v7AddUser();
-  if(role==='operario'&&name&&_users.length>before&&!_techs.find(function(t){return normN(t.name)===normN(name);})){
-    await sb.from('am_techs').insert({name:name});await loadAll();
-  }
-  if(role==='operario'){var w=document.getElementById('nu-op-wrap');if(w)w.style.display=document.getElementById('nu-role').value==='operario'?'':'none';}
+// Carga por persona: operarios siempre; el resto solo si tiene tareas abiertas
+loadByTech=function(open){
+  var rows=_techs.map(function(t){return{n:t.name,op:t.role==='operario',c:open.filter(function(o){return o.assigned_tech===t.name&&['asignada','en_curso','en_espera'].indexOf(o.status)>=0;}).length};})
+    .filter(function(r){return r.op||r.c>0;}).sort(function(a,b){return b.c-a.c;});
+  if(!rows.length)return '<div class="empty-mini">Nadie tiene tareas asignadas.</div>';
+  var max=Math.max.apply(null,rows.map(function(r){return r.c;}).concat([1]));
+  return '<div class="card"><div class="card-body">'+rows.map(function(r){return '<div class="load-row"><span style="min-width:90px;font-weight:600">👷 '+esc(r.n)+'</span><div class="load-bar"><i style="width:'+Math.round(r.c/max*100)+'%"></i></div><b style="min-width:20px;text-align:right">'+r.c+'</b></div>';}).join('')+'</div></div>';
 };
 
 async function init(){
