@@ -2,7 +2,15 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#c24e1a">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Mantenimiento">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
 <title>Mantenimiento · Amsterdam</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,400;9..144,600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -527,6 +535,19 @@ body.op-mode #od-foot .btn{padding:12px 16px;font-size:15px}
   .ph-del{width:28px;height:28px}
   .b-hint{display:none}
 }
+
+/* ══ v11: pantalla completa / app instalada ══ */
+.fs-btn{width:40px;height:40px;border-radius:var(--r-sm);background:var(--sand);border:1px solid var(--sand3);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;color:var(--ink2)}
+.fs-btn::before{content:'';width:18px;height:18px;background:currentColor;-webkit-mask:var(--fs-ico) center/contain no-repeat;mask:var(--fs-ico) center/contain no-repeat}
+.fs-btn{--fs-ico:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5'/%3E%3C/svg%3E")}
+html.is-fs .fs-btn{--fs-ico:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5'/%3E%3C/svg%3E")}
+.op-fs{display:none !important}
+html.no-fs .fs-btn,html.is-app .fs-btn{display:none}
+/* espacio para la barra de estado / borde redondeado en modo app */
+.mob-header{padding-top:env(safe-area-inset-top);height:calc(54px + env(safe-area-inset-top))}
+.bnav{padding-bottom:env(safe-area-inset-bottom);height:calc(var(--nav-h) + env(safe-area-inset-bottom))}
+.fab{bottom:calc(var(--nav-h) + 12px + env(safe-area-inset-bottom))}
+@media(min-width:640px) and (max-width:1023px){.mob-header{height:calc(60px + env(safe-area-inset-top))}.bnav{height:calc(var(--nav-h) + 6px + env(safe-area-inset-bottom))}}
 </style>
 </head>
 <body>
@@ -594,7 +615,7 @@ body.op-mode #od-foot .btn{padding:12px 16px;font-size:15px}
 <div class="desk-main">
   <header class="mob-header">
     <div class="logo-pill">Amsterdam</div>
-    <button class="hbg" onclick="openDrw()"><span></span><span></span><span></span></button>
+    <div style="display:flex;align-items:center;gap:8px"><button class="fs-btn" type="button" onclick="toggleFS()" title="Pantalla completa" aria-label="Pantalla completa"></button><button class="hbg" onclick="openDrw()"><span></span><span></span><span></span></button></div>
   </header>
   <div class="desk-hdr" style="display:none" id="desk-hdr">
     <div style="display:flex;align-items:center;gap:10px">
@@ -3267,7 +3288,7 @@ function renderOpHome(){
   var done=_orders.filter(function(o){return (o.status==='resuelta'||o.status==='cerrada')&&new Date(o.resolved_at||o.closed_at||o.created_at).getTime()>=from;})
     .sort(function(a,b){return new Date(b.resolved_at||b.created_at)-new Date(a.resolved_at||a.created_at);});
   var first=esc((curUser.name||'').split(' ')[0]);
-  var h='<div class="op-top"><div><div class="op-hi">Hola, '+first+' 👋</div><div class="op-sub">'+(act.length?'Tenés <b>'+act.length+'</b> tarea'+(act.length>1?'s':'')+' para hacer':'No tenés tareas pendientes')+'</div></div><button class="op-out" data-act="out">Salir</button></div>';
+  var h='<div class="op-top"><div><div class="op-hi">Hola, '+first+' 👋</div><div class="op-sub">'+(act.length?'Tenés <b>'+act.length+'</b> tarea'+(act.length>1?'s':'')+' para hacer':'No tenés tareas pendientes')+'</div></div><div style="display:flex;gap:8px;align-items:center"><button class="fs-btn op-fs" type="button" onclick="toggleFS()" title="Pantalla completa" aria-label="Pantalla completa"></button><button class="op-out" data-act="out">Salir</button></div></div>';
   h+='<div class="slbl">🔧 Para hacer</div>'+(act.length?'<div class="op-grid">'+act.map(opCard).join('')+'</div>':'<div class="op-empty">👌 No tenés tareas asignadas<small>Cuando te asignen una, aparece acá.</small></div>');
   if(done.length)h+='<div class="slbl" style="margin-top:22px">✅ Terminadas esta semana</div><div class="op-grid">'+done.map(opCard).join('')+'</div>';
   el.innerHTML=h;
@@ -3590,6 +3611,24 @@ saveOrder=function(){
   if(oSec==='__otro'&&!v9OtherPlace()){toast('Escribí qué sector o lugar es','e');document.getElementById('o-sec-other').focus();return;}
   return _v9SaveOrder();
 };
+
+// ══════════ v11: pantalla completa ══════════
+(function(){
+  var d=document,el=d.documentElement;
+  var can=!!(el.requestFullscreen||el.webkitRequestFullscreen);
+  var standalone=(window.matchMedia&&(matchMedia('(display-mode: fullscreen)').matches||matchMedia('(display-mode: standalone)').matches))||navigator.standalone===true;
+  if(!can)el.classList.add('no-fs');
+  if(standalone)el.classList.add('is-app');
+  function isFS(){return !!(d.fullscreenElement||d.webkitFullscreenElement);}
+  function sync(){el.classList.toggle('is-fs',isFS());}
+  d.addEventListener('fullscreenchange',sync);d.addEventListener('webkitfullscreenchange',sync);
+  window.toggleFS=function(){
+    try{
+      if(isFS()){(d.exitFullscreen||d.webkitExitFullscreen).call(d);}
+      else{var r=(el.requestFullscreen||el.webkitRequestFullscreen).call(el,{navigationUI:'hide'});if(r&&r.catch)r.catch(function(){toast('Este navegador no permite pantalla completa','e');});}
+    }catch(e){toast('Este navegador no permite pantalla completa','e');}
+  };
+})();
 
 async function init(){
   showDesktop();

@@ -1,0 +1,19 @@
+{
+  "name": "Mantenimiento · Amsterdam",
+  "short_name": "Mantenimiento",
+  "description": "Órdenes y tareas de mantenimiento de Panificadora Amsterdam",
+  "lang": "es-UY",
+  "start_url": "/?app=1",
+  "scope": "/",
+  "id": "/",
+  "display": "fullscreen",
+  "display_override": ["fullscreen", "standalone"],
+  "orientation": "any",
+  "background_color": "#f7f4ef",
+  "theme_color": "#c24e1a",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
