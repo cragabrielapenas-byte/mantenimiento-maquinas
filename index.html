@@ -632,6 +632,56 @@ body.oper .fab,body.oper .no-oper{display:none !important}
 .op-wrap .oc{margin-bottom:0;border-radius:var(--r) var(--r) 0 0}
 .op-acts{display:flex;gap:8px;background:#fff;border-radius:0 0 var(--r) var(--r);padding:10px 14px 14px;box-shadow:var(--sh)}
 .op-acts .btn{flex:1;min-height:52px;font-size:15px}
+
+/* v9 reportes */
+.rp-tabs{display:flex;gap:6px;margin-bottom:12px}
+.rp-tab{padding:9px 16px;border-radius:var(--r-pill);border:1.5px solid var(--line);background:#fff;font-family:var(--serif);font-weight:600;font-size:13px;color:var(--ink2);cursor:pointer}
+.rp-tab.on{background:var(--primary);border-color:var(--primary);color:#fff}
+.rp-filters{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-bottom:10px}
+.rp-filters .fs{min-height:44px;padding:9px 10px;font-size:13.5px}
+.rp-dates{display:flex;align-items:center;gap:8px;margin-bottom:10px;max-width:420px}
+.rp-dates .fi{min-height:44px}
+.rp-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:6px 0 10px}
+.rp-kpi{background:#fff;border-radius:var(--r);box-shadow:var(--sh);padding:16px 18px}
+.rp-kl{font-family:var(--serif);font-weight:600;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--primary-3)}
+.rp-kn{font-family:var(--serif);font-weight:700;font-size:38px;line-height:1.1;color:var(--primary);margin-top:6px;letter-spacing:-.02em}
+.rp-kn.sm{font-size:28px;padding-top:6px}
+.rp-kx{font-size:12px;color:var(--ink3);margin-top:2px}
+.rp-kx.bad{color:var(--red);font-weight:600}
+.rp-status{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.rp-st{display:flex;align-items:center;justify-content:space-between;background:#fff;border-radius:var(--r-sm);padding:10px 14px;box-shadow:var(--sh);border-left:5px solid var(--c);font-size:13px;color:var(--ink2)}
+.rp-st b{font-family:var(--serif);font-size:18px;color:var(--primary)}
+.rp-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:6px}
+.rp-card{background:#fff;border-radius:var(--r);box-shadow:var(--sh);padding:16px 18px}
+.rp-ct{font-family:var(--serif);font-weight:700;font-size:15px;color:var(--primary)}
+.rp-cs{font-size:12px;color:var(--ink3);margin-top:2px}
+.rp-canvas{position:relative;height:240px;margin-top:10px}
+.rp-empty{height:120px;display:flex;align-items:center;justify-content:center;color:var(--ink4);font-size:13px;border:1.5px dashed var(--sand3);border-radius:var(--r-sm);margin-top:12px}
+.rp-table{background:#fff;border-radius:var(--r);box-shadow:var(--sh);overflow:hidden}
+.rp-tr{display:grid;grid-template-columns:70px 64px 1.2fr 2fr 100px 120px 1fr 56px;gap:10px;align-items:center;padding:12px 16px;border-bottom:1px solid var(--line);font-size:13px;color:var(--ink);cursor:pointer}
+.rp-tr:last-child{border-bottom:none}
+.rp-tr:hover{background:var(--sand)}
+.rp-th{cursor:default;font-family:var(--serif);font-weight:600;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--primary-3);background:var(--sand)}
+.rp-th:hover{background:var(--sand)}
+.rp-tr .r{text-align:right;font-family:var(--serif);font-weight:600}
+.rp-tr .bad{color:var(--red)}
+.rp-code{font-family:var(--serif);font-weight:700;font-size:12px;color:var(--ink3)}
+.rp-prob{font-weight:600}
+@media(max-width:1100px){.rp-grid{grid-template-columns:1fr 1fr}.rp-filters{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:639px){
+  .rp-filters{grid-template-columns:1fr 1fr}
+  .rp-filters #rp-period{grid-column:1/-1}
+  .rp-kpis,.rp-status{grid-template-columns:1fr 1fr}
+  .rp-kn{font-size:32px}
+  .rp-grid{grid-template-columns:1fr}
+  .rp-th{display:none !important}
+  .rp-tr{grid-template-columns:1fr auto;gap:4px 10px;padding:12px 14px}
+  .rp-tr span:nth-child(1){grid-column:1}.rp-tr span:nth-child(8){grid-column:2;grid-row:1}
+  .rp-tr span:nth-child(2),.rp-tr span:nth-child(7){display:none}
+  .rp-tr span:nth-child(3){grid-column:1/-1;color:var(--ink3);font-size:12px}
+  .rp-tr span:nth-child(4){grid-column:1/-1}
+  .rp-tr span:nth-child(5),.rp-tr span:nth-child(6){grid-column:auto}
+}
 </style>
 </head>
 <body>
@@ -819,33 +869,18 @@ body.oper .fab,body.oper .no-oper{display:none !important}
         </div>
       </div>
     </div>
-    <div class="rep-filters">
-      <select class="rep-sel" id="rep-period" onchange="onRepPeriod()">
-        <option value="30">Últimos 30 días</option>
-        <option value="90">Últimos 3 meses</option>
-        <option value="365">Este año</option>
-        <option value="all">Todo</option>
-        <option value="custom">Rango personalizado</option>
+    <div class="rp-tabs"><button class="rp-tab on" data-t="ot" onclick="rpSetTab('ot')">Órdenes de trabajo</button><button class="rp-tab" data-t="hist" onclick="rpSetTab('hist')">Historial de máquinas</button></div>
+    <div class="rp-filters">
+      <select class="fs" id="rp-period" onchange="onRepPeriod()">
+        <option value="30">Últimos 30 días</option><option value="7">Últimos 7 días</option><option value="mes">Este mes</option><option value="mesant">Mes pasado</option><option value="90">Últimos 3 meses</option><option value="anio">Este año</option><option value="all">Todo</option><option value="custom">Elegir fechas…</option>
       </select>
-      <select class="rep-sel" id="rep-tech" onchange="renderReports()"><option value="">Todos los técnicos</option></select>
-      <select class="rep-sel" id="rep-cat" onchange="onRepCat()"><option value="">Todas las categorías</option></select>
-      <select class="rep-sel" id="rep-machine" onchange="renderReports()"><option value="">Todos los equipos</option></select>
+      <select class="fs" id="rp-sec" onchange="renderReports()"></select>
+      <select class="fs" id="rp-where" onchange="renderReports()"></select>
+      <select class="fs" id="rp-tech" onchange="renderReports()"></select>
+      <select class="fs" id="rp-kind" onchange="renderReports()"><option value="">Correctivas y preventivas</option><option value="correctivo">Solo correctivas</option><option value="preventivo">Solo preventivas</option></select>
     </div>
-    <div class="period-dates off" id="rep-dates">
-      <input type="date" id="rep-from" onchange="renderReports()">
-      <input type="date" id="rep-to" onchange="renderReports()">
-    </div>
-    <div class="kpi-grid">
-      <div class="kpi kpi-b"><div class="kpi-num" id="rep-total">—</div><div class="kpi-lbl">Intervenciones</div></div>
-      <div class="kpi kpi-r"><div class="kpi-num" id="rep-corr">—</div><div class="kpi-lbl">Correctivas</div></div>
-      <div class="kpi kpi-g"><div class="kpi-num" id="rep-prev">—</div><div class="kpi-lbl">Preventivas</div></div>
-      <div class="kpi kpi-a"><div class="kpi-num" id="rep-mach">—</div><div class="kpi-lbl">Equipos afectados</div></div>
-    </div>
-    <div class="chart-card"><div class="chart-title">Intervenciones por equipo (top 10)</div><canvas id="chart-by-machine" height="220"></canvas></div>
-    <div class="chart-card"><div class="chart-title">Preventivas vs Correctivas por mes</div><canvas id="chart-by-type" height="200"></canvas></div>
-    <div class="slbl">Detalle</div>
-    <div id="rep-list"></div>
-    <div id="rep-empty" class="empty" style="display:none"><div class="empty-ico">📊</div><p>Sin datos en este período.</p></div>
+    <div class="rp-dates" id="rp-dates" style="display:none"><input type="date" class="fi" id="rp-from" onchange="renderReports()"><span>a</span><input type="date" class="fi" id="rp-to" onchange="renderReports()"></div>
+    <div id="rp-body"></div>
   </div>
   <div id="page-reminders" class="page">
     <div class="pg-hdr"><div class="pg-title">Recordatorios</div><button class="btn btn-p btn-sm" onclick="openM('modal-reminder')">＋ Nuevo</button></div>
@@ -3562,6 +3597,149 @@ function notifyChanges(prev){
     if(was.s!==o.status&&o.status==='resuelta'&&isMine(o))toast(oCode(o)+' está terminada. Revisala y cerrala','i');
     if(isAssignedToMe(o)&&normName(was.a)!==normName(o.assigned_tech))toast('Te asignaron '+oCode(o)+': '+o.title,'i');
   });
+}
+
+
+// ══════════ v9: Reportes sobre órdenes de trabajo ══════════
+var rpCharts={},rpTab='ot';
+var RP_C1='#2E5A9C',RP_C2='#E9743A';
+function locDate(ts){if(!ts)return '';var d=new Date(ts);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function rpRange(){
+  var p=document.getElementById('rp-period').value;var t=new Date();var y=t.getFullYear(),m=t.getMonth();
+  var f=function(d){return locDate(d);};
+  if(p==='7'||p==='30'||p==='90'){var a=new Date();a.setDate(a.getDate()-parseInt(p)+1);return[f(a),f(t)];}
+  if(p==='mes')return[f(new Date(y,m,1)),f(t)];
+  if(p==='mesant')return[f(new Date(y,m-1,1)),f(new Date(y,m,0))];
+  if(p==='anio')return[f(new Date(y,0,1)),f(t)];
+  if(p==='custom')return[document.getElementById('rp-from').value||'0000-00-00',document.getElementById('rp-to').value||'9999-12-31'];
+  return['0000-00-00','9999-12-31'];
+}
+function inRange(ts,r){var d=locDate(ts);return d&&d>=r[0]&&d<=r[1];}
+function rpWhereMatch(o,v){
+  if(!v)return true;var p=v.split(':');
+  if(p[0]==='m')return o.machine_id===p[1];
+  if(p[0]==='t')return o.task_id===p[1];
+  return orderCatMatch(o,v);
+}
+function rpFillFilters(){
+  var keep=function(id){var e=document.getElementById(id);return e?e.value:'';};
+  var sv=keep('rp-sec'),wv=keep('rp-where'),tv=keep('rp-tech');
+  var secs=activeSectors();
+  document.getElementById('rp-sec').innerHTML='<option value="">📍 Todos los sectores</option>'+secs.map(function(s){return '<option value="'+s.id+'">'+esc(s.name)+'</option>';}).join('');
+  var h='<option value="">⚙ Todas las máquinas</option>';
+  _cats.filter(function(c){return c.type==='machines';}).forEach(function(c){
+    h+='<optgroup label="'+esc(c.name)+'"><option value="cat:'+c.id+'">Todo '+esc(c.name)+'</option>';
+    _subcats.filter(function(s){return s.category_id===c.id;}).forEach(function(s){
+      h+='<option value="sub:'+s.id+'">'+esc(s.name)+' (todas)</option>';
+      _machines.filter(function(m){return m.subcategory_id===s.id;}).sort(function(a,b){return a.name.localeCompare(b.name);}).forEach(function(m){h+='<option value="m:'+m.id+'">   · '+esc(m.name)+'</option>';});
+    });
+    h+='</optgroup>';
+  });
+  if(_tasks.length)h+='<optgroup label="Tareas generales">'+_tasks.map(function(t){return '<option value="t:'+t.id+'">'+esc(t.name)+'</option>';}).join('')+'</optgroup>';
+  document.getElementById('rp-where').innerHTML=h;
+  var names={};_orders.forEach(function(o){if(o.assigned_tech)names[o.assigned_tech]=1;});_events.forEach(function(e){if(e.tech)names[e.tech]=1;});
+  _users.filter(function(u){return u.active!==false&&u.role!=='encargado';}).forEach(function(u){names[u.name]=1;});
+  document.getElementById('rp-tech').innerHTML='<option value="">👷 Todos los responsables</option>'+Object.keys(names).sort().map(function(n){return '<option>'+esc(n)+'</option>';}).join('');
+  document.getElementById('rp-sec').value=sv;document.getElementById('rp-where').value=wv;document.getElementById('rp-tech').value=tv;
+  document.getElementById('rp-sec').style.display=secs.length?'':'none';
+}
+function rpBase(){
+  var sec=document.getElementById('rp-sec').value,wh=document.getElementById('rp-where').value,tech=document.getElementById('rp-tech').value,kind=document.getElementById('rp-kind').value;
+  return _orders.filter(function(o){return (!sec||o.sector_id===sec)&&rpWhereMatch(o,wh)&&(!tech||normName(o.assigned_tech)===normName(tech))&&(!kind||o.kind===kind);});
+}
+function getRepFiltered(){var r=rpRange();return rpBase().filter(function(o){return inRange(o.created_at,r);});}
+function onRepPeriod(){document.getElementById('rp-dates').style.display=document.getElementById('rp-period').value==='custom'?'':'none';renderReports();}
+function onRepCat(){renderReports();}
+function rpSetTab(t){rpTab=t;renderReports();}
+function fmtDur(h){if(h===null||isNaN(h))return '—';if(h<1)return Math.max(1,Math.round(h*60))+' min';if(h<48)return Math.round(h)+' h';return (h/24).toFixed(1).replace('.0','')+' días';}
+function daysBetween(a,b){return Math.max(0,Math.round((new Date(b)-new Date(a))/86400000));}
+function rpDestroy(){Object.keys(rpCharts).forEach(function(k){if(rpCharts[k])rpCharts[k].destroy();});rpCharts={};}
+function rpChartBox(id,title,sub,empty){return '<div class="rp-card"><div class="rp-ct">'+title+'</div>'+(sub?'<div class="rp-cs">'+sub+'</div>':'')+(empty?'<div class="rp-empty">Sin datos en este período</div>':'<div class="rp-canvas"><canvas id="'+id+'"></canvas></div>')+'</div>';}
+function rpBarOpts(horizontal,legend){
+  var grid={color:'rgba(14,28,58,.07)',drawTicks:false};var noGrid={display:false};
+  return{responsive:true,maintainAspectRatio:false,indexAxis:horizontal?'y':'x',
+    plugins:{legend:{display:!!legend,position:'bottom',align:'start',labels:{boxWidth:10,boxHeight:10,useBorderRadius:true,borderRadius:2,color:'#2B3754',font:{family:'Inter',size:12}}},
+      tooltip:{backgroundColor:'#0E1C3A',titleFont:{family:'Poppins',weight:'600'},bodyFont:{family:'Inter'},padding:10,cornerRadius:10,displayColors:!!legend}},
+    scales:horizontal?{x:{beginAtZero:true,grid:grid,border:{display:false},ticks:{precision:0,color:'#5B6478',font:{family:'Inter',size:11}}},y:{grid:noGrid,border:{display:false},ticks:{color:'#0E1C3A',font:{family:'Inter',size:12}}}}
+      :{y:{beginAtZero:true,grid:grid,border:{display:false},ticks:{precision:0,color:'#5B6478',font:{family:'Inter',size:11}}},x:{grid:noGrid,border:{display:false},ticks:{color:'#0E1C3A',font:{family:'Inter',size:12}}}}};
+}
+function renderReports(){
+  if(!document.getElementById('rp-period'))return;
+  rpFillFilters();
+  document.querySelectorAll('.rp-tab').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-t')===rpTab);});
+  rpDestroy();
+  var out=document.getElementById('rp-body');
+  if(rpTab==='hist')return renderRepHist(out);
+  var r=rpRange();var base=rpBase();
+  var created=base.filter(function(o){return inRange(o.created_at,r);});
+  var closed=base.filter(function(o){return o.status==='cerrada'&&inRange(o.closed_at||o.resolved_at,r);});
+  var resolved=base.filter(function(o){return o.resolved_at&&inRange(o.resolved_at,r);});
+  var openNow=base.filter(function(o){return o.status!=='cerrada';});
+  var late=openNow.filter(function(o){return o.due_date&&o.due_date<todayS();});
+  var urg=created.filter(function(o){return o.priority==='urgente';});
+  var avg=resolved.length?resolved.reduce(function(s,o){return s+(new Date(o.resolved_at)-new Date(o.created_at));},0)/resolved.length/3600000:null;
+  var h='<div class="rp-kpis">'
+    +'<div class="rp-kpi"><div class="rp-kl">Órdenes creadas</div><div class="rp-kn">'+created.length+'</div><div class="rp-kx">'+(urg.length?urg.length+' urgente'+(urg.length>1?'s':''):'ninguna urgente')+'</div></div>'
+    +'<div class="rp-kpi"><div class="rp-kl">Cerradas</div><div class="rp-kn">'+closed.length+'</div><div class="rp-kx">en el período</div></div>'
+    +'<div class="rp-kpi"><div class="rp-kl">Tiempo promedio</div><div class="rp-kn sm">'+fmtDur(avg)+'</div><div class="rp-kx">del pedido al trabajo terminado</div></div>'
+    +'<div class="rp-kpi"><div class="rp-kl">Abiertas hoy</div><div class="rp-kn">'+openNow.length+'</div><div class="rp-kx'+(late.length?' bad':'')+'">'+(late.length?late.length+' atrasada'+(late.length>1?'s':''):'ninguna atrasada')+'</div></div>'
+    +'</div>';
+  var st=[['Pendiente',openNow.filter(function(o){return o.status==='nueva';}).length,'#C8473B'],['En curso',openNow.filter(function(o){return o.status==='asignada'||o.status==='en_curso';}).length,'#CDA85E'],['En espera',openNow.filter(function(o){return o.status==='en_espera';}).length,'#7D6BB0'],['Para confirmar',openNow.filter(function(o){return o.status==='resuelta';}).length,'#7D8340']];
+  h+='<div class="rp-status">'+st.map(function(s){return '<div class="rp-st" style="--c:'+s[2]+'"><span>'+s[0]+'</span><b>'+s[1]+'</b></div>';}).join('')+'</div>';
+  // datos de gráficos
+  var months={};var addM=function(ts,k){var d=locDate(ts).slice(0,7);if(!d)return;if(!months[d])months[d]={c:0,x:0};months[d][k]++;};
+  created.forEach(function(o){addM(o.created_at,'c');});closed.forEach(function(o){addM(o.closed_at||o.resolved_at,'x');});
+  var mk=Object.keys(months).sort().slice(-12);
+  var MES=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  var byWhere={};created.forEach(function(o){var k=oWhereTxt(o);byWhere[k]=(byWhere[k]||0)+1;});
+  var wk=Object.keys(byWhere).sort(function(a,b){return byWhere[b]-byWhere[a];}).slice(0,10);
+  var byTech={};closed.forEach(function(o){var k=o.assigned_tech||'Sin responsable';byTech[k]=(byTech[k]||0)+1;});
+  var tk=Object.keys(byTech).sort(function(a,b){return byTech[b]-byTech[a];}).slice(0,10);
+  h+='<div class="rp-grid">'
+    +rpChartBox('rp-ch-month','Órdenes por mes','Creadas y cerradas',!mk.length)
+    +rpChartBox('rp-ch-where','Dónde se concentran los pedidos','Top 10 por máquina o sector',!wk.length)
+    +rpChartBox('rp-ch-tech','Órdenes cerradas por responsable','',!tk.length)
+    +'</div>';
+  // detalle
+  var rows=created.slice().sort(function(a,b){return new Date(b.created_at)-new Date(a.created_at);});
+  h+='<div class="slbl">Detalle ('+rows.length+')</div>';
+  if(!rows.length)h+='<div class="empty-mini">No hay órdenes creadas en este período con estos filtros.</div>';
+  else h+='<div class="rp-table"><div class="rp-tr rp-th"><span>OT</span><span>Creada</span><span>Dónde</span><span>Problema</span><span>Prioridad</span><span>Estado</span><span>Responsable</span><span class="r">Días</span></div>'
+    +rows.map(function(o){var d=o.status==='cerrada'?daysBetween(o.created_at,o.closed_at||o.resolved_at||o.created_at):daysBetween(o.created_at,new Date());var late2=o.status!=='cerrada'&&o.due_date&&o.due_date<todayS();
+      return '<div class="rp-tr" data-oid="'+o.id+'"><span class="rp-code">'+oCode(o)+'</span><span>'+fmtD(locDate(o.created_at))+'</span><span>'+esc(oWhereTxt(o))+'</span><span class="rp-prob">'+esc(o.title)+'</span><span>'+priPill(o.priority)+'</span><span>'+stPill(o.status)+'</span><span>'+esc(o.assigned_tech||'—')+'</span><span class="r'+(late2?' bad':'')+'">'+d+(o.status==='cerrada'?'':' ⏱')+'</span></div>';}).join('')+'</div>';
+  out.innerHTML=h;
+  out.querySelectorAll('.rp-tr[data-oid]').forEach(function(rw){rw.addEventListener('click',function(){openOrder(rw.getAttribute('data-oid'));});});
+  if(typeof Chart==='undefined')return;
+  Chart.defaults.font.family='Inter';
+  if(mk.length)rpCharts.m=new Chart(document.getElementById('rp-ch-month'),{type:'bar',data:{labels:mk.map(function(k){var p=k.split('-');return MES[parseInt(p[1])-1]+' '+p[0].slice(2);}),datasets:[{label:'Creadas',data:mk.map(function(k){return months[k].c;}),backgroundColor:RP_C1,borderRadius:4,maxBarThickness:22,borderSkipped:'start'},{label:'Cerradas',data:mk.map(function(k){return months[k].x;}),backgroundColor:RP_C2,borderRadius:4,maxBarThickness:22,borderSkipped:'start'}]},options:Object.assign(rpBarOpts(false,true),{datasets:{bar:{categoryPercentage:.6,barPercentage:.85}}})});
+  if(wk.length)rpCharts.w=new Chart(document.getElementById('rp-ch-where'),{type:'bar',data:{labels:wk.map(function(k){return k.length>28?k.slice(0,27)+'…':k;}),datasets:[{label:'Pedidos',data:wk.map(function(k){return byWhere[k];}),backgroundColor:RP_C1,borderRadius:4,maxBarThickness:18,borderSkipped:'start'}]},options:rpBarOpts(true,false)});
+  if(tk.length)rpCharts.t=new Chart(document.getElementById('rp-ch-tech'),{type:'bar',data:{labels:tk,datasets:[{label:'Cerradas',data:tk.map(function(k){return byTech[k];}),backgroundColor:RP_C1,borderRadius:4,maxBarThickness:18,borderSkipped:'start'}]},options:rpBarOpts(true,false)});
+}
+function renderRepHist(out){
+  var r=rpRange();var wh=document.getElementById('rp-where').value,tech=document.getElementById('rp-tech').value,kind=document.getElementById('rp-kind').value;
+  var evs=_events.filter(function(e){
+    if(!(e.date>=r[0]&&e.date<=r[1]))return false;
+    if(tech&&normName(e.tech)!==normName(tech))return false;
+    if(kind&&e.type!==kind)return false;
+    if(wh){var p=wh.split(':');if(p[0]==='m')return e.machine_id===p[1];if(p[0]==='t')return e.task_id===p[1];return orderCatMatch({machine_id:e.machine_id},wh);}
+    return true;
+  }).sort(function(a,b){return a.date<b.date?1:-1;});
+  var aff={};evs.forEach(function(e){aff[e.machine_id||e.task_id]=1;});
+  var h='<div class="rp-kpis"><div class="rp-kpi"><div class="rp-kl">Intervenciones</div><div class="rp-kn">'+evs.length+'</div></div><div class="rp-kpi"><div class="rp-kl">Correctivas</div><div class="rp-kn">'+evs.filter(function(e){return e.type==='correctivo';}).length+'</div></div><div class="rp-kpi"><div class="rp-kl">Preventivas</div><div class="rp-kn">'+evs.filter(function(e){return e.type==='preventivo';}).length+'</div></div><div class="rp-kpi"><div class="rp-kl">Equipos</div><div class="rp-kn">'+Object.keys(aff).length+'</div></div></div>';
+  h+='<div class="slbl">Trabajos registrados en las máquinas ('+evs.length+')</div>';
+  h+=evs.length?evs.map(function(ev){var m=_machines.find(function(x){return x.id===ev.machine_id;});var t=_tasks.find(function(x){return x.id===ev.task_id;});var item=m||t;return '<div class="hcard"><div class="hcard-top"><div><span class="type-tag '+(ev.type==='preventivo'?'t-prev':'t-corr')+'">'+ev.type+'</span>'+(item?' <strong style="font-size:13px">'+esc(item.name)+'</strong>':'')+'</div><span class="hcard-date">'+fmtD(ev.date)+'</span></div><div class="hcard-desc">'+esc(ev.description)+'</div>'+photoStrip(ev)+'<div class="hcard-foot">'+(ev.tech?'<span>👷 '+esc(ev.tech)+'</span>':'')+'</div></div>';}).join(''):'<div class="empty-mini">Sin intervenciones en este período.</div>';
+  out.innerHTML=h;
+}
+function expRepExcel(){
+  if(rpTab==='hist'){
+    var r=rpRange();var evs=_events.filter(function(e){return e.date>=r[0]&&e.date<=r[1];});
+    return makeXLSX(evs.map(function(ev){var m=_machines.find(function(x){return x.id===ev.machine_id;});var t=_tasks.find(function(x){return x.id===ev.task_id;});var it=m||t;return{Fecha:ev.date,Equipo:it?it.name:'',Tipo:ev.type,Descripcion:ev.description,Responsable:ev.tech||''};}),'Historial_maquinas_Amsterdam');
+  }
+  makeXLSX(getRepFiltered().map(function(o){var t=oTarget(o);return{OT:oCode(o),Creada:fmtDT(o.created_at),Maquina_o_lugar:t.name,Sector:t.sector||(t.type==='place'?t.name:''),Problema:o.title,Detalle:o.description||'',Prioridad:(PRI[o.priority]||{}).l,Tipo:o.kind,Estado:stLabel(stKey(o)),Pidio:o.requested_name||'',Responsable:o.assigned_tech||'',Para_cuando:o.due_date||'',Terminada:o.resolved_at?fmtDT(o.resolved_at):'',Cerrada:o.closed_at?fmtDT(o.closed_at):'',Horas_hasta_terminar:o.resolved_at?Math.round((new Date(o.resolved_at)-new Date(o.created_at))/3600000):'',Trabajo_realizado:o.resolution||''};}),'Reporte_ordenes_Amsterdam');
+}
+function expRepPDF(){
+  var rows=getRepFiltered();
+  makePDF('Reporte de órdenes — Amsterdam',['OT','Creada','Dónde','Problema','Prioridad','Estado','Responsable'],rows.map(function(o){return[oCode(o),fmtD(locDate(o.created_at)),oWhereTxt(o),o.title.slice(0,60),(PRI[o.priority]||{}).l,stLabel(stKey(o)),o.assigned_tech||'—'];}));
 }
 
 
