@@ -1591,7 +1591,7 @@ function renderDetHist(id,type){
     var canEdit=isAdmin();
     return '<div class="hcard"><div class="hcard-top"><div><span class="type-tag '+(ev.type==='preventivo'?'t-prev':'t-corr')+'">'+ev.type+'</span><span style="font-size:12px;color:var(--ink3);margin-left:8px">'+fmtD(ev.date)+'</span></div>'+bdg(ev.new_status)+'</div>'+
       '<div class="hcard-desc">'+esc(ev.description)+'</div>'+photoStrip(ev)+
-      '<div class="hcard-foot">'+(ev.order_id&&_orders.find(function(o){return o.id===ev.order_id;})?'<button class="btn btn-g btn-sm" onclick="openOrder(\''+ev.order_id+'\')">🧰 '+oCode(_orders.find(function(o){return o.id===ev.order_id;}))+'</button>':'')+(ev.tech?'<div class="hcard-meta">👷 '+ev.tech+'</div>':'')+(ev.next_date?'<div class="hcard-meta">📅 '+fmtD(ev.next_date)+'</div>':'')+(canEdit?'<button class="btn btn-g btn-sm" style="margin-left:auto" onclick="openEditEv(\''+ev.id+'\')">✏️ Editar</button>':'')+'</div></div>';
+      '<div class="hcard-foot">'+(ev.order_id&&_orders.find(function(o){return o.id===ev.order_id;})?'<button class="btn btn-g btn-sm" onclick="openOrder(\''+ev.order_id+'\')">🧰 '+oCode(_orders.find(function(o){return o.id===ev.order_id;}))+'</button>':'')+(ev.tech?'<div class="hcard-meta">👷 '+ev.tech+'</div>':'')+(ev.next_date?'<div class="hcard-meta">📅 '+fmtD(ev.next_date)+'</div>':'')+(canEdit?'<button class="btn btn-g btn-sm" style="margin-left:auto" onclick="openEditEv(\''+ev.id+'\')">✏️ Editar</button><button class="btn btn-d btn-sm" onclick="delHistEv(\''+ev.id+'\')">🗑</button>':'')+'</div></div>';
   }).join('');
 }
 
@@ -3727,8 +3727,9 @@ function renderRepHist(out){
   var aff={};evs.forEach(function(e){aff[e.machine_id||e.task_id]=1;});
   var h='<div class="rp-kpis"><div class="rp-kpi"><div class="rp-kl">Intervenciones</div><div class="rp-kn">'+evs.length+'</div></div><div class="rp-kpi"><div class="rp-kl">Correctivas</div><div class="rp-kn">'+evs.filter(function(e){return e.type==='correctivo';}).length+'</div></div><div class="rp-kpi"><div class="rp-kl">Preventivas</div><div class="rp-kn">'+evs.filter(function(e){return e.type==='preventivo';}).length+'</div></div><div class="rp-kpi"><div class="rp-kl">Equipos</div><div class="rp-kn">'+Object.keys(aff).length+'</div></div></div>';
   h+='<div class="slbl">Trabajos registrados en las máquinas ('+evs.length+')</div>';
-  h+=evs.length?evs.map(function(ev){var m=_machines.find(function(x){return x.id===ev.machine_id;});var t=_tasks.find(function(x){return x.id===ev.task_id;});var item=m||t;return '<div class="hcard"><div class="hcard-top"><div><span class="type-tag '+(ev.type==='preventivo'?'t-prev':'t-corr')+'">'+ev.type+'</span>'+(item?' <strong style="font-size:13px">'+esc(item.name)+'</strong>':'')+'</div><span class="hcard-date">'+fmtD(ev.date)+'</span></div><div class="hcard-desc">'+esc(ev.description)+'</div>'+photoStrip(ev)+'<div class="hcard-foot">'+(ev.tech?'<span>👷 '+esc(ev.tech)+'</span>':'')+'</div></div>';}).join(''):'<div class="empty-mini">Sin intervenciones en este período.</div>';
+  h+=evs.length?evs.map(function(ev){var m=_machines.find(function(x){return x.id===ev.machine_id;});var t=_tasks.find(function(x){return x.id===ev.task_id;});var item=m||t;return '<div class="hcard"><div class="hcard-top"><div><span class="type-tag '+(ev.type==='preventivo'?'t-prev':'t-corr')+'">'+ev.type+'</span>'+(item?' <strong style="font-size:13px">'+esc(item.name)+'</strong>':'')+'</div><span class="hcard-date">'+fmtD(ev.date)+'</span></div><div class="hcard-desc">'+esc(ev.description)+'</div>'+photoStrip(ev)+'<div class="hcard-foot">'+(ev.tech?'<span>👷 '+esc(ev.tech)+'</span>':'')+(isAdmin()?'<button class="btn btn-d btn-sm" style="margin-left:auto" data-delev="'+ev.id+'">🗑 Eliminar</button>':'')+'</div></div>';}).join(''):'<div class="empty-mini">Sin intervenciones en este período.</div>';
   out.innerHTML=h;
+  out.querySelectorAll('[data-delev]').forEach(function(b){b.addEventListener('click',function(){delHistEv(b.getAttribute('data-delev'));});});
 }
 function expRepExcel(){
   if(rpTab==='hist'){
@@ -3740,6 +3741,37 @@ function expRepExcel(){
 function expRepPDF(){
   var rows=getRepFiltered();
   makePDF('Reporte de órdenes — Amsterdam',['OT','Creada','Dónde','Problema','Prioridad','Estado','Responsable'],rows.map(function(o){return[oCode(o),fmtD(locDate(o.created_at)),oWhereTxt(o),o.title.slice(0,60),(PRI[o.priority]||{}).l,stLabel(stKey(o)),o.assigned_tech||'—'];}));
+}
+
+
+// ══════════ v10: borrar orden limpia historial · borrar entradas del historial ══════════
+async function recomputeEntityStatus(o){
+  if(!o.machine_id&&!o.task_id)return;
+  var id=o.machine_id||o.task_id;var tbl=o.machine_id?'am_machines':'am_tasks';
+  var it=(o.machine_id?_machines:_tasks).find(function(x){return x.id===id;});if(!it)return;
+  var still=_orders.filter(function(x){return x.id!==o.id&&x.status!=='cerrada'&&(x.machine_id===id||x.task_id===id);});
+  var ns=still.some(function(x){return x.priority==='urgente';})?'danger':still.some(function(x){return x.priority==='alta';})?'warn':'ok';
+  if((it.status||'ok')!==ns)await sb.from(tbl).update({status:ns}).eq('id',id);
+}
+async function delOrder(o){
+  var linked=_events.filter(function(e){return e.order_id===o.id;}).length;
+  if(!confirm('¿Eliminar '+oCode(o)+' – '+o.title+'?'+(linked?'\nTambién se borra del historial de la máquina.':'')+'\nNo se puede deshacer.'))return;
+  showLoad(true);
+  await sb.from('am_events').delete().eq('order_id',o.id);
+  var r=await sb.from('am_orders').delete().eq('id',o.id);
+  if(r&&r.error){showLoad(false);toast('No se pudo eliminar','e');console.error(r.error);return;}
+  await recomputeEntityStatus(o);
+  await logAudit('eliminar','am_orders',o.id,oCode(o)+' · '+o.title);
+  closeM('modal-od');await afterOrderChange(oCode(o)+' eliminada');
+}
+async function delHistEv(id){
+  var ev=_events.find(function(e){return e.id===id;});if(!ev)return;
+  if(!confirm('¿Eliminar este registro del historial?\n'+fmtD(ev.date)+' · '+ev.description.slice(0,80)+'\nNo se puede deshacer.'))return;
+  showLoad(true);
+  var r=await sb.from('am_events').delete().eq('id',id);
+  if(r&&r.error){showLoad(false);toast('No se pudo eliminar','e');return;}
+  await logAudit('eliminar','am_events',id,ev.description.slice(0,80));
+  await loadAll();showLoad(false);toast('Registro eliminado','s');refreshAll();
 }
 
 
