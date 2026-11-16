@@ -410,7 +410,7 @@ details.more[open] summary{margin-bottom:12px}
 .b-tog.on{background:var(--ink);border-color:var(--ink);color:#fff}
 .b-tog.on.urg{background:var(--red);border-color:var(--red)}
 .b-tabs{display:none}
-.board{display:grid;grid-template-columns:repeat(5,minmax(172px,1fr));gap:12px;align-items:start;overflow-x:auto;padding-bottom:4px}
+.board{display:grid;grid-template-columns:repeat(4,minmax(190px,1fr));gap:12px;align-items:start;overflow-x:auto;padding-bottom:4px}
 .bcol{background:var(--sand2);border-radius:12px;padding:10px;min-height:160px;transition:background .15s,box-shadow .15s}
 .bcol.drop-hi{background:#e3dccf;box-shadow:inset 0 0 0 2px var(--rust)}
 .bcol-h{display:flex;align-items:center;gap:7px;padding:2px 4px 10px;font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ink)}
@@ -682,6 +682,24 @@ body.oper .fab,body.oper .no-oper{display:none !important}
   .rp-tr span:nth-child(4){grid-column:1/-1}
   .rp-tr span:nth-child(5),.rp-tr span:nth-child(6){grid-column:auto}
 }
+
+/* v11 */
+.chk-box{background:var(--green-bg);border:1.5px solid var(--green-bd);border-radius:var(--r-sm);padding:14px 16px;margin:0 0 14px}
+.chk-t{font-family:var(--serif);font-weight:700;font-size:15px;color:var(--green)}
+.chk-d{font-size:13.5px;color:var(--ink2);margin:4px 0 10px}
+.chk-acts{display:flex;gap:8px;flex-wrap:wrap}
+.chk-acts .btn{flex:1}
+.bc-chk{font-size:11px;background:var(--green-bg);color:var(--green);border-radius:6px;padding:4px 7px;margin-bottom:7px;font-weight:600}
+.bc-ok{font-size:11px;color:var(--ink4);margin-bottom:6px;font-weight:600}
+.rp-sort{cursor:pointer;user-select:none;display:inline-flex;align-items:center;gap:4px}
+.rp-sort.r{justify-content:flex-end}
+.rp-sort i{font-style:normal;font-size:9px;opacity:.45}
+.rp-sort.on{color:var(--accent)}
+.rp-sort.on i{opacity:1}
+.rp-sortbar{display:none;align-items:center;gap:8px;margin-bottom:10px}
+.rp-sortbar label{font-size:12.5px;font-weight:600;color:var(--ink3);white-space:nowrap}
+.rp-sortbar .fs{min-height:42px;padding:8px 10px;font-size:13.5px}
+@media(max-width:639px){.rp-sortbar{display:flex}}
 </style>
 </head>
 <body>
@@ -3170,6 +3188,7 @@ function boardCard(o,drag){
     +'<div class="bc-t">'+esc(o.title)+'</div>'
     +'<div class="bc-w">'+oWhere(o)+'</div>'
     +(o.status==='en_espera'&&o.wait_reason?'<div class="bc-wait">⏸ '+esc(o.wait_reason)+'</div>':'')
+    +(o.status==='resuelta'?'<div class="bc-chk">⏳ Falta check de '+esc(requesterFirst(o))+'</div>':(o.status==='cerrada'?'<div class="bc-ok">✓ Revisada</div>':''))
     +'<div class="bc-f"><span class="bc-av'+(o.assigned_tech?'':' none')+'">'+esc(ini)+'</span>'+(o.assigned_tech?esc(o.assigned_tech):'<span style="color:var(--ink4)">Sin responsable</span>')
     +(late?'<span class="bc-late">📅 atrasada</span>':(o.due_date&&openish?'<span class="bc-due">📅 '+fmtD(o.due_date).slice(0,5)+'</span>':''))
     +(nph?'<span class="bc-ph">📷 '+nph+'</span>':'')+'</div></div>';
@@ -3194,7 +3213,7 @@ function renderBoardDash(){
   var fo=boardFilterOpts();
   var h='<div class="b-head"><div class="b-sum"><b>'+openAll.length+'</b> abiertas'+(urgN?' · <span style="color:var(--red);font-weight:700">'+urgN+' urgente'+(urgN>1?'s':'')+'</span>':'')+'</div><button class="b-cta" data-act="new">＋ Nuevo pedido</button></div>';
   var myConf=_orders.filter(function(o){return o.status==='resuelta'&&isMine(o);});
-  if(myConf.length)h+='<div class="b-banner" data-act="conf">✅ Tenés <b>'+myConf.length+'</b> pedido'+(myConf.length>1?'s':'')+' para confirmar si quedó bien ›</div>';
+  if(myConf.length)h+='<div class="b-banner" data-act="conf">✅ Tenés <b>'+myConf.length+'</b> pedido'+(myConf.length>1?'s':'')+' para hacer el check final ›</div>';
   h+='<div class="b-filters">'+(fo.hasSec?'<select class="fs" id="bf-sec">'+fo.sec+'</select>':'')+'<select class="fs" id="bf-cat">'+fo.cat+'</select><button class="b-tog'+(bUrg?' on urg':'')+'" data-tog="urg">🔴 Solo urgentes</button><button class="b-tog'+(bMine?' on':'')+'" data-tog="mine">🙋 Mis pedidos</button>'+((bSec||bCat||bUrg||bMine)?'<button class="link-btn" data-act="clr" style="margin:0;padding:0 4px">✕ Quitar filtros</button>':'')+'</div>';
   var cols=BCOLS.map(function(c){var list=all.filter(c.m);if(c.k==='cerrada')list.sort(function(a,b){return new Date(b.closed_at||b.created_at)-new Date(a.closed_at||a.created_at);});else list.sort(sortOrders);return{c:c,list:list};});
   h+='<div class="b-tabs" id="b-tabs">'+cols.map(function(x,i){return '<button class="b-tab'+(i===bTab?' on':'')+'" data-tab="'+i+'"><i style="background:'+x.c.c+'"></i>'+x.c.l+'<b>'+x.list.length+'</b></button>';}).join('')+'</div>';
@@ -3448,7 +3467,7 @@ async function createEventFromOrder(o){
 }
 
 // ── Detalle de orden (estado + comentarios) ──
-function renderOrderDetail(){
+function renderOrderDetailV8(){
   var o=_orders.find(function(x){return x.id===curOrderId;});
   if(!o){document.getElementById('modal-od').classList.remove('on');return;}
   var t=oTarget(o);var cur=stKey(o);
@@ -3674,7 +3693,8 @@ function renderReports(){
   var created=base.filter(function(o){return inRange(o.created_at,r);});
   var closed=base.filter(function(o){return o.status==='cerrada'&&inRange(o.closed_at||o.resolved_at,r);});
   var resolved=base.filter(function(o){return o.resolved_at&&inRange(o.resolved_at,r);});
-  var openNow=base.filter(function(o){return o.status!=='cerrada';});
+  var openNow=base.filter(function(o){return isActive(o);});
+  var toCheck=base.filter(function(o){return o.status==='resuelta';});
   var late=openNow.filter(function(o){return o.due_date&&o.due_date<todayS();});
   var urg=created.filter(function(o){return o.priority==='urgente';});
   var avg=resolved.length?resolved.reduce(function(s,o){return s+(new Date(o.resolved_at)-new Date(o.created_at));},0)/resolved.length/3600000:null;
@@ -3684,7 +3704,7 @@ function renderReports(){
     +'<div class="rp-kpi"><div class="rp-kl">Tiempo promedio</div><div class="rp-kn sm">'+fmtDur(avg)+'</div><div class="rp-kx">del pedido al trabajo terminado</div></div>'
     +'<div class="rp-kpi"><div class="rp-kl">Abiertas hoy</div><div class="rp-kn">'+openNow.length+'</div><div class="rp-kx'+(late.length?' bad':'')+'">'+(late.length?late.length+' atrasada'+(late.length>1?'s':''):'ninguna atrasada')+'</div></div>'
     +'</div>';
-  var st=[['Pendiente',openNow.filter(function(o){return o.status==='nueva';}).length,'#C8473B'],['En curso',openNow.filter(function(o){return o.status==='asignada'||o.status==='en_curso';}).length,'#CDA85E'],['En espera',openNow.filter(function(o){return o.status==='en_espera';}).length,'#7D6BB0'],['Para confirmar',openNow.filter(function(o){return o.status==='resuelta';}).length,'#7D8340']];
+  var st=[['Pendiente',openNow.filter(function(o){return o.status==='nueva';}).length,'#C8473B'],['En curso',openNow.filter(function(o){return o.status==='asignada'||o.status==='en_curso';}).length,'#CDA85E'],['En espera',openNow.filter(function(o){return o.status==='en_espera';}).length,'#7D6BB0'],['Por revisar',toCheck.length,'#7D8340']];
   h+='<div class="rp-status">'+st.map(function(s){return '<div class="rp-st" style="--c:'+s[2]+'"><span>'+s[0]+'</span><b>'+s[1]+'</b></div>';}).join('')+'</div>';
   // datos de gráficos
   var months={};var addM=function(ts,k){var d=locDate(ts).slice(0,7);if(!d)return;if(!months[d])months[d]={c:0,x:0};months[d][k]++;};
@@ -3701,13 +3721,14 @@ function renderReports(){
     +rpChartBox('rp-ch-tech','Órdenes cerradas por responsable','',!tk.length)
     +'</div>';
   // detalle
-  var rows=created.slice().sort(function(a,b){return new Date(b.created_at)-new Date(a.created_at);});
+  var rows=rpSortRows(created);
   h+='<div class="slbl">Detalle ('+rows.length+')</div>';
   if(!rows.length)h+='<div class="empty-mini">No hay órdenes creadas en este período con estos filtros.</div>';
-  else h+='<div class="rp-table"><div class="rp-tr rp-th"><span>OT</span><span>Creada</span><span>Dónde</span><span>Problema</span><span>Prioridad</span><span>Estado</span><span>Responsable</span><span class="r">Días</span></div>'
+  else h+=rpSortSelect()+'<div class="rp-table">'+rpHeader()
     +rows.map(function(o){var d=o.status==='cerrada'?daysBetween(o.created_at,o.closed_at||o.resolved_at||o.created_at):daysBetween(o.created_at,new Date());var late2=o.status!=='cerrada'&&o.due_date&&o.due_date<todayS();
       return '<div class="rp-tr" data-oid="'+o.id+'"><span class="rp-code">'+oCode(o)+'</span><span>'+fmtD(locDate(o.created_at))+'</span><span>'+esc(oWhereTxt(o))+'</span><span class="rp-prob">'+esc(o.title)+'</span><span>'+priPill(o.priority)+'</span><span>'+stPill(o.status)+'</span><span>'+esc(o.assigned_tech||'—')+'</span><span class="r'+(late2?' bad':'')+'">'+d+(o.status==='cerrada'?'':' ⏱')+'</span></div>';}).join('')+'</div>';
   out.innerHTML=h;
+  rpBindSort();
   out.querySelectorAll('.rp-tr[data-oid]').forEach(function(rw){rw.addEventListener('click',function(){openOrder(rw.getAttribute('data-oid'));});});
   if(typeof Chart==='undefined')return;
   Chart.defaults.font.family='Inter';
@@ -3772,6 +3793,143 @@ async function delHistEv(id){
   if(r&&r.error){showLoad(false);toast('No se pudo eliminar','e');return;}
   await logAudit('eliminar','am_events',id,ev.description.slice(0,80));
   await loadAll();showLoad(false);toast('Registro eliminado','s');refreshAll();
+}
+
+
+// ══════════ v11: sin "Para confirmar" · check final de quien pidió · ordenar detalle ══════════
+STATUS_FLOW=[['pendiente','Pendiente'],['en_curso','En curso'],['en_espera','En espera'],['terminada','Terminada']];
+ST_COLOR.terminada='#5E6630';
+OST.resuelta.l='Por revisar';OST.cerrada.l='Terminada';
+function stKey(o){if(o.status==='nueva')return 'pendiente';if(o.status==='asignada')return 'en_curso';if(o.status==='resuelta'||o.status==='cerrada')return 'terminada';return o.status;}
+function isActive(o){return ['nueva','asignada','en_curso','en_espera'].indexOf(o.status)>=0;}
+function needsCheck(o){return o.status==='resuelta';}
+function canCheck(o){return needsCheck(o)&&(isMine(o)||isAdmin()||(!o.requested_by&&canManage()));}
+ORD_CHIPS=[['open','Abiertas'],['urgente','🔴 Urgentes'],['nueva','Pendientes'],['en_curso','En curso'],['en_espera','En espera'],['sinresp','Sin responsable'],['resuelta','✔ Por revisar'],['cerrada','Terminadas'],['all','Todas']];
+function ordMatch(o,f){
+  if(f==='all')return true;
+  if(f==='open')return isActive(o);
+  if(f==='urgente')return isActive(o)&&o.priority==='urgente';
+  if(f==='nueva')return o.status==='nueva';
+  if(f==='en_curso')return o.status==='en_curso'||o.status==='asignada';
+  if(f==='sinresp')return isActive(o)&&!o.assigned_tech;
+  if(f==='cerrada')return o.status==='cerrada'||o.status==='resuelta';
+  return o.status===f;
+}
+(function(){
+  var i=BCOLS.findIndex(function(c){return c.k==='confirmar';});if(i>=0)BCOLS.splice(i,1);
+  BCOLS.forEach(function(c){if(c.k==='cerrada'){c.l='Terminadas';c.sub='7 días';c.f='cerrada';c.m=function(o){return o.status==='resuelta'||(o.status==='cerrada'&&new Date(o.closed_at||o.created_at).getTime()>=Date.now()-7*86400000);};}});
+})();
+async function boardDrop(id,target){
+  var o=_orders.find(function(x){return x.id===id;});if(!o)return;
+  var map={nueva:'pendiente',curso:'en_curso',espera:'en_espera',cerrada:'terminada'};
+  return changeStatus(o,map[target]);
+}
+async function changeStatus(o,t){
+  var cur=stKey(o);if(cur===t)return;
+  curOrderId=o.id;
+  var reopen=(o.status==='resuelta'||o.status==='cerrada');
+  if(t==='terminada'){_closeAfter=false;return openResolve(o);}
+  if(t==='en_espera')return openNote('Poner en espera','¿Qué falta? (opcional) Ej: esperando repuesto',async function(txt){
+    showLoad(true);var upd={status:'en_espera',wait_reason:txt||null};
+    if(reopen){upd.resolved_at=null;upd.closed_at=null;upd.closed_by_name=null;}
+    if(!(await updOrder(o.id,upd))){showLoad(false);return;}
+    await olog(o.id,'cambió el estado a En espera',txt||null);await afterOrderChange('En espera');
+  },false);
+  var upd={wait_reason:null,status:t==='pendiente'?'nueva':'en_curso'};
+  if(reopen){upd.resolved_at=null;upd.closed_at=null;upd.closed_by_name=null;}
+  showLoad(true);
+  if(!(await updOrder(o.id,upd))){showLoad(false);return;}
+  await olog(o.id,(reopen?'reabrió la orden: ':'cambió el estado a ')+stLabel(t));
+  return afterOrderChange('Estado: '+stLabel(t));
+}
+async function saveResolve(){
+  var o=_orders.find(function(x){return x.id===curOrderId;});if(!o)return;
+  var tech=document.getElementById('r-tech').value||o.assigned_tech||(isOper()?curUser.name:null);
+  var txt=document.getElementById('r-text').value.trim();
+  showLoad(true);
+  var photos;
+  try{photos=await psUpload('rs','ordenes');}catch(err){showLoad(false);toast('No se pudieron subir las fotos','e');console.error(err);return;}
+  var hasIt=!!(o.machine_id||o.task_id);
+  var close=_closeAfter||autoClose(o)||isMine(o);_closeAfter=false;
+  var now=new Date().toISOString();
+  var upd={status:close?'cerrada':'resuelta',assigned_tech:tech,resolution:txt||null,photos_after:photos,final_status:hasIt?'ok':null,resolved_at:now,resolved_by_name:curUser.name,wait_reason:null};
+  if(close){upd.closed_at=now;upd.closed_by_name=curUser.name;}
+  if(!(await updOrder(o.id,upd))){showLoad(false);return;}
+  await olog(o.id,'marcó el trabajo como terminado'+(tech?' ('+tech+')':''),txt||null);
+  if(hasIt){
+    var it=o.machine_id?_machines.find(function(x){return x.id===o.machine_id;}):_tasks.find(function(x){return x.id===o.task_id;});
+    var e={status:'ok'};
+    if(o.kind==='preventivo')e.next_maint=(it&&it.freq)?addDaysS(it.freq):null;
+    await sb.from(o.machine_id?'am_machines':'am_tasks').update(e).eq('id',o.machine_id||o.task_id);
+  }
+  await createEventFromOrder(Object.assign({},o,upd));
+  if(close)await olog(o.id,'cerró la orden');
+  await logAudit('resolver','am_orders',o.id,oCode(o)+(tech?' · '+tech:''));
+  closeM('modal-resolve');
+  await afterOrderChange(close?'Orden terminada':'Terminada. '+requesterFirst(o)+' hace el check final');
+}
+async function checkOk(o){
+  showLoad(true);var now=new Date().toISOString();
+  var upd={status:'cerrada',closed_at:now,closed_by_name:curUser.name};
+  if(!(await updOrder(o.id,upd))){showLoad(false);return;}
+  await createEventFromOrder(Object.assign({},o,upd));
+  await olog(o.id,'hizo el check final: quedó bien');await logAudit('cerrar','am_orders',o.id,oCode(o));
+  await afterOrderChange('Check hecho. '+oCode(o)+' cerrada');
+}
+function checkReject(o){
+  curOrderId=o.id;
+  openNote('¿Qué no quedó bien?','Contale a mantenimiento qué falta o qué sigue fallando',async function(txt){
+    showLoad(true);
+    if(!(await updOrder(o.id,{status:'en_curso',resolved_at:null,closed_at:null,closed_by_name:null}))){showLoad(false);return;}
+    await sb.from('am_events').delete().eq('order_id',o.id);
+    await sb.from('am_order_log').insert({order_id:o.id,user_id:curUser.id,user_name:curUser.name,action:'comment',note:'No quedó bien: '+txt});
+    await olog(o.id,'reabrió la orden en el check final');
+    await afterOrderChange('Devuelta a mantenimiento');
+  },true);
+}
+function renderOrderDetail(){
+  renderOrderDetailV8();
+  var o=_orders.find(function(x){return x.id===curOrderId;});if(!o)return;
+  var bar=document.querySelector('#od-body .st-bar');if(!bar)return;
+  var h='';
+  if(needsCheck(o)){
+    if(canCheck(o))h='<div class="chk-box"><div class="chk-t">✔ Check final</div><div class="chk-d">Mantenimiento marcó este trabajo como terminado'+(o.resolved_by_name?' ('+esc(o.resolved_by_name)+')':'')+'. Revisalo y confirmá.</div><div class="chk-acts"><button class="btn btn-p" id="chk-ok">✓ Quedó bien</button><button class="btn btn-g" id="chk-no">↩ No quedó bien</button></div></div>';
+    else h='<div class="od-box wait">⏳ Terminada. Falta el check final de '+esc(requesterFirst(o))+'.</div>';
+  }else if(o.status==='cerrada'&&o.closed_by_name){h='';}
+  if(h){bar.insertAdjacentHTML('afterend',h);
+    var ok=document.getElementById('chk-ok');if(ok)ok.addEventListener('click',function(){checkOk(o);});
+    var no=document.getElementById('chk-no');if(no)no.addEventListener('click',function(){checkReject(o);});}
+}
+function pendingCount(){
+  var myChecks=_orders.filter(function(o){return o.status==='resuelta'&&isMine(o);}).length;
+  if(isOper())return _orders.filter(function(o){return isAssignedToMe(o)&&(o.status==='nueva'||o.status==='asignada');}).length;
+  var unassigned=_orders.filter(function(o){return isActive(o)&&!o.assigned_tech;}).length;
+  if(isJefe()||isAdmin()||(isEnc()&&canAssign()))return unassigned+myChecks;
+  return myChecks;
+}
+// ── Reportes: ordenar detalle por columna ──
+var rpSort={k:'created',dir:-1};
+var RP_COLS=[['code','OT'],['created','Creada'],['where','Dónde'],['title','Problema'],['pri','Prioridad'],['status','Estado'],['tech','Responsable'],['days','Días']];
+function rpDays(o){return (o.status==='cerrada'||o.status==='resuelta')?daysBetween(o.created_at,o.closed_at||o.resolved_at||o.created_at):daysBetween(o.created_at,new Date());}
+function rpSortRows(list){
+  var ord={nueva:0,asignada:1,en_curso:1,en_espera:2,resuelta:3,cerrada:4};
+  var val=function(o){switch(rpSort.k){
+    case 'code':return o.code||0;case 'created':return new Date(o.created_at).getTime();
+    case 'where':return normName(oWhereTxt(o));case 'title':return normName(o.title);
+    case 'pri':return (PRI[o.priority]||PRI.normal).w;case 'status':return ord[o.status]==null?9:ord[o.status];
+    case 'tech':return o.assigned_tech?normName(o.assigned_tech):'￿';case 'days':return rpDays(o);}};
+  return list.slice().sort(function(a,b){var x=val(a),y=val(b);if(x<y)return -rpSort.dir;if(x>y)return rpSort.dir;return new Date(b.created_at)-new Date(a.created_at);});
+}
+function rpHeader(){
+  return '<div class="rp-tr rp-th">'+RP_COLS.map(function(c){var on=rpSort.k===c[0];return '<span class="rp-sort'+(on?' on':'')+(c[0]==='days'?' r':'')+'" data-sort="'+c[0]+'">'+c[1]+'<i>'+(on?(rpSort.dir>0?'▲':'▼'):'↕')+'</i></span>';}).join('')+'</div>';
+}
+function rpSortSelect(){
+  return '<div class="rp-sortbar"><label>Ordenar por</label><select class="fs" id="rp-sortsel">'+RP_COLS.map(function(c){return '<option value="'+c[0]+'"'+(rpSort.k===c[0]?' selected':'')+'>'+c[1]+'</option>';}).join('')+'</select><button type="button" class="btn btn-g btn-sm" id="rp-sortdir">'+(rpSort.dir>0?'▲ Asc':'▼ Desc')+'</button></div>';
+}
+function rpBindSort(){
+  document.querySelectorAll('#rp-body .rp-sort').forEach(function(s){s.addEventListener('click',function(){var k=s.getAttribute('data-sort');if(rpSort.k===k)rpSort.dir=-rpSort.dir;else{rpSort.k=k;rpSort.dir=(k==='created'||k==='days')?-1:1;}renderReports();});});
+  var sel=document.getElementById('rp-sortsel');if(sel)sel.addEventListener('change',function(){rpSort.k=sel.value;renderReports();});
+  var dir=document.getElementById('rp-sortdir');if(dir)dir.addEventListener('click',function(){rpSort.dir=-rpSort.dir;renderReports();});
 }
 
 
