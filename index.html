@@ -700,6 +700,15 @@ body.oper .fab,body.oper .no-oper{display:none !important}
 .rp-sortbar label{font-size:12.5px;font-weight:600;color:var(--ink3);white-space:nowrap}
 .rp-sortbar .fs{min-height:42px;padding:8px 10px;font-size:13.5px}
 @media(max-width:639px){.rp-sortbar{display:flex}}
+.chk-pop{position:fixed;inset:0;background:rgba(14,28,58,.45);z-index:600;display:flex;align-items:flex-end;justify-content:center;padding:16px}
+.chk-pop-in{background:#fff;border-radius:24px;max-width:460px;width:100%;padding:22px;box-shadow:var(--sh-lg)}
+.chk-pop-t{font-family:var(--serif);font-weight:700;font-size:18px;color:var(--green);margin-bottom:12px}
+.chk-pop-l{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.chk-pop-i{text-align:left;background:var(--green-bg);border:1px solid var(--green-bd);border-radius:14px;padding:10px 12px;font-family:var(--font);font-size:14px;color:var(--ink);cursor:pointer}
+.chk-pop-i b{font-family:var(--serif);font-size:12px;color:var(--ink3);margin-right:4px}
+.chk-pop-i span{display:block;font-size:12px;color:var(--ink3);margin-top:2px}
+.chk-pop-a{display:flex;gap:8px}.chk-pop-a .btn{flex:1}
+@media(min-width:640px){.chk-pop{align-items:center}}
 </style>
 </head>
 <body>
@@ -1201,7 +1210,7 @@ async function startApp(){
   delete curUser.password;saveSession(curUser);
   ordScope=isEnc()?'mine':'all';ordFilt='open';
   if(canManage()){var nPrev=await genPreventives();if(nPrev){await loadAll();}}
-  applyRole();setUserLabels();renderGreeting();goPage('dashboard');renderSbSubcats();renderSbSectors();checkReminders();updateBadges();setupRT();
+  applyRole();setUserLabels();renderGreeting();goPage('dashboard');renderSbSubcats();renderSbSectors();checkReminders();setTimeout(notifyPendingChecks,600);updateBadges();setupRT();
 }
 
 function applyRole(){
@@ -3188,7 +3197,7 @@ function boardCard(o,drag){
     +'<div class="bc-t">'+esc(o.title)+'</div>'
     +'<div class="bc-w">'+oWhere(o)+'</div>'
     +(o.status==='en_espera'&&o.wait_reason?'<div class="bc-wait">⏸ '+esc(o.wait_reason)+'</div>':'')
-    +(o.status==='resuelta'?'<div class="bc-chk">⏳ Falta check de '+esc(requesterFirst(o))+'</div>':(o.status==='cerrada'?'<div class="bc-ok">✓ Revisada</div>':''))
+    +(o.status==='resuelta'?'<div class="bc-chk">⏳ Falta check de '+esc(requesterFirst(o))+'</div>':(o.status==='cerrada'?(o.closed_by_name==='Cierre automático'||o.kind==='preventivo'?'<div class="bc-ok">✓ Cerrada</div>':'<div class="bc-ok">✓ Revisada</div>'):''))
     +'<div class="bc-f"><span class="bc-av'+(o.assigned_tech?'':' none')+'">'+esc(ini)+'</span>'+(o.assigned_tech?esc(o.assigned_tech):'<span style="color:var(--ink4)">Sin responsable</span>')
     +(late?'<span class="bc-late">📅 atrasada</span>':(o.due_date&&openish?'<span class="bc-due">📅 '+fmtD(o.due_date).slice(0,5)+'</span>':''))
     +(nph?'<span class="bc-ph">📷 '+nph+'</span>':'')+'</div></div>';
@@ -3796,6 +3805,21 @@ async function delHistEv(id){
 }
 
 
+function wasChecked(o){if(o.status!=='cerrada'||!o.closed_by_name||!o.requested_name)return false;return normName(o.closed_by_name)===normName(o.requested_name);}
+
+var _chkNotified=false;
+function notifyPendingChecks(){
+  if(_chkNotified||!curUser||isOper())return;_chkNotified=true;
+  var mine=_orders.filter(function(o){return o.status==='resuelta'&&isMine(o);});
+  if(!mine.length)return;
+  var el=document.getElementById('chk-pop');if(el)el.remove();
+  el=document.createElement('div');el.id='chk-pop';el.className='chk-pop';
+  el.innerHTML='<div class="chk-pop-in"><div class="chk-pop-t">✔ Tenés '+mine.length+' trabajo'+(mine.length>1?'s':'')+' terminado'+(mine.length>1?'s':'')+' para revisar</div><div class="chk-pop-l">'+mine.slice(0,4).map(function(o){return '<button class="chk-pop-i" data-oid="'+o.id+'"><b>'+oCode(o)+'</b> '+esc(o.title)+'<span>Terminó: '+esc(o.resolved_by_name||o.assigned_tech||'mantenimiento')+'</span></button>';}).join('')+'</div><div class="chk-pop-a"><button class="btn btn-g" id="chk-pop-x">Después</button>'+(mine.length>4?'<button class="btn btn-p" id="chk-pop-all">Ver todos</button>':'')+'</div></div>';
+  document.body.appendChild(el);
+  el.querySelectorAll('.chk-pop-i').forEach(function(b){b.addEventListener('click',function(){el.remove();openOrder(b.getAttribute('data-oid'));});});
+  document.getElementById('chk-pop-x').addEventListener('click',function(){el.remove();});
+  var all=document.getElementById('chk-pop-all');if(all)all.addEventListener('click',function(){el.remove();ordScope='mine';goOrders('resuelta');});
+}
 // ══════════ v11: sin "Para confirmar" · check final de quien pidió · ordenar detalle ══════════
 STATUS_FLOW=[['pendiente','Pendiente'],['en_curso','En curso'],['en_espera','En espera'],['terminada','Terminada']];
 ST_COLOR.terminada='#5E6630';
