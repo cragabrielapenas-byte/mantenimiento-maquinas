@@ -747,6 +747,21 @@ body.oper .fab,body.oper .no-oper{display:none !important}
 .rpp-st{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
 .rpp-n{font-size:13px;color:var(--ink3);margin-top:8px;font-weight:600}
 #ue-pop,#rpp-pop{z-index:650}
+/* v13 */
+.bc-req{font-size:12px;color:var(--ink3);margin:-2px 0 6px}.bc-req b{color:var(--ink2);font-weight:600}
+.rp-tr{grid-template-columns:70px 64px 1.1fr 1.8fr 96px 116px .9fr .9fr 52px}
+@media(max-width:760px){
+  .rp-tr span:nth-child(8){display:none;grid-column:auto;grid-row:auto}
+  .rp-tr span:nth-child(9){grid-column:2;grid-row:1}
+  .rp-tr span.rp-req{display:block;grid-column:1/-1;font-size:12px;color:var(--ink3)}
+  .rp-tr span.rp-req::before{content:'Pidió: '}
+  .rp-th span.rp-req::before{content:''}
+}
+.rem-who{font-size:12px;color:var(--ink3);margin-top:3px}
+.rem-to{font-weight:600;color:var(--ink2)}.rem-to.me{color:var(--orange,#E9743A)}
+.rem-cnt{margin-left:auto;background:var(--red);color:#fff;font-size:11px;font-weight:700;border-radius:999px;min-width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;padding:0 6px}
+.rem-cnt.off{display:none}
+.rem-pop-i{background:#FFF6EC;border-color:#F3D3B5}
 </style>
 </head>
 <body>
@@ -771,7 +786,7 @@ body.oper .fab,body.oper .no-oper{display:none !important}
     <button class="drw-item" id="di-machines" onclick="goPage('machines');closeDrw()"><span class="drw-icon">⚙</span>Maquinarias</button>
     <button class="drw-item admin-only" id="di-tasks" onclick="goPage('tasks');closeDrw()"><span class="drw-icon">📋</span>Tareas Generales</button>
     <button class="drw-item admin-only" id="di-reports" onclick="goPage('reports');closeDrw()"><span class="drw-icon">📊</span>Reportes</button>
-    <button class="drw-item" id="di-reminders" onclick="goPage('reminders');closeDrw()"><span class="drw-icon">🔔</span>Recordatorios</button>
+    <button class="drw-item" id="di-reminders" onclick="goPage('reminders');closeDrw()"><span class="drw-icon">🔔</span>Recordatorios<span class="rem-cnt off" id="di-rem-cnt"></span></button>
     <button class="drw-item admin-only" id="di-audit" onclick="goPage('audit');closeDrw()"><span class="drw-icon">🔍</span>Auditoría</button>
   </div>
   <div class="drw-sec mgr-only">
@@ -798,7 +813,7 @@ body.oper .fab,body.oper .no-oper{display:none !important}
   <div class="sb-sec">
     <div class="sb-sec-lbl">Más</div>
     <button class="sb-item admin-only" id="si-reports" onclick="goPage('reports')"><span class="sb-icon">📊</span>Reportes</button>
-    <button class="sb-item" id="si-reminders" onclick="goPage('reminders')"><span class="sb-icon">🔔</span>Recordatorios</button>
+    <button class="sb-item" id="si-reminders" onclick="goPage('reminders')"><span class="sb-icon">🔔</span>Recordatorios<span class="rem-cnt off" id="si-rem-cnt"></span></button>
     <button class="sb-item admin-only" id="si-audit" onclick="goPage('audit')"><span class="sb-icon">🔍</span>Auditoría</button>
   </div>
   <div class="sb-sec mgr-only">
@@ -948,7 +963,8 @@ body.oper .fab,body.oper .no-oper{display:none !important}
     <div id="rp-body"></div>
   </div>
   <div id="page-reminders" class="page">
-    <div class="pg-hdr"><div class="pg-title">Recordatorios</div><button class="btn btn-p btn-sm" onclick="openM('modal-reminder')">＋ Nuevo</button></div>
+    <div class="pg-hdr"><div class="pg-title">Recordatorios</div><button class="btn btn-p btn-sm" onclick="openRemModal()">＋ Nuevo</button></div>
+    <div class="per-chips" id="rem-scope" style="margin-bottom:12px"></div>
     <div id="rem-list"></div>
     <div id="rem-empty" class="empty" style="display:none"><div class="empty-ico">🔔</div><p>Sin recordatorios.</p></div>
   </div>
@@ -1052,6 +1068,7 @@ body.oper .fab,body.oper .no-oper{display:none !important}
       <input type="hidden" id="r-id">
       <div class="fg"><label class="fl">Título *</label><input class="fi" id="r-title" placeholder="Ej: Recoger bomba para tanque"></div>
       <div class="fg"><label class="fl">Fecha *</label><input type="date" class="fi" id="r-date"></div>
+      <div class="fg"><label class="fl">¿Para quién?</label><select class="fs" id="r-for"></select><div class="fh" style="font-size:12px;color:var(--ink3);margin-top:4px">Le aparece en la app el día del recordatorio, y al momento si la tiene abierta.</div></div>
       <div class="fg"><label class="fl">Descripción</label><textarea class="ft" id="r-desc" placeholder="Detalles adicionales..."></textarea></div>
     </div>
     <div class="modal-foot"><button class="btn btn-g" onclick="closeM('modal-reminder')">Cancelar</button><button class="btn btn-p" onclick="saveReminder()">Guardar</button></div>
@@ -3234,6 +3251,7 @@ function boardCard(o,drag){
     +'<div class="bc-top"><span class="bc-code">'+oCode(o)+'</span><span class="bc-pri">'+p.l+'</span>'+(o.kind==='preventivo'?'<span class="bc-prev" title="Preventivo">🔧</span>':'')+'<span class="bc-age">'+ago(o.created_at).replace('hace ','')+'</span></div>'
     +'<div class="bc-t">'+esc(o.title)+'</div>'
     +'<div class="bc-w">'+oWhere(o)+'</div>'
+    +'<div class="bc-req">🙋 '+(o.requested_name&&o.requested_name!=='Sistema'?'Pidió <b>'+esc(o.requested_name)+'</b>':(o.kind==='preventivo'?'Preventivo automático':'Sin dato de quién pidió'))+'</div>'
     +(o.status==='en_espera'&&o.wait_reason?'<div class="bc-wait">⏸ '+esc(o.wait_reason)+'</div>':'')
     +(o.status==='resuelta'?'<div class="bc-chk">⏳ Falta check de '+esc(requesterFirst(o))+'</div>':(o.status==='cerrada'?(o.closed_by_name==='Cierre automático'||o.kind==='preventivo'?'<div class="bc-ok">✓ Cerrada</div>':'<div class="bc-ok">✓ Revisada</div>'):''))
     +'<div class="bc-f"><span class="bc-av'+(o.assigned_tech?'':' none')+'">'+esc(ini)+'</span>'+(o.assigned_tech?esc(o.assigned_tech):'<span style="color:var(--ink4)">Sin responsable</span>')
@@ -3779,7 +3797,7 @@ function renderReports(){
   if(!rows.length)h+='<div class="empty-mini">No hay órdenes creadas en este período con estos filtros.</div>';
   else h+=rpSortSelect()+'<div class="rp-table">'+rpHeader()
     +rows.map(function(o){var d=o.status==='cerrada'?daysBetween(o.created_at,o.closed_at||o.resolved_at||o.created_at):daysBetween(o.created_at,new Date());var late2=o.status!=='cerrada'&&o.due_date&&o.due_date<todayS();
-      return '<div class="rp-tr" data-oid="'+o.id+'"><span class="rp-code">'+oCode(o)+'</span><span>'+fmtD(locDate(o.created_at))+'</span><span>'+esc(oWhereTxt(o))+'</span><span class="rp-prob">'+esc(o.title)+'</span><span>'+priPill(o.priority)+'</span><span>'+stPill(o.status)+'</span><span>'+esc(o.assigned_tech||'—')+'</span><span class="r'+(late2?' bad':'')+'">'+d+(o.status==='cerrada'?'':' ⏱')+'</span></div>';}).join('')+'</div>';
+      return '<div class="rp-tr" data-oid="'+o.id+'"><span class="rp-code">'+oCode(o)+'</span><span>'+fmtD(locDate(o.created_at))+'</span><span>'+esc(oWhereTxt(o))+'</span><span class="rp-prob">'+esc(o.title)+'</span><span>'+priPill(o.priority)+'</span><span>'+stPill(o.status)+'</span><span class="rp-req">'+esc(o.requested_name||'—')+'</span><span>'+esc(o.assigned_tech||'—')+'</span><span class="r'+(late2?' bad':'')+'">'+d+(o.status==='cerrada'?'':' ⏱')+'</span></div>';}).join('')+'</div>';
   out.innerHTML=h;
   rpBindSort();
   out.querySelectorAll('.rp-tr[data-oid]').forEach(function(rw){rw.addEventListener('click',function(){openOrder(rw.getAttribute('data-oid'));});});
@@ -3852,7 +3870,7 @@ async function delHistEv(id){
 function wasChecked(o){if(o.status!=='cerrada'||!o.closed_by_name||!o.requested_name)return false;return normName(o.closed_by_name)===normName(o.requested_name);}
 
 var _chkNotified=false;
-function notifyPendingChecks(){
+function notifyPendingChecksV11(){
   if(_chkNotified||!curUser||isOper())return;_chkNotified=true;
   var mine=_orders.filter(function(o){return o.status==='resuelta'&&isMine(o);});
   if(!mine.length)return;
@@ -3977,7 +3995,7 @@ function pendingCount(){
 }
 // ── Reportes: ordenar detalle por columna ──
 var rpSort={k:'created',dir:-1};
-var RP_COLS=[['code','OT'],['created','Creada'],['where','Dónde'],['title','Problema'],['pri','Prioridad'],['status','Estado'],['tech','Responsable'],['days','Días']];
+var RP_COLS=[['code','OT'],['created','Creada'],['where','Dónde'],['title','Problema'],['pri','Prioridad'],['status','Estado'],['req','Pidió'],['tech','Responsable'],['days','Días']];
 function rpDays(o){return (o.status==='cerrada'||o.status==='resuelta')?daysBetween(o.created_at,o.closed_at||o.resolved_at||o.created_at):daysBetween(o.created_at,new Date());}
 function rpSortRows(list){
   var ord={nueva:0,asignada:1,en_curso:1,en_espera:2,resuelta:3,cerrada:4};
@@ -3985,7 +4003,7 @@ function rpSortRows(list){
     case 'code':return o.code||0;case 'created':return new Date(o.created_at).getTime();
     case 'where':return normName(oWhereTxt(o));case 'title':return normName(o.title);
     case 'pri':return (PRI[o.priority]||PRI.normal).w;case 'status':return ord[o.status]==null?9:ord[o.status];
-    case 'tech':return o.assigned_tech?normName(o.assigned_tech):'￿';case 'days':return rpDays(o);}};
+    case 'tech':return o.assigned_tech?normName(o.assigned_tech):'￿';case 'req':return o.requested_name?normName(o.requested_name):'￿';case 'days':return rpDays(o);}};
   return list.slice().sort(function(a,b){var x=val(a),y=val(b);if(x<y)return -rpSort.dir;if(x>y)return rpSort.dir;return new Date(b.created_at)-new Date(a.created_at);});
 }
 function rpHeader(){
@@ -4302,6 +4320,112 @@ function rppExcel(){
     return Object.assign(r,{OT:oCode(o),Creada:fmtDT(o.created_at),Maquina_o_lugar:t.name,Sector:t.sector||(t.type==='place'?t.name:''),Problema:o.title,Detalle:o.description||'',Prioridad:(PRI[o.priority]||{}).l,Tipo:o.kind,Estado:(RPP_ST.find(function(x){return x[0]===rppKey(o);})||['',''])[1],Pidio:o.requested_name||'',Responsable:o.assigned_tech||'',Para_cuando:o.due_date||'',Terminada:o.resolved_at?fmtDT(o.resolved_at):'',Cerrada:o.closed_at?fmtDT(o.closed_at):'',Dias:rpDays(o),Trabajo_realizado:o.resolution||''});}),'Reporte_ordenes_Amsterdam');
 }
 
+
+// ══════════ v13: quién pidió · recordatorios asignables ══════════
+var remScope='mine',_remSeen=null;
+function remForMe(r){return curUser&&(r.assigned_to===curUser.id||!r.assigned_to);}
+function remMine(r){return remForMe(r)||(curUser&&r.user_id===curUser.id);}
+function remDueForMe(){var t=todayS();return _reminders.filter(function(r){return !r.done&&r.due_date<=t&&remForMe(r);});}
+function remWho(r){
+  if(!r.assigned_to)return 'Para todos';
+  var u=_users.find(function(x){return x.id===r.assigned_to;});
+  var n=u?u.name:(r.assigned_name||'—');
+  return curUser&&r.assigned_to===curUser.id?'Para vos':'Para '+n;
+}
+function remBy(r){var u=_users.find(function(x){return x.id===r.user_id;});var n=u?u.name:(r.created_name||'');return n?(curUser&&r.user_id===curUser.id?'lo creaste vos':'lo creó '+n):'';}
+function openRemModal(id){
+  var r=id?_reminders.find(function(x){return x.id===id;}):null;
+  document.getElementById('mr-title').textContent=r?'Editar recordatorio':'Nuevo recordatorio';
+  document.getElementById('r-id').value=r?r.id:'';
+  document.getElementById('r-title').value=r?r.title:'';
+  document.getElementById('r-date').value=r?r.due_date:todayS();
+  document.getElementById('r-desc').value=r&&r.description||'';
+  var ord={admin:0,jefe:1,encargado:2,operario:3};
+  var us=_users.filter(function(u){return u.active!==false;}).sort(function(a,b){return (ord[a.role]-ord[b.role])||a.name.localeCompare(b.name);});
+  var sel=document.getElementById('r-for');
+  sel.innerHTML='<option value="me">Para mí</option><option value="all">Para todos</option><optgroup label="Para otra persona">'+us.filter(function(u){return !curUser||u.id!==curUser.id;}).map(function(u){return '<option value="'+u.id+'">'+esc(u.name)+' · '+(ROLE_LBL[u.role]||u.role)+'</option>';}).join('')+'</optgroup>';
+  sel.value=r?(!r.assigned_to?'all':(curUser&&r.assigned_to===curUser.id?'me':r.assigned_to)):'me';
+  openM('modal-reminder');
+}
+async function saveReminder(){
+  var title=document.getElementById('r-title').value.trim();
+  var date=document.getElementById('r-date').value;
+  if(!title||!date){toast('Completá título y fecha','e');return;}
+  var editId=document.getElementById('r-id').value;
+  var f=document.getElementById('r-for').value;
+  var to=f==='all'?null:(f==='me'?(curUser?curUser.id:null):f);
+  var tu=to?_users.find(function(u){return u.id===to;}):null;
+  var data={title:title,due_date:date,description:document.getElementById('r-desc').value.trim()||null,assigned_to:to,assigned_name:tu?tu.name:null};
+  if(!editId){data.user_id=curUser?curUser.id:null;data.created_name=curUser?curUser.name:null;}
+  showLoad(true);
+  var q=function(d){return editId?sb.from('am_reminders').update(d).eq('id',editId):sb.from('am_reminders').insert(d);};
+  var r=await q(data);
+  if(r.error){var d2=Object.assign({},data);delete d2.assigned_to;delete d2.assigned_name;delete d2.created_name;r=await q(d2);if(!r.error)toast('Guardado, pero falta correr el SQL para poder asignarlo','e');}
+  if(r.error){showLoad(false);toast('No se pudo guardar','e');console.error(r.error);return;}
+  if(_remSeen&&r.data&&r.data[0])_remSeen[r.data[0].id]=1;
+  await loadAll();showLoad(false);closeM('modal-reminder');renderReminders();checkReminders();
+  if(!r.error)toast(to&&curUser&&to!==curUser.id?'Recordatorio enviado a '+(tu?tu.name.split(' ')[0]:''):'Guardado','s');
+}
+function checkReminders(){
+  var t=todayS();var due=remDueForMe();
+  var banner=document.getElementById('rem-banner'),list=document.getElementById('rem-banner-list');
+  if(banner){
+    if(!due.length)banner.classList.add('off');
+    else{banner.classList.remove('off');
+      list.innerHTML=due.map(function(r){var by=r.user_id&&curUser&&r.user_id!==curUser.id?remBy(r):'';return '<div class="rem-item-line" onclick="goPage(\'reminders\')" style="cursor:pointer">'+(r.due_date===t?'📅':'⚠️')+' <strong>'+esc(r.title)+'</strong>'+(r.due_date<t?' (vencido '+fmtD(r.due_date)+')':'')+(by?' <span style="opacity:.75">· '+esc(by)+'</span>':'')+'</div>';}).join('');}
+  }
+  ['si-rem-cnt','di-rem-cnt'].forEach(function(id){var e=document.getElementById(id);if(!e)return;e.textContent=due.length;e.classList.toggle('off',!due.length);});
+  // aviso en el momento cuando alguien te deja un recordatorio
+  if(curUser){
+    if(_remSeen===null){_remSeen={};_reminders.forEach(function(r){_remSeen[r.id]=1;});}
+    else _reminders.forEach(function(r){
+      if(_remSeen[r.id])return;_remSeen[r.id]=1;
+      if(r.assigned_to===curUser.id&&r.user_id!==curUser.id&&!r.done){var u=_users.find(function(x){return x.id===r.user_id;});toast('🔔 '+(u?u.name.split(' ')[0]:'Alguien')+' te dejó un recordatorio: '+r.title+(r.due_date>t?' (para el '+fmtD(r.due_date)+')':''),'s');}
+    });
+  }
+}
+function renderReminders(){
+  var el=document.getElementById('rem-list');var emp=document.getElementById('rem-empty');
+  var sc=document.getElementById('rem-scope');
+  var canAll=!isOper();
+  if(!canAll)remScope='mine';
+  if(sc)sc.innerHTML=canAll?[['mine','Míos'],['sent','Los que mandé'],['all','Todos']].map(function(x){return '<button class="per-c'+(remScope===x[0]?' on':'')+'" data-rs="'+x[0]+'">'+x[1]+'</button>';}).join(''):'';
+  if(sc)sc.querySelectorAll('[data-rs]').forEach(function(b){b.addEventListener('click',function(){remScope=b.getAttribute('data-rs');renderReminders();});});
+  var list=_reminders.filter(function(r){if(remScope==='all')return true;if(remScope==='sent')return curUser&&r.user_id===curUser.id&&r.assigned_to!==curUser.id;return remMine(r);});
+  list.sort(function(a,b){return (a.done-b.done)||(a.due_date<b.due_date?-1:a.due_date>b.due_date?1:0);});
+  if(!list.length){el.innerHTML='';emp.style.display='block';return;}
+  emp.style.display='none';
+  var today=todayS();
+  el.innerHTML=list.map(function(r){
+    var isToday=r.due_date===today;var isOver=r.due_date<today&&!r.done;
+    var dcls=isOver?'rem-date overdue':isToday?'rem-date today':'rem-date';
+    var dtxt=isOver?'⚠️ Vencido '+fmtD(r.due_date):isToday?'📅 Hoy':'📅 '+fmtD(r.due_date);
+    var by=remBy(r);
+    return '<div class="rem-card"><div class="rem-check '+(r.done?'done':'')+'" onclick="toggleReminder(\''+r.id+'\','+r.done+')">'+(r.done?'✓':'')+'</div><div class="rem-body" onclick="openRemModal(\''+r.id+'\')" style="cursor:pointer"><div class="rem-title '+(r.done?'done':'')+'">'+esc(r.title)+'</div><div class="'+dcls+'">'+dtxt+'</div><div class="rem-who"><span class="rem-to'+(r.assigned_to&&curUser&&r.assigned_to===curUser.id?' me':'')+'">👤 '+esc(remWho(r))+'</span>'+(by?' · '+esc(by):'')+'</div>'+(r.description?'<div style="font-size:12px;color:var(--ink3);margin-top:3px">'+esc(r.description)+'</div>':'')+'</div><button class="rem-del" onclick="delReminder(\''+r.id+'\')">×</button></div>';
+  }).join('');
+}
+// aviso al abrir la app: checks pendientes + recordatorios
+function notifyPendingChecks(){
+  if(_chkNotified||!curUser)return;
+  var due=remDueForMe();
+  var mine=isOper()?[]:_orders.filter(function(o){return o.status==='resuelta'&&isMine(o);});
+  if(!mine.length&&!due.length){_chkNotified=true;return;}
+  if(mine.length&&!due.length){return notifyPendingChecksV11();}
+  _chkNotified=true;
+  var t=todayS();
+  var el=document.getElementById('chk-pop');if(el)el.remove();
+  el=document.createElement('div');el.id='chk-pop';el.className='chk-pop';
+  var h='<div class="chk-pop-in">';
+  h+='<div class="chk-pop-t" style="color:var(--ink)">🔔 Tenés '+due.length+' recordatorio'+(due.length>1?'s':'')+' para hoy</div><div class="chk-pop-l">'+due.slice(0,5).map(function(r){var by=r.user_id&&r.user_id!==curUser.id?remBy(r):'';return '<button class="chk-pop-i rem-pop-i" data-rem="1"><b>'+(r.due_date<t?'⚠️ Vencido':'📅 Hoy')+'</b> '+esc(r.title)+(by||r.description?'<span>'+esc([by,r.description].filter(Boolean).join(' · '))+'</span>':'')+'</button>';}).join('')+'</div>';
+  if(mine.length)h+='<div class="chk-pop-t" style="font-size:16px">✔ Y '+mine.length+' trabajo'+(mine.length>1?'s':'')+' terminado'+(mine.length>1?'s':'')+' para revisar</div><div class="chk-pop-l">'+mine.slice(0,3).map(function(o){return '<button class="chk-pop-i" data-oid="'+o.id+'"><b>'+oCode(o)+'</b> '+esc(o.title)+'</button>';}).join('')+'</div>';
+  h+='<div class="chk-pop-a"><button class="btn btn-g" id="chk-pop-x">Después</button><button class="btn btn-p" id="chk-pop-rem">Ver recordatorios</button></div></div>';
+  el.innerHTML=h;document.body.appendChild(el);
+  el.querySelectorAll('[data-oid]').forEach(function(b){b.addEventListener('click',function(){el.remove();openOrder(b.getAttribute('data-oid'));});});
+  el.querySelectorAll('[data-rem]').forEach(function(b){b.addEventListener('click',function(){el.remove();goPage('reminders');});});
+  document.getElementById('chk-pop-x').addEventListener('click',function(){el.remove();});
+  document.getElementById('chk-pop-rem').addEventListener('click',function(){el.remove();goPage('reminders');});
+}
+(function(){var _old=refreshAll;refreshAll=function(){var r=_old.apply(this,arguments);try{checkReminders();if(curPage==='reminders')renderReminders();}catch(e){console.error(e);}return r;};})();
 
 function showDesktop(){
   var sb=document.getElementById('sidebar');var dh=document.getElementById('desk-hdr');
