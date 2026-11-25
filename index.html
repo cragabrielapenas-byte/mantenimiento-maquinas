@@ -762,6 +762,8 @@ body.oper .fab,body.oper .no-oper{display:none !important}
 .rem-cnt{margin-left:auto;background:var(--red);color:#fff;font-size:11px;font-weight:700;border-radius:999px;min-width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;padding:0 6px}
 .rem-cnt.off{display:none}
 .rem-pop-i{background:#FFF6EC;border-color:#F3D3B5}
+.ams-menu{display:block;font-size:12.5px;font-weight:600;color:var(--orange,#E9743A);text-decoration:none;margin-bottom:8px}
+.ams-login-link{display:block;text-align:center;margin-top:16px;font-size:14px;font-weight:600;color:var(--primary-3,#1F3A6B);text-decoration:none}
 </style>
 </head>
 <body>
@@ -774,6 +776,7 @@ body.oper .fab,body.oper .no-oper{display:none !important}
     <div class="fg"><label class="fl">Usuario</label><input class="fi" id="login-email" type="text" autocapitalize="none" autocorrect="off" autocomplete="username" placeholder="Ej: sergio"></div>
     <div class="fg"><label class="fl">Contraseña</label><input class="fi" id="login-pass" type="password" placeholder="••••••••"></div>
     <button class="btn btn-p" style="width:100%;justify-content:center;margin-top:4px" onclick="doLogin()">Ingresar</button>
+    <a class="ams-login-link" href="https://app.panaderiaamsterdam.com.uy/">Entrar desde el menú de la panadería →</a>
   </div>
 </div>
 <div class="drw-overlay" id="drw-overlay" onclick="closeDrw()"></div>
@@ -799,7 +802,7 @@ body.oper .fab,body.oper .no-oper{display:none !important}
     <button class="drw-item" onclick="openM('modal-categories');closeDrw()"><span class="drw-icon">🏭</span>Gestionar categorías</button>
     <button class="drw-item" onclick="openM('modal-users');closeDrw()"><span class="drw-icon">👤</span>Usuarios</button>
   </div>
-  <div class="drw-user"><strong id="drw-username">—</strong><button class="logout-btn" onclick="doLogout()">Cerrar sesión</button></div>
+  <div class="drw-user"><a class="ams-menu" href="https://app.panaderiaamsterdam.com.uy/">☰ Menú Amsterdam</a><strong id="drw-username">—</strong><button class="logout-btn" onclick="doLogout()">Cerrar sesión</button></div>
 </div>
 <div id="sidebar" style="display:none">
   <div class="sb-logo"><div class="sb-pill">Amsterdam</div><div class="sb-sub">Mantenimiento</div></div>
@@ -826,7 +829,7 @@ body.oper .fab,body.oper .no-oper{display:none !important}
     <button class="sb-item" onclick="openM('modal-categories')"><span class="sb-icon">🏭</span>Gestionar categorías</button>
     <button class="sb-item" onclick="openM('modal-users')"><span class="sb-icon">👤</span>Usuarios</button>
   </div>
-  <div class="sb-user"><strong id="sb-username">—</strong><button class="logout-btn" onclick="doLogout()">Cerrar sesión</button></div>
+  <div class="sb-user"><a class="ams-menu" href="https://app.panaderiaamsterdam.com.uy/">☰ Menú Amsterdam</a><strong id="sb-username">—</strong><button class="logout-btn" onclick="doLogout()">Cerrar sesión</button></div>
 </div>
 <div class="desk-main">
   <header class="mob-header">
@@ -1240,8 +1243,9 @@ async function doLogin(){
   showLoad(true);
   var res=await sb.from('am_users').select('*').ilike('email',email).eq('password',pass).eq('active',true).single();
   showLoad(false);
-  if(res.error||!res.data){document.getElementById('login-err').classList.add('on');return;}
-  curUser=res.data;delete curUser.password;saveSession(curUser);startApp();
+  if(res.error||!res.data){document.getElementById('login-err').textContent='Usuario o contraseña incorrectos';document.getElementById('login-err').classList.add('on');return;}
+  if(!amsHasApp(res.data)){document.getElementById('login-err').textContent='No tenés acceso a Mantenimiento. Pedíselo a la administración.';document.getElementById('login-err').classList.add('on');return;}
+  curUser=res.data;delete curUser.password;delete curUser.sso_token;saveSession(curUser);startApp();
 }
 document.getElementById('login-pass').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
 
@@ -4435,8 +4439,23 @@ function showDesktop(){
 }
 window.addEventListener('resize',showDesktop);
 
+var AMS_PORTAL='https://app.panaderiaamsterdam.com.uy/';
+function amsHasApp(u){return !u.apps||typeof u.apps!=='object'||!!u.apps.mantenimiento;}
+async function amsSSO(){
+  var m=(location.hash||'').match(/^#sso=([^.]+)\.([a-f0-9]+)$/);
+  if(!m)return false;
+  history.replaceState(null,'',location.pathname+location.search);
+  var r=await sb.from('am_users').select('*').eq('id',m[1]).eq('sso_token',m[2]).eq('active',true).maybeSingle();
+  if(r.error||!r.data||!r.data.sso_exp||new Date(r.data.sso_exp)<new Date()){toast('El acceso venció. Entrá de nuevo desde el menú.','e');return false;}
+  if(!amsHasApp(r.data)){toast('No tenés acceso a Mantenimiento.','e');return false;}
+  var u=r.data;delete u.password;delete u.sso_token;
+  var prev=loadSession();
+  if(prev&&prev.id!==u.id){curUser=null;}
+  curUser=u;saveSession(u);return true;
+}
 async function init(){
   showDesktop();
+  if(await amsSSO()){startApp();return;}
   var saved=loadSession();
   if(saved){curUser=saved;startApp();}
   else{showLoad(false);}
